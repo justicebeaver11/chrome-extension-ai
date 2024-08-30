@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eaeaea; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+}
+
+#content {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19); 
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    transition: box-shadow 0.3s ease; 
+}
+
+#content:hover {
+    box-shadow: 0 0 15px rgba(203, 172, 249, 0.8), 0 0 30px rgba(203, 172, 249, 0.6); 
+}
+
+#loginButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#loginButton {
+    background-color: #CBACF9;
+    color: #ffffff; 
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#loginButton:hover {
+    background-color: #4a0072; 
+}
+
+#welcome {
+    font-size: 24px;
+    color: #3f0a65; 
+    margin-bottom: 10px;
+}
+
+#instruction {
+    font-size: 16px;
+    color: #6a1b9a;
+    margin-bottom: 20px;
+}
+
+#closeButton {
+    background-color: transparent;
+    border: none;
+    color: #3f0a65;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#closeButton:hover {
+    color: #6a1b9a;
+}
+
+
