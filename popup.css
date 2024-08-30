@@ -32,7 +32,7 @@ body {
 }
 
 #loginButton {
-    background-color: #CBACF9;
+    background-color: #3996fb;
     color: #ffffff; 
     border: none;
     border-radius: 5px;
@@ -43,7 +43,7 @@ body {
 }
 
 #loginButton:hover {
-    background-color: #4a0072; 
+    background-color: #295bb1; 
 }
 
 #welcome {
