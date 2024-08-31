@@ -53,23 +53,40 @@
         <div id="chatbotmodel">
             <div id="modelSelector">
                 <button id="modelButton">
-                    <i class="fas fa-cube"></i>
+                    <i class="fas fa-bolt"></i>
                     <span id="selectedModel">Current Model</span>
                     <i class="fas fa-caret-down" id="caretIcon"></i>
                 </button>
                 <div id="modelDropdown" class="dropdown-content">
-                    <a href="#" data-model="model1">Model 1</a>
-                    <a href="#" data-model="model2">Model 2</a>
-                    <a href="#" data-model="model3">Model 3</a>
-                    <a href="#" data-model="model1">Model 1</a>
-                    <a href="#" data-model="model1">Model 1</a>
-                    <a href="#" data-model="model1">Model 1</a>
-                    <a href="#" data-model="model1">Model 1</a>
-                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model1">ChatGPT by OpenAI</a>
+                    <a href="#" data-model="model2">ChatGPT (GPT 3.5)</a>
+                    <a href="#" data-model="model3">GPT 4o</a>
+                    <a href="#" data-model="model1">GPT 4o Mini</a>
+                    <a href="#" data-model="model1">Gemini 1.0 Pro</a>
+                    <a href="#" data-model="model1">Gemini 1.5 Pro</a>
+                    <a href="#" data-model="model1">Gemini 1.5 Flash</a>
+                    <a href="#" data-model="model1">Gemma 7B</a>
                 </div>
             </div>
         </div>
         <div id="chatbotMessages"></div>
+        <div id="optionsBox" class="hidden">
+            <button id="closeOptionsButton">&times;</button>
+            <div class="option"><i class="fa-solid fa-upload"></i>Upload File/Image</div>
+            <div class="option"><i class="fa-solid fa-download"></i>Download Chats</div>
+            <div class="option"><i class="fa-solid fa-microphone"></i>Voice Chat</div>
+            <div class="option"><i class="fa-solid fa-pencil"></i>Handwriting Notes</div>
+            <div class="option"><i class="fa-solid fa-calculator"></i>Math Notes</div>
+            <div class="option"><i class="fa-solid fa-user"></i>AI Humanizer</div>
+            <div class="option"><i class="fa-brands fa-google"></i>
+                <label class="switch">
+                    <input type="checkbox" id="googleToggle">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+
+        </div>
+       
         <div id="chatInputArea">
             <button id="bookmarkButton"><i class="fas fa-bookmark"></i></button>
         <textarea id="chatbotInput" placeholder="Type your message..."></textarea>
@@ -82,6 +99,7 @@
     </div>
 
     </div>
+    
     <script src="popup.js"></script>
 </body>
 </html>

@@ -7,36 +7,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.getElementById('closeChatButton').addEventListener('click', () => {
-    window.close(); // Closes the popup window
+    window.close(); 
 });
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   const caretIcon = document.querySelector('#caretIcon');
-//   const modelDropdown = document.querySelector('#modelDropdown');
+// Toggle the options box visibility
+const ellipsisButton = document.getElementById('ellipsisButton');
+const optionsBox = document.getElementById('optionsBox');
+const closeOptionsButton = document.getElementById('closeOptionsButton');
 
-//   caretIcon.addEventListener('click', function(event) {
-//       // Prevent the click event from propagating to document
-//       event.stopPropagation();
+ellipsisButton.addEventListener('click', function() {
+    optionsBox.classList.toggle('hidden');
+});
 
-//       // Toggle the visibility of the dropdown
-//       const isVisible = modelDropdown.style.display === 'block';
-//       modelDropdown.style.display = isVisible ? 'none' : 'block';
-//   });
+// Close the options box when the close button is clicked
+closeOptionsButton.addEventListener('click', function() {
+    optionsBox.classList.add('hidden');
+});
 
-//   // Close the dropdown if clicking outside
-//   document.addEventListener('click', function(event) {
-//       if (!caretIcon.contains(event.target) && !modelDropdown.contains(event.target)) {
-//           modelDropdown.style.display = 'none';
-//       }
-//   });
-// });
+// Optional: Close the options box when clicking outside of it
+document.addEventListener('click', function(event) {
+    if (!optionsBox.contains(event.target) && !ellipsisButton.contains(event.target)) {
+        optionsBox.classList.add('hidden');
+    }
+});
+
 
 const caretIcon = document.querySelector('#caretIcon');
     const modelDropdown = document.querySelector('#modelDropdown');
     const modelButton = document.querySelector('#modelButton');
 
     modelButton.addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent the click from propagating to the document
+        event.stopPropagation(); 
 
         // Toggle the dropdown visibility
         const isVisible = modelDropdown.style.display === 'block';
