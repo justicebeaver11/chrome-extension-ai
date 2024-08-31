@@ -1,109 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="popup.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>AI4Chat </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="popup.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <title>AI4Chat</title>
     <style>
-        
-        body {
-            width: 500px; 
-            height: 600px; 
-            margin: 0;
-            padding: 0;
-            background-color: #000319; 
-            
-        }
+      body {
+        width: 500px;
+        height: 600px;
+        margin: 0;
+        padding: 0;
+        background-color: #000319;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="content">
-        <button id="closeButton">&times;</button>
-        <h1 id="welcome">Welcome Back!</h1>
-        <p id="instruction">Sign in to continue</p>
-        <div id="loginButtonContainer">
-            <button id="loginButton">Sign In</button>
-        </div>
+      <button id="closeButton">&times;</button>
+      <h1 id="welcome">Welcome Back!</h1>
+      <p id="instruction">Sign in to continue</p>
+      <div id="loginButtonContainer">
+        <button id="loginButton">Sign In</button>
+      </div>
     </div>
-    <div id="chatbotContainer" style="display: none;">
-        <div id="header">
+    <div id="chatbotContainer" style="display: none">
+      <div id="header">
         <div id="dropdownContainer">
-            <button id="dropdownButton" class="icon-button">
-                <img src="icon.png" alt="Icon" class="icon-image" />
-                <span class="arrow">&#9660;</span> 
-            </button>
-            
+          <button id="dropdownButton" class="icon-button">
+            <img src="icon.png" alt="Icon" class="icon-image" />
+            <span class="arrow">&#9660;</span>
+          </button>
         </div>
-        
-        <div id="headerButtons">
-            <button id="openNewTabButton" class="icon-button">
-                <i class="fa fa-plus"></i> 
-                <div class="tooltip">Open a new chat</div>
-            </button>
-            <button id="menuButton" class="icon-button">
-                <i class="fa-solid fa-ellipsis-v"></i> 
-            </button>
-            <button id="closeChatButton" class="icon-button">
-                <i class="fa-solid fa-chevron-right"></i> 
-            </button>
-        </div>
-        </div>
-        <div id="chatbotmodel">
-            <div id="modelSelector">
-                <button id="modelButton">
-                    <i class="fas fa-bolt"></i>
-                    <span id="selectedModel">Current Model</span>
-                    <i class="fas fa-caret-down" id="caretIcon"></i>
-                </button>
-                <div id="modelDropdown" class="dropdown-content">
-                    <a href="#" data-model="model1">ChatGPT by OpenAI</a>
-                    <a href="#" data-model="model2">ChatGPT (GPT 3.5)</a>
-                    <a href="#" data-model="model3">GPT 4o</a>
-                    <a href="#" data-model="model1">GPT 4o Mini</a>
-                    <a href="#" data-model="model1">Gemini 1.0 Pro</a>
-                    <a href="#" data-model="model1">Gemini 1.5 Pro</a>
-                    <a href="#" data-model="model1">Gemini 1.5 Flash</a>
-                    <a href="#" data-model="model1">Gemma 7B</a>
-                </div>
-            </div>
-        </div>
-        <div id="chatbotMessages"></div>
-        <div id="optionsBox" class="hidden">
-            <button id="closeOptionsButton">&times;</button>
-            <div class="option"><i class="fa-solid fa-upload"></i>Upload File/Image</div>
-            <div class="option"><i class="fa-solid fa-download"></i>Download Chats</div>
-            <div class="option"><i class="fa-solid fa-microphone"></i>Voice Chat</div>
-            <div class="option"><i class="fa-solid fa-pencil"></i>Handwriting Notes</div>
-            <div class="option"><i class="fa-solid fa-calculator"></i>Math Notes</div>
-            <div class="option"><i class="fa-solid fa-user"></i>AI Humanizer</div>
-            <div class="option"><i class="fa-brands fa-google"></i>
-                <label class="switch">
-                    <input type="checkbox" id="googleToggle">
-                    <span class="slider round"></span>
-                </label>
-                </div>
 
+        <div id="headerButtons">
+          <button id="openNewTabButton" class="icon-button">
+            <i class="fa fa-plus"></i>
+            <div class="tooltip">Open a new chat</div>
+          </button>
+          <button id="menuButton" class="icon-button">
+            <i class="fa-solid fa-ellipsis-v"></i>
+          </button>
+          <button id="closeChatButton" class="icon-button">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
         </div>
-       
-        <div id="chatInputArea">
-            <button id="bookmarkButton"><i class="fas fa-bookmark"></i></button>
-        <textarea id="chatbotInput" placeholder="Type your message..."></textarea>
+      </div>
+      <div id="chatbotmodel">
+        <div id="modelSelector">
+          <button id="modelButton">
+            <i class="fas fa-bolt"></i>
+            <span id="selectedModel">Current Model</span>
+            <i class="fas fa-caret-down" id="caretIcon"></i>
+          </button>
+          <div id="modelDropdown" class="dropdown-content">
+            <a href="#" data-model="model1">ChatGPT by OpenAI</a>
+            <a href="#" data-model="model2">ChatGPT (GPT 3.5)</a>
+            <a href="#" data-model="model3">GPT 4o</a>
+            <a href="#" data-model="model4">GPT 4o Mini</a>
+            <a href="#" data-model="model5">Gemini 1.0 Pro</a>
+            <a href="#" data-model="model6">Gemini 1.5 Pro</a>
+            <a href="#" data-model="model7">Gemini 1.5 Flash</a>
+            <a href="#" data-model="model8">Gemma 7B</a>
+            <a href="#" data-model="model9">Gemma 2 9B</a>
+            <a href="#" data-model="model10">Gemma 2 7B</a>
+            <a href="#" data-model="model11">Claude Instant v1</a>
+            <a href="#" data-model="model12">Claude v2.0</a>
+            <a href="#" data-model="model13">Claude v2.1</a>
+            <a href="#" data-model="model14">Claude 3 Haiku</a>
+            <a href="#" data-model="model15">Claude 3 Sonnet</a>
+            <a href="#" data-model="model16">Claude 3 Opus</a>
+            <a href="#" data-model="model1">Phi-3 Mini Instruct</a>
+            <a href="#" data-model="model2">Phi-3.5 Mini 128K Instruct</a>
+            <a href="#" data-model="model3">Phi-3 Medium Instruct</a>
+            <a href="#" data-model="model4">WizardLM-2 7B</a>
+            <a href="#" data-model="model5">WizardLM-2 8x22B</a>
+            <a href="#" data-model="model6">Llama v2 13B</a>
+            <a href="#" data-model="model7">Llama v2 70B</a>
+            <a href="#" data-model="model8">Llama v3 8B</a>
+            <a href="#" data-model="model9">Llama v3 70B</a>
+            <a href="#" data-model="model10">Llama v3.1 8B</a>
+            <a href="#" data-model="model11">Llama v3.1 70B</a>
+            <a href="#" data-model="model12">Llama v3.1 405B</a>
+            <a href="#" data-model="model13">CodeLlama 34B</a>
+            <a href="#" data-model="model14">Command</a>
+            <a href="#" data-model="model15">Command R</a>
+            <a href="#" data-model="model16">Command R+</a>
+            <a href="#" data-model="model17">Mistral 7B Instruct</a>
+            <a href="#" data-model="model18">Mistral 7B Instruct v0.1</a>
+            <a href="#" data-model="model19">Mistral 7B Instruct v0.2</a>
+            <a href="#" data-model="model20">Mistral 7B Instruct v0.3</a>
+            <a href="#" data-model="model21">Mixtral 8x7B Instruct</a>
+            <a href="#" data-model="model22">Mixtral 8x22B Instruct</a>
+            <a href="#" data-model="model23">Mistral Nemo</a>
+            <a href="#" data-model="model24">Codestral Mamba</a>
+            <a href="#" data-model="model25">Jamba Instruct</a>
+            <a href="#" data-model="model26">Jamba 1.5 Mini</a>
+            <a href="#" data-model="model27">Jamba 1.5 Large</a>
+            <a href="#" data-model="model28">Qwen 1.5 4B Chat</a>
+            <a href="#" data-model="model29">Qwen 1.5 7B Chat</a>
+            <a href="#" data-model="model30">Qwen 1.5 72B Chat</a>
+            <a href="#" data-model="model31">Qwen 1.5 110B Chat</a>
+            <a href="#" data-model="model32">Qwen 2 7B</a>
+            <a href="#" data-model="model33">Qwen 2 72B</a>
+            <a href="#" data-model="model34">StripedHyena Nous 7B</a>
+            <a href="#" data-model="model35">OLMo 7B Instruct</a>
+            <a href="#" data-model="model36">Chronos Hermes 13B v2</a>
+            <a href="#" data-model="model37">DBRX 132B Instruct</a>
+            <a href="#" data-model="model38">DeepSeek-V2 Chat</a>
+            <a href="#" data-model="model39">Deepseek Coder</a>
+            <a href="#" data-model="model40">Dolphin 2.6 Mixtral 8x7B</a>
+            <a href="#" data-model="model41">Dolphin 2.9.2 Mixtral 8x22B</a>
+            <a href="#" data-model="model42">Dolphin Llama 3 70B</a>
+            <a href="#" data-model="model43">LLaVA v1.6 34B</a>
+            <a href="#" data-model="model44">FireLLaVA 13B</a>
+            <a href="#" data-model="model45">Llama 3 Lumimaid 8B</a>
+            <a href="#" data-model="model46">Llama 3 Lumimaid 70B</a>
+            <a href="#" data-model="model47">Lynn: Llama 3 Soliloquy 8B v2</a>
+            <a href="#" data-model="model48">lzlv 70B</a>
+            <a href="#" data-model="model49">Magnum 72B</a>
+            <a href="#" data-model="model50">Midnight Rose 70B</a>
+            <a href="#" data-model="model51">MythoMax 13B</a>
+            <a href="#" data-model="model52">MythoMist 7B</a>
+            <a href="#" data-model="model53">Noromaid Mixtral 8x7B Instruct</a>
+            <a href="#" data-model="model54">Noromaid 20B</a>
+            <a href="#" data-model="model55">Hermes 2 Pro - Llama-3 8B</a>
+            <a href="#" data-model="model56">Hermes 2 - Mistral 7B DPO</a>
+            <a href="#" data-model="model57">Hermes 2 Mixtral 8x7B DPO</a>
+            <a href="#" data-model="model58">Hermes 2 Mixtral 8x7B SFT</a>
+            <a href="#" data-model="model59">Hermes 2 Theta 8B</a>
+            <a href="#" data-model="model60">Hermes 3 70B Instruct</a>
+            <a href="#" data-model="model61">Hermes 3 405B Instruct</a>
+            <a href="#" data-model="model62">Capybara 7B</a>
+            <a href="#" data-model="model63">Capybara 34B</a>
+            <a href="#" data-model="model64">Hermes 13B</a>
+            <a href="#" data-model="model65">NVIDIA Nemotron-4 340B Instruct</a>
+            <a href="#" data-model="model66">OpenChat 3.5 8B</a>
+            <a href="#" data-model="model67">OpenChat 3.6 8B</a>
+            <a href="#" data-model="model68">OpenHermes 2.5 Mistral 7B</a>
+            <a href="#" data-model="model69">Mistral OpenOrca 7B</a>
+            <a href="#" data-model="model70">Llama3 Sonar 8B Online</a>
+            <a href="#" data-model="model71">Llama3 Sonar 70B Online</a>
+            <a href="#" data-model="model72">Llama 3.1 Sonar 8B Online</a>
+            <a href="#" data-model="model73">Llama 3.1 Sonar 70B Online</a>
+            <a href="#" data-model="model74">Llama 3.1 Sonar 405B Online</a>
+            <a href="#" data-model="model75">Phind CodeLlama 34B v2</a>
+            <a href="#" data-model="model76">StripedHyena Nous 7B</a>
+            <a href="#" data-model="model16">Yi 6B</a>
+            <a href="#" data-model="model16">Yi 34B</a>
+            <a href="#" data-model="model16">Yi 1.5 34B</a>
+            <a href="#" data-model="model16">Yi Large</a>
+            <a href="#" data-model="model16">Yi Large Turbo</a>
+          </div>
+        </div>
+      </div>
+      <div id="chatbotMessages"></div>
+      <div id="optionsBox" class="hidden">
+        <button id="closeOptionsButton">&times;</button>
+        <div class="option">
+          <i class="fa-solid fa-upload"></i>Upload File/Image
+        </div>
+        <div class="option">
+          <i class="fa-solid fa-download"></i>Download Chats
+        </div>
+        <div class="option">
+          <i class="fa-solid fa-microphone"></i>Voice Chat
+        </div>
+        <div class="option">
+          <i class="fa-solid fa-pencil"></i>Handwriting Notes
+        </div>
+        <div class="option">
+          <i class="fa-solid fa-calculator"></i>Math Notes
+        </div>
+        <div class="option"><i class="fa-solid fa-user"></i>AI Humanizer</div>
+        <div class="option">
+          <i class="fa-brands fa-google"></i>
+          <label class="switch">
+            <input type="checkbox" id="googleToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div id="chatInputArea">
+        <button id="bookmarkButton"><i class="fas fa-bookmark"></i></button>
+        <textarea
+          id="chatbotInput"
+          placeholder="Type your message..."
+        ></textarea>
         <button id="ellipsisButton">
-            <i class="fa fa-ellipsis-h"></i>
+          <i class="fa fa-ellipsis-h"></i>
         </button>
         <button id="sendButton">
-            <i class="fas fa-paper-plane"></i>
+          <i class="fas fa-paper-plane"></i>
         </button>
+      </div>
     </div>
 
-    </div>
-    
     <script src="popup.js"></script>
-</body>
+  </body>
 </html>
-
-
-
-
