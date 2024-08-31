@@ -28,13 +28,59 @@
         </div>
     </div>
     <div id="chatbotContainer" style="display: none;">
+        <div id="header">
+        <div id="dropdownContainer">
+            <button id="dropdownButton" class="icon-button">
+                <img src="icon.png" alt="Icon" class="icon-image" />
+                <span class="arrow">&#9660;</span> 
+            </button>
+            
+        </div>
+        
+        <div id="headerButtons">
+            <button id="openNewTabButton" class="icon-button">
+                <i class="fa fa-plus"></i> 
+                <div class="tooltip">Open a new chat</div>
+            </button>
+            <button id="menuButton" class="icon-button">
+                <i class="fa-solid fa-ellipsis-v"></i> 
+            </button>
+            <button id="closeChatButton" class="icon-button">
+                <i class="fa-solid fa-chevron-right"></i> 
+            </button>
+        </div>
+        </div>
+        <div id="chatbotmodel">
+            <div id="modelSelector">
+                <button id="modelButton">
+                    <i class="fas fa-cube"></i>
+                    <span id="selectedModel">Current Model</span>
+                    <i class="fas fa-caret-down" id="caretIcon"></i>
+                </button>
+                <div id="modelDropdown" class="dropdown-content">
+                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model2">Model 2</a>
+                    <a href="#" data-model="model3">Model 3</a>
+                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model1">Model 1</a>
+                    <a href="#" data-model="model1">Model 1</a>
+                </div>
+            </div>
+        </div>
         <div id="chatbotMessages"></div>
         <div id="chatInputArea">
+            <button id="bookmarkButton"><i class="fas fa-bookmark"></i></button>
         <textarea id="chatbotInput" placeholder="Type your message..."></textarea>
+        <button id="ellipsisButton">
+            <i class="fa fa-ellipsis-h"></i>
+        </button>
         <button id="sendButton">
             <i class="fas fa-paper-plane"></i>
         </button>
     </div>
+
     </div>
     <script src="popup.js"></script>
 </body>

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AI4Chat Login Checker",
+  "name": "AI4Chat",
   "version": "1.0",
   "permissions": [
     "cookies",

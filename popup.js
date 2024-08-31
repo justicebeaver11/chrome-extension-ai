@@ -6,6 +6,54 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.close();
   });
 
+  document.getElementById('closeChatButton').addEventListener('click', () => {
+    window.close(); // Closes the popup window
+});
+
+// document.addEventListener('DOMContentLoaded', function() {
+//   const caretIcon = document.querySelector('#caretIcon');
+//   const modelDropdown = document.querySelector('#modelDropdown');
+
+//   caretIcon.addEventListener('click', function(event) {
+//       // Prevent the click event from propagating to document
+//       event.stopPropagation();
+
+//       // Toggle the visibility of the dropdown
+//       const isVisible = modelDropdown.style.display === 'block';
+//       modelDropdown.style.display = isVisible ? 'none' : 'block';
+//   });
+
+//   // Close the dropdown if clicking outside
+//   document.addEventListener('click', function(event) {
+//       if (!caretIcon.contains(event.target) && !modelDropdown.contains(event.target)) {
+//           modelDropdown.style.display = 'none';
+//       }
+//   });
+// });
+
+const caretIcon = document.querySelector('#caretIcon');
+    const modelDropdown = document.querySelector('#modelDropdown');
+    const modelButton = document.querySelector('#modelButton');
+
+    modelButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the click from propagating to the document
+
+        // Toggle the dropdown visibility
+        const isVisible = modelDropdown.style.display === 'block';
+        modelDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Close the dropdown when clicking outside of it
+    document.addEventListener('click', function(event) {
+        if (!modelButton.contains(event.target) && !modelDropdown.contains(event.target)) {
+            modelDropdown.style.display = 'none';
+        }
+    });
+
+
+
+
+
   document.getElementById('chatbotInput').addEventListener('input', function () {
     this.style.height = 'auto';
     this.style.height = this.scrollHeight + 'px';
@@ -53,6 +101,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   updateUI();
 });
+
+
+
 
 
 
