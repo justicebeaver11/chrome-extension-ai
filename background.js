@@ -21,20 +21,19 @@ async function updateLoginStatus() {
   }
 }
 
-// Use the appropriate API events to check login status
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === 'complete') {
     updateLoginStatus();
   }
 });
 
-// Ensure that this event is correctly handled in background.js
 chrome.webNavigation.onCompleted.addListener(
   () => {
     updateLoginStatus();
   },
   { url: [{ hostContains: 'app.ai4chat.co' }] }
 );
+
 
 
 

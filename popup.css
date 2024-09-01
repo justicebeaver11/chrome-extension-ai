@@ -523,6 +523,20 @@ input:checked + .slider:before {
     color: #3996fb;
 }
 
+.chat-message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  
+  .response {
+    background-color: #3996fb; /* Bot response background color */
+    color: white; /* Text color for bot response */
+    align-self: flex-start;
+  }
+
 
 
 

@@ -6,7 +6,8 @@
     "cookies",
     "storage",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+     "scripting"
   ],
   "host_permissions": [
     "https://app.ai4chat.co/*"
