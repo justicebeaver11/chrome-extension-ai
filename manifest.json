@@ -7,10 +7,14 @@
     "storage",
     "tabs",
     "webNavigation",
-     "scripting"
+     "scripting",
+     "alarms"
+
   ],
   "host_permissions": [
-    "https://app.ai4chat.co/*"
+    "https://app.ai4chat.co/*",
+    "http://localhost:3000/*"
+    
   ],
   "background": {
     "service_worker": "background.js"
@@ -27,6 +31,9 @@
     "16": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }
 
