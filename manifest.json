@@ -8,12 +8,15 @@
     "tabs",
     "webNavigation",
      "scripting",
-     "alarms"
+     "activeTab"
+     
 
   ],
   "host_permissions": [
     "https://app.ai4chat.co/*",
-    "http://localhost:3000/*"
+    "http://localhost:3000/*",
+    "http://*/*",
+    "https://*/*"
     
   ],
   "background": {

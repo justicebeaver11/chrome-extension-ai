@@ -1,106 +1,67 @@
-// const express = require('express');
-// const cookieParser = require('cookie-parser');
-// const axios = require('axios');
-// const cors = require('cors');
-
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// app.use(cookieParser());
-// app.use(express.json());
-// app.use(cors({
-//     origin: 'chrome-extension://ghojhhdopbpkcmljeceeiggbpgojpadh', // Replace with your Chrome extension ID
-//     credentials: true
-// }));
-
-// // Endpoint to handle chat requests
-// app.post('/api/chat', async (req, res) => {
-//     const { message } = req.body;
-
-//     // Extract session token from cookies
-//     const sessionToken = req.cookies.session_token;
-
-//     if (!sessionToken) {
-//         return res.status(401).json({ error: 'User not authenticated' });
-//     }
-
-//     try {
-//         // Send the request to the /chatgpt endpoint
-//         const response = await axios.post('https://app.ai4chat.co/chatgpt', {
-//             message: message
-//         }, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${sessionToken}`
-//             },
-//             withCredentials: true
-//         });
-
-//         // Forward the response back to the Chrome extension
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error communicating with AI4Chat:', error.message);
-//         res.status(500).json({ error: 'Error communicating with AI4Chat' });
-//     }
-// });
-
-// // Start the server
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
 
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const axios = require('axios');
-const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cookieParser());
 app.use(express.json());
-app.use(cors({
-    origin: 'chrome-extension://ghojhhdopbpkcmljeceeiggbpgojpadh', // Replace with your Chrome extension ID
-    credentials: true
-}));
+app.use(cookieParser());
 
-// Endpoint to handle chat requests
-app.post('/api/chat', async (req, res) => {
-    const { message } = req.body;
-
-    // Extract session token from cookies
-    const sessionToken = req.cookies.session_token;
-
-    if (!sessionToken) {
-        return res.status(401).json({ error: 'User not authenticated' });
-    }
-
+// Endpoint to handle requests from the Chrome extension
+app.post('/chatgpt', async (req, res) => {
     try {
-        // Send the request to the /chatgpt endpoint
-        const response = await axios.post('https://app.ai4chat.co/chatgpt', {
-            message: message
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sessionToken}`
-            },
-            withCredentials: true
-        });
+        const { chatid, aiengine, conversation } = req.body;
 
-        // Forward the response back to the Chrome extension
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error communicating with AI4Chat:', error.message);
-        if (error.response) {
-            console.error('Response status:', error.response.status);
-            console.error('Response data:', error.response.data);
+        // Get session_token from cookies
+        const sessionToken = req.cookies.session_token;
+
+        if (!sessionToken) {
+            console.log('No session token found in cookies');
+            return res.status(401).json({ error: 'Unauthorized: No session token provided' });
         }
-        res.status(500).json({ error: 'Error communicating with AI4Chat' });
+
+        // Forward the request to the /chatgpt endpoint on your site
+        const response = await axios.post(
+            'https://app.ai4chat.co/chatgpt',
+            {
+                chatid,
+                aiengine,
+                conversation,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cookie': `session_token=${sessionToken}`
+                }
+            }
+        );
+
+        // Send the response back to the extension
+        res.json(response.data);
+
+    } catch (error) {
+        console.error('Error in /chatgpt request:', error.message);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Server responded with:', error.response.status);
+            console.error('Response body:', error.response.data);
+            res.status(error.response.status).json({ error: error.response.data });
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('No response received:', error.request);
+            res.status(500).json({ error: 'No response received from server' });
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error setting up request:', error.message);
+            res.status(500).json({ error: 'Error setting up request' });
+        }
     }
 });
 
-// Start the server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
+
 

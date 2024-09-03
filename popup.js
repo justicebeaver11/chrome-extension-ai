@@ -1,333 +1,164 @@
-// document.addEventListener('DOMContentLoaded', async () => {
-//   console.log('DOM fully loaded and parsed');
-
-//   // Close the popup when the close button is clicked
-//   const closeButton = document.getElementById('closeButton');
-//   closeButton.addEventListener('click', () => {
-//     window.close();
-//   });
-
-//   document.getElementById('closeChatButton').addEventListener('click', () => {
-//     window.close();
-//   });
-
-//   // Toggle the options box visibility
-//   const ellipsisButton = document.getElementById('ellipsisButton');
-//   const optionsBox = document.getElementById('optionsBox');
-//   const closeOptionsButton = document.getElementById('closeOptionsButton');
-
-//   ellipsisButton.addEventListener('click', function () {
-//     optionsBox.classList.toggle('hidden');
-//   });
-
-//   // Close the options box when the close button is clicked
-//   closeOptionsButton.addEventListener('click', function () {
-//     optionsBox.classList.add('hidden');
-//   });
-
-//   // Close the options box when clicking outside of it
-//   document.addEventListener('click', function (event) {
-//     if (!optionsBox.contains(event.target) && !ellipsisButton.contains(event.target)) {
-//       optionsBox.classList.add('hidden');
-//     }
-//   });
-
-//   const caretIcon = document.querySelector('#caretIcon');
-//   const modelDropdown = document.querySelector('#modelDropdown');
-//   const modelButton = document.querySelector('#modelButton');
-//   const selectedModelSpan = document.getElementById('selectedModel');
-
-//   // Load the saved model from Chrome storage
-//   chrome.storage.local.get(['selectedModel'], (result) => {
-//     if (result.selectedModel) {
-//       selectedModelSpan.textContent = result.selectedModel;
-//     }
-//   });
-
-//   modelButton.addEventListener('click', function (event) {
-//     event.stopPropagation();
-
-//     // Toggle the dropdown visibility
-//     const isVisible = modelDropdown.style.display === 'block';
-//     modelDropdown.style.display = isVisible ? 'none' : 'block';
-//   });
-
-//   // Update the selected model when a dropdown item is clicked
-//   modelDropdown.addEventListener('click', function (event) {
-//     const selectedModel = event.target.dataset.model;
-//     if (selectedModel) {
-//       selectedModelSpan.textContent = event.target.textContent;
-
-//       // Save the selected model to Chrome storage
-//       chrome.storage.local.set({ selectedModel: event.target.textContent });
-
-//       // Hide the dropdown after selection
-//       modelDropdown.style.display = 'none';
-//     }
-//   });
-
-//   // Close the dropdown when clicking outside of it
-//   document.addEventListener('click', function (event) {
-//     if (!modelButton.contains(event.target) && !modelDropdown.contains(event.target)) {
-//       modelDropdown.style.display = 'none';
-//     }
-//   });
-
-//   document.getElementById('chatbotInput').addEventListener('input', function () {
-//     this.style.height = 'auto';
-//     this.style.height = this.scrollHeight + 'px';
-//   });
-
-//   // Function to check if the user is logged in based on storage
-//   function checkLoginStatus() {
-//     return new Promise((resolve) => {
-//       chrome.storage.local.get(['sessionToken'], (result) => {
-//         resolve(result.sessionToken || null);
-//       });
-//     });
-//   }
-
-//   // Function to handle the sign-in button click
-//   function handleSignIn() {
-//     const loginButton = document.getElementById('loginButton');
-//     if (loginButton) {
-//       loginButton.addEventListener('click', () => {
-//         chrome.tabs.create({ url: "https://app.ai4chat.co/login" });
-//       });
-//     }
-//   }
-
-//   // Update the UI based on login status
-//   async function updateUI() {
-//     const sessionToken = await checkLoginStatus();
-
-//     console.log('Session Token:', sessionToken);
-
-//     const contentDiv = document.getElementById('content');
-//     const chatbotContainer = document.getElementById('chatbotContainer');
-
-//     if (sessionToken) {
-//       // User is logged in
-//       contentDiv.style.display = 'none';
-//       chatbotContainer.style.display = 'flex';
-//     } else {
-//       // User is not logged in
-//       contentDiv.style.display = 'flex';
-//       chatbotContainer.style.display = 'none';
-//       handleSignIn();
-//     }
-//   }
-
-//   updateUI();
-
-//   // Functionality to send and display messages
-//   const sendButton = document.getElementById('sendButton');
-//   const chatbotMessages = document.getElementById('chatbotMessages');
-//   const chatbotInput = document.getElementById('chatbotInput');
-
-//   sendButton.addEventListener('click', async () => {
-//     const messageText = chatbotInput.value.trim();
-//     if (messageText) {
-//       const messageDiv = document.createElement('div');
-//       messageDiv.className = 'chat-message';
-//       messageDiv.textContent = "You: " + messageText;
-
-//       chatbotMessages.appendChild(messageDiv);
-//       chatbotInput.value = '';
-
-//       // Scroll to the bottom of the chatbox
-//       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-//       // Send the message to the backend to get a chatbot response
-//       const response = await chrome.runtime.sendMessage({
-//         action: 'sendMessage',
-//         message: messageText
-//       });
-
-//       // Display the chatbot response
-//       const responseDiv = document.createElement('div');
-//       responseDiv.className = 'chat-response';
-//       responseDiv.textContent = "Chatbot: " + response;
-
-//       chatbotMessages.appendChild(responseDiv);
-
-//       // Scroll to the bottom of the chatbox after receiving a response
-//       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-//     }
-//   });
-// });
-
-
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('DOM fully loaded and parsed');
+    console.log('DOM fully loaded and parsed');
 
-  // Close the popup when the close button is clicked
-  const closeButton = document.getElementById('closeButton');
-  closeButton.addEventListener('click', () => {
-      window.close();
-  });
+    const closeButton = document.getElementById('closeButton');
+    closeButton.addEventListener('click', () => {
+        window.close();
+    });
 
-  document.getElementById('closeChatButton').addEventListener('click', () => {
-      window.close();
-  });
+    document.getElementById('closeChatButton').addEventListener('click', () => {
+        window.close(); 
+    });
 
-  // Toggle the options box visibility
-  const ellipsisButton = document.getElementById('ellipsisButton');
-  const optionsBox = document.getElementById('optionsBox');
-  const closeOptionsButton = document.getElementById('closeOptionsButton');
+    // Toggle the options box visibility
+    const ellipsisButton = document.getElementById('ellipsisButton');
+    const optionsBox = document.getElementById('optionsBox');
+    const closeOptionsButton = document.getElementById('closeOptionsButton');
 
-  ellipsisButton.addEventListener('click', function () {
-      optionsBox.classList.toggle('hidden');
-  });
+    ellipsisButton.addEventListener('click', function() {
+        optionsBox.classList.toggle('hidden');
+    });
 
-  // Close the options box when the close button is clicked
-  closeOptionsButton.addEventListener('click', function () {
-      optionsBox.classList.add('hidden');
-  });
+    closeOptionsButton.addEventListener('click', function() {
+        optionsBox.classList.add('hidden');
+    });
 
-  // Close the options box when clicking outside of it
-  document.addEventListener('click', function (event) {
-      if (!optionsBox.contains(event.target) && !ellipsisButton.contains(event.target)) {
-          optionsBox.classList.add('hidden');
-      }
-  });
+    document.addEventListener('click', function(event) {
+        if (!optionsBox.contains(event.target) && !ellipsisButton.contains(event.target)) {
+            optionsBox.classList.add('hidden');
+        }
+    });
 
-  const caretIcon = document.querySelector('#caretIcon');
-  const modelDropdown = document.querySelector('#modelDropdown');
-  const modelButton = document.querySelector('#modelButton');
-  const selectedModelSpan = document.getElementById('selectedModel');
+    const caretIcon = document.querySelector('#caretIcon');
+    const modelDropdown = document.querySelector('#modelDropdown');
+    const modelButton = document.querySelector('#modelButton');
+    const selectedModelSpan = document.getElementById('selectedModel');
 
-  // Load the saved model from Chrome storage
-  chrome.storage.local.get(['selectedModel'], (result) => {
-      if (result.selectedModel) {
-          selectedModelSpan.textContent = result.selectedModel;
-      }
-  });
+    chrome.storage.local.get(['selectedModel'], (result) => {
+        if (result.selectedModel) {
+            selectedModelSpan.textContent = result.selectedModel;
+        }
+    });
 
-  modelButton.addEventListener('click', function (event) {
-      event.stopPropagation();
+    modelButton.addEventListener('click', function(event) {
+        event.stopPropagation(); 
 
-      // Toggle the dropdown visibility
-      const isVisible = modelDropdown.style.display === 'block';
-      modelDropdown.style.display = isVisible ? 'none' : 'block';
-  });
+        const isVisible = modelDropdown.style.display === 'block';
+        modelDropdown.style.display = isVisible ? 'none' : 'block';
+    });
 
-  // Update the selected model when a dropdown item is clicked
-  modelDropdown.addEventListener('click', function (event) {
-      const selectedModel = event.target.dataset.model;
-      if (selectedModel) {
-          selectedModelSpan.textContent = event.target.textContent;
+    modelDropdown.addEventListener('click', function(event) {
+        const selectedModel = event.target.dataset.model;
+        if (selectedModel) {
+            selectedModelSpan.textContent = event.target.textContent;
 
-          // Save the selected model to Chrome storage
-          chrome.storage.local.set({ selectedModel: event.target.textContent });
+            chrome.storage.local.set({ selectedModel: event.target.textContent });
 
-          // Hide the dropdown after selection
-          modelDropdown.style.display = 'none';
-      }
-  });
+            modelDropdown.style.display = 'none';
+        }
+    });
 
-  // Close the dropdown when clicking outside of it
-  document.addEventListener('click', function (event) {
-      if (!modelButton.contains(event.target) && !modelDropdown.contains(event.target)) {
-          modelDropdown.style.display = 'none';
-      }
-  });
+    document.addEventListener('click', function(event) {
+        if (!modelButton.contains(event.target) && !modelDropdown.contains(event.target)) {
+            modelDropdown.style.display = 'none';
+        }
+    });
 
-  document.getElementById('chatbotInput').addEventListener('input', function () {
-      this.style.height = 'auto';
-      this.style.height = this.scrollHeight + 'px';
-  });
+    document.getElementById('chatbotInput').addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
 
-  // Function to check if the user is logged in based on storage
-  function checkLoginStatus() {
-      return new Promise((resolve) => {
-          chrome.storage.local.get(['sessionToken'], (result) => {
-              resolve(result.sessionToken || null);
-          });
-      });
-  }
+    async function getSessionTokenFromStorage() {
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['sessionToken'], (result) => {
+                resolve(result.sessionToken || null);
+            });
+        });
+    }
 
-  // Function to handle the sign-in button click
-  function handleSignIn() {
-      const loginButton = document.getElementById('loginButton');
-      if (loginButton) {
-          loginButton.addEventListener('click', () => {
-              chrome.tabs.create({ url: "https://app.ai4chat.co/login" });
-          });
-      }
-  }
+    async function updateUI() {
+        const sessionToken = await getSessionTokenFromStorage();
+        console.log('Session Token:', sessionToken);
 
-  // Update the UI based on login status
-  async function updateUI() {
-      const sessionToken = await checkLoginStatus();
+        const contentDiv = document.getElementById('content');
+        const chatbotContainer = document.getElementById('chatbotContainer');
 
-      console.log('Session Token:', sessionToken);
+        if (sessionToken) {
+            contentDiv.style.display = 'none';
+            chatbotContainer.style.display = 'flex';
+        } else {
+            contentDiv.style.display = 'flex';
+            chatbotContainer.style.display = 'none';
+            handleSignIn();
+        }
+    }
 
-      const contentDiv = document.getElementById('content');
-      const chatbotContainer = document.getElementById('chatbotContainer');
+    async function sendMessageToChatbot(messageText) {
+        try {
+            const sessionToken = await getSessionTokenFromStorage();
 
-      if (sessionToken) {
-          // User is logged in
-          contentDiv.style.display = 'none';
-          chatbotContainer.style.display = 'flex';
-      } else {
-          // User is not logged in
-          contentDiv.style.display = 'flex';
-          chatbotContainer.style.display = 'none';
-          handleSignIn();
-      }
-  }
+            if (!sessionToken) {
+                console.log('No session token available.');
+                return;
+            }
 
-  updateUI();
+            const chatid = '3fc1394a-50a5-477c-9608-616daa80b728'; // Replace with actual chat ID
+            const aiengine = 'GPT 4o Mini';
+            const conversation = [{ role: 'user', content: messageText }];
 
-  // Functionality to send and display messages
-  const sendButton = document.getElementById('sendButton');
-  const chatbotMessages = document.getElementById('chatbotMessages');
-  const chatbotInput = document.getElementById('chatbotInput');
+            const response = await fetch('https://app.ai4chat.co/chatgpt', { // Ensure this is the correct endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionToken}` // Include session token in the headers
+                },
+                body: JSON.stringify({ chatid, aiengine, conversation }),
+                credentials: 'include' // Ensure cookies are sent with the request
+            });
 
-  sendButton.addEventListener('click', async () => {
-      const messageText = chatbotInput.value.trim();
-      if (messageText) {
-          const messageDiv = document.createElement('div');
-          messageDiv.className = 'chat-message';
-          messageDiv.textContent = "You: " + messageText;
+            const data = await response.json();
+            if (response.ok) {
+                displayMessage('assistant', data.response);
+            } else {
+                console.error('Error from server:', data.error);
+            }
+        } catch (error) {
+            console.error('Error sending message to chatbot:', error);
+        }
+    }
 
-          chatbotMessages.appendChild(messageDiv);
-          chatbotInput.value = '';
+    function displayMessage(role, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${role}`;
+        messageDiv.textContent = content;
 
-          // Scroll to the bottom of the chatbox
-          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
 
-          // Display a loading indicator
-          const loadingDiv = document.createElement('div');
-          loadingDiv.className = 'chat-loading';
-          loadingDiv.textContent = "Chatbot is typing...";
-          chatbotMessages.appendChild(loadingDiv);
+    document.getElementById('sendButton').addEventListener('click', () => {
+        const chatbotInput = document.getElementById('chatbotInput');
+        const messageText = chatbotInput.value.trim();
+        if (messageText) {
+            displayMessage('user', messageText);
+            sendMessageToChatbot(messageText);
+            chatbotInput.value = '';
+        }
+    });
 
-          // Send the message to the backend to get a chatbot response
-          const response = await chrome.runtime.sendMessage({
-              action: 'sendMessage',
-              message: messageText
-          });
+    function handleSignIn() {
+        const loginButton = document.getElementById('loginButton');
+        if (loginButton) {
+            loginButton.addEventListener('click', () => {
+                chrome.tabs.create({ url: "https://app.ai4chat.co/login" });
+            });
+        }
+    }
 
-          // Remove the loading indicator
-          chatbotMessages.removeChild(loadingDiv);
-
-          // Display the chatbot response
-          const responseDiv = document.createElement('div');
-          responseDiv.className = 'chat-response';
-          responseDiv.textContent = "Chatbot: " + response;
-
-          chatbotMessages.appendChild(responseDiv);
-
-          // Scroll to the bottom of the chatbox after receiving a response
-          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-      }
-  });
+    updateUI();
 });
-
-
-
 
 
 
