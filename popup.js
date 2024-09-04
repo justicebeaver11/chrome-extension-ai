@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.close(); 
     });
 
-    // Toggle the options box visibility
     const ellipsisButton = document.getElementById('ellipsisButton');
     const optionsBox = document.getElementById('optionsBox');
     const closeOptionsButton = document.getElementById('closeOptionsButton');
@@ -103,9 +102,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            const chatid = '87cb81ec-5b7c-4256-b5cc-c210a7cad606'; // Replace with actual chat ID
+            const chatid = '05df2687-f0bf-4c17-bf8b-7a625ee315f3'; // Replace with actual chat ID
             const aiengine = 'GPT 4o Mini';
             const conversation = [{ role: 'user', content: messageText }];
+
+            // New parameters
+            const timezoneOffset = new Date().getTimezoneOffset();
+            const selectedLanguage = 'English';
+            const selectedTone = 'Default';
+            const wordCount = 'Default';
+            const googleSearchStatus = false;
 
             const response = await fetch('https://app.ai4chat.co/chatgpt', {
                 method: 'POST',
@@ -113,7 +119,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${sessionToken}`
                 },
-                body: JSON.stringify({ chatid, aiengine, conversation }),
+                body: JSON.stringify({
+                    chatid,
+                    aiengine,
+                    conversation,
+                    timezoneOffset,
+                    language: selectedLanguage,
+                    tone: selectedTone,
+                    wordcount: wordCount,
+                    googleSearchStatus
+                }),
                 credentials: 'include'
             });
 
@@ -133,7 +148,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         messageDiv.className = `chat-message ${role}`;
         messageDiv.textContent = content;
 
-        // Optional: Add specific styles for alignment
         if (role === 'assistant') {
             messageDiv.style.textAlign = 'left';
             messageDiv.style.marginRight = 'auto';
@@ -168,8 +182,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUI();
 });
-
-
-
 
 

@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
@@ -11,7 +9,7 @@ app.use(cookieParser());
 // Endpoint to handle requests from the Chrome extension
 app.post('/chatgpt', async (req, res) => {
     try {
-        const { chatid, aiengine, conversation } = req.body;
+        const { chatid, aiengine, conversation, timezoneOffset, language, tone, wordcount, googleSearchStatus } = req.body;
 
         // Get session_token from cookies
         const sessionToken = req.cookies.session_token;
@@ -31,6 +29,11 @@ app.post('/chatgpt', async (req, res) => {
                 chatid,
                 aiengine,
                 conversation,
+                timezoneOffset,
+                language,
+                tone,
+                wordcount,
+                googleSearchStatus
             },
             {
                 headers: {
@@ -46,16 +49,13 @@ app.post('/chatgpt', async (req, res) => {
     } catch (error) {
         console.error('Error in /chatgpt request:', error.message);
         if (error.response) {
-            // Log detailed server response information
             console.error('Server responded with:', error.response.status);
             console.error('Response body:', error.response.data);
             res.status(error.response.status).json({ error: error.response.data });
         } else if (error.request) {
-            // Log that no response was received
             console.error('No response received:', error.request);
             res.status(500).json({ error: 'No response received from server' });
         } else {
-            // Log error during request setup
             console.error('Error setting up request:', error.message);
             res.status(500).json({ error: 'Error setting up request' });
         }
@@ -66,6 +66,15 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+
+
+
+
+
+
+
 
 
 
