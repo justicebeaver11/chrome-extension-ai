@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
@@ -19,6 +20,9 @@ app.post('/chatgpt', async (req, res) => {
             console.log('No session token found in cookies');
             return res.status(401).json({ error: 'Unauthorized: No session token provided' });
         }
+
+        console.log('Session Token:', sessionToken);
+        console.log('Request Body:', req.body);
 
         // Forward the request to the /chatgpt endpoint on your site
         const response = await axios.post(
@@ -42,17 +46,16 @@ app.post('/chatgpt', async (req, res) => {
     } catch (error) {
         console.error('Error in /chatgpt request:', error.message);
         if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+            // Log detailed server response information
             console.error('Server responded with:', error.response.status);
             console.error('Response body:', error.response.data);
             res.status(error.response.status).json({ error: error.response.data });
         } else if (error.request) {
-            // The request was made but no response was received
+            // Log that no response was received
             console.error('No response received:', error.request);
             res.status(500).json({ error: 'No response received from server' });
         } else {
-            // Something happened in setting up the request that triggered an Error
+            // Log error during request setup
             console.error('Error setting up request:', error.message);
             res.status(500).json({ error: 'Error setting up request' });
         }
@@ -63,5 +66,13 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+
+
+
+
+
+
 
 

@@ -103,18 +103,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            const chatid = '3fc1394a-50a5-477c-9608-616daa80b728'; // Replace with actual chat ID
+            const chatid = '87cb81ec-5b7c-4256-b5cc-c210a7cad606'; // Replace with actual chat ID
             const aiengine = 'GPT 4o Mini';
             const conversation = [{ role: 'user', content: messageText }];
 
-            const response = await fetch('https://app.ai4chat.co/chatgpt', { // Ensure this is the correct endpoint
+            const response = await fetch('https://app.ai4chat.co/chatgpt', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionToken}` // Include session token in the headers
+                    'Authorization': `Bearer ${sessionToken}`
                 },
                 body: JSON.stringify({ chatid, aiengine, conversation }),
-                credentials: 'include' // Ensure cookies are sent with the request
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -132,6 +132,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chat-message ${role}`;
         messageDiv.textContent = content;
+
+        // Optional: Add specific styles for alignment
+        if (role === 'assistant') {
+            messageDiv.style.textAlign = 'left';
+            messageDiv.style.marginRight = 'auto';
+        } else {
+            messageDiv.style.textAlign = 'right';
+            messageDiv.style.marginLeft = 'auto';
+        }
 
         const chatbotMessages = document.getElementById('chatbotMessages');
         chatbotMessages.appendChild(messageDiv);
@@ -159,16 +168,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUI();
 });
-
-
-
-
-
-
-
-
-
-
 
 
 

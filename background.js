@@ -34,3 +34,6 @@ chrome.webNavigation.onCompleted.addListener(
     { url: [{ hostContains: 'app.ai4chat.co' }] }
 );
 
+
+
+
