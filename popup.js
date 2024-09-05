@@ -93,6 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    let lastResponse = '';  // Track the last response
+
     async function sendMessageToChatbot(messageText) {
         try {
             const sessionToken = await getSessionTokenFromStorage();
@@ -106,7 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const aiengine = 'GPT 4o Mini';
             const conversation = [{ role: 'user', content: messageText }];
 
-            // New parameters
             const timezoneOffset = new Date().getTimezoneOffset();
             const selectedLanguage = 'English';
             const selectedTone = 'Default';
@@ -132,12 +133,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                 credentials: 'include'
             });
 
-            const data = await response.json();
-            if (response.ok) {
-                displayMessage('assistant', data.response);
-            } else {
-                console.error('Error from server:', data.error);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error from server:', errorData.error);
+                return;  // Stop execution if the response is not ok
             }
+
+            // Parse response safely
+            const data = await response.text();
+
+            // Create a temporary element to parse HTML content
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+
+            // Extract all text content and replace newline characters with spaces
+            let textContent = '';
+            const allElements = doc.querySelectorAll('*'); // Select all elements
+            allElements.forEach(el => {
+                if (el.textContent.trim()) {
+                    textContent += el.textContent.trim() + ' '; // Replace newlines with spaces
+                }
+            });
+
+            // Clean up the text content
+            textContent = textContent.replace(/\s{2,}/g, ' ').trim(); // Replace multiple spaces with a single space
+
+            // Remove duplicated responses
+            if (textContent === lastResponse) {
+                console.log('Duplicate response detected, skipping display.');
+                return;
+            }
+
+            lastResponse = textContent;  // Update the last response
+            displayMessage('assistant', textContent || 'No content');
+
         } catch (error) {
             console.error('Error sending message to chatbot:', error);
         }
@@ -182,5 +211,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUI();
 });
-
 
