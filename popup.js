@@ -9,6 +9,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.close();
     });
 
+    document.getElementById("caretIcon").addEventListener("click", function () {
+        const caretDropdown = document.getElementById("caretDropdown");
+        caretDropdown.style.display = caretDropdown.style.display === "block" ? "none" : "block";
+      });
+      
+      // Close dropdown if clicked outside
+      window.addEventListener("click", function (event) {
+        if (!event.target.matches('#caretIcon')) {
+          document.getElementById("caretDropdown").style.display = "none";
+        }
+      });
+      
+
     // Options toggle logic
     const ellipsisButton = document.getElementById('ellipsisButton');
     const optionsBox = document.getElementById('optionsBox');

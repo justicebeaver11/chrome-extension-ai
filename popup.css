@@ -1,3 +1,50 @@
+#caretDropdown {
+    display: none;
+    position: absolute;
+    background-color: #17182b;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    top: calc(100% + 5px);
+    left: 0;
+    min-width: 180px;
+    padding: 5px 0;
+    width: auto;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #3996fb;
+  }
+  
+  #caretDropdown a {
+    color: #ffffff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: #17182b;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #caretDropdown a:hover {
+    background-color: #e0e0e5;
+  }
+  
+  /* Scrollbar styles for the dropdown */
+  #caretDropdown::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  #caretDropdown::-webkit-scrollbar-thumb {
+    background-color: #3996fb;
+    border-radius: 2px;
+  }
+  
+  #caretDropdown::-webkit-scrollbar-track {
+    background-color: #000319;
+  }
+  
+
+
 body {
     font-family: Arial, sans-serif;
     background-color: #eaeaea;
@@ -367,6 +414,21 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
 }
+
+#advancedContainer {
+    display: inline-flex;
+    align-items: center;
+    width: 45px; 
+    height: 20px; 
+    border: 1px solid #3996fb; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    margin-left: 15px; 
+  }
+
+  #caretIcon {
+    margin-left: 4px; 
+  }
 
 .icon-button {
     background-color: transparent;
