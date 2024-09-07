@@ -273,8 +273,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       const conversation = [{ role: "user", content: messageText }];
 
       const timezoneOffset = new Date().getTimezoneOffset();
-      const selectedLanguage = "English";
-      const selectedTone = "Default";
+      const selectedLanguage = await new Promise((resolve) => {
+        chrome.storage.local.get(["selectedLang"], (result) => {
+            resolve(result.selectedLang || 'english'); 
+        });
+    });
+     // const selectedTone = "Default";
+     const selectTone = await new Promise((resolve) => {
+        chrome.storage.local.get(["selectedTone"], (result) => {
+          resolve(result.selectTone || 'default');
+     });
+     });
       const wordCount = "Default";
       const googleSearchStatus = false;
 
@@ -293,7 +302,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           conversation,
           timezoneOffset,
           language: selectedLanguage,
-          tone: selectedTone,
+          tone: selectTone,
           wordcount: wordCount,
           googleSearchStatus,
         }),
