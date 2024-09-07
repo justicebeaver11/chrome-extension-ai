@@ -751,9 +751,29 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
-#volumeUp {
-  margin-left: 110px;
-}
+.volume-up-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .volume-up-text {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  #volumeUp {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
 .word-count-button {
   display: flex;
@@ -774,14 +794,34 @@ input:checked + .slider:before {
 
 #sliderAdjust {
   position: absolute;
-  right: 20px;
+  right: 25px;
   top: 50%;
   transform: translateY(-50%);
 }
 
-#langChange {
-  margin-left: 80px;
-}
+.lang-change-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .lang-change-text {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  #langChange {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
 #wordCountPopup {
   background-color: #17182b;
