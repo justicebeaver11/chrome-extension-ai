@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   langOptions.forEach((option) => {
     option.addEventListener("click", () => {
-      const selectedLang = option.dataset.tone;
+      const selectedLang = option.dataset.lang;
       const langText = langButton.querySelector("span.lang-text");
       langText.textContent = `Language: ${option.textContent}`;
       langPopup.classList.add("hidden");
@@ -278,16 +278,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             resolve(result.selectedLang || 'english'); 
         });
     });
-     // const selectedTone = "Default";
-     const selectTone = await new Promise((resolve) => {
+
+     const selectedTone = await new Promise((resolve) => {
         chrome.storage.local.get(["selectedTone"], (result) => {
-          resolve(result.selectTone || 'default');
+          resolve(result.selectedTone || 'default');
      });
      });
       const wordCount = "Default";
       const googleSearchStatus = false;
 
-      // Display Loading... message
+    
       displayLoadingMessage();
 
       const response = await fetch("https://app.ai4chat.co/chatgpt", {
@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           conversation,
           timezoneOffset,
           language: selectedLanguage,
-          tone: selectTone,
+          tone: selectedTone,
           wordcount: wordCount,
           googleSearchStatus,
         }),
