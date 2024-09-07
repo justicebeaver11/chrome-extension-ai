@@ -42,9 +42,18 @@
               <i class="fas fa-caret-down" id="caretIcon"></i>
             </button>
             <div id="caretDropdown" class="dropdown-content">
-              <a href="#">Language</a>
-              <a href="#">Word Count</a>
-              <a href="#">Tone</a>
+              <a href="#" id="langButton"
+                ><span class="lang-text"> Language: English </span>
+                <i class="fa-solid fa-chevron-right" id="langChange"></i
+              ></a>
+              <a href="#" id="wordCountButton" class="word-count-button"
+                ><span class="word-count-text">Word Count: Default</span>
+                <i class="fa-solid fa-sliders" id="sliderAdjust"></i
+              ></a>
+              <a href="#" id="toneButton"
+                ><span class="tone-text"> Tone: Default</span>
+                <i class="fas fa-volume-up" id="volumeUp"></i
+              ></a>
             </div>
           </div>
         </div>
@@ -170,10 +179,8 @@
           </div>
         </div>
       </div>
-      
-      <div id="chatbotMessages" class="chatbot-messages">
-        </div>
-        
+
+      <div id="chatbotMessages" class="chatbot-messages"></div>
 
       <div id="optionsBox" class="hidden">
         <button id="closeOptionsButton">&times;</button>
@@ -189,7 +196,7 @@
         <div class="option">
           <i class="fa-solid fa-pencil"></i>Handwriting Notes
         </div>
-        <div class="option" >
+        <div class="option">
           <i class="fa-solid fa-calculator"></i>Math Notes
         </div>
         <div class="option"><i class="fa-solid fa-user"></i>AI Humanizer</div>
@@ -202,12 +209,52 @@
         </div>
       </div>
 
+      <div id="tonePopup" class="hidden">
+        <button id="closeTonePopup">&times;</button>
+        <h2>Select Tone</h2>
+        <div class="tone-option" data-tone="default">Default</div>
+        <div class="tone-option" data-tone="formal">Formal</div>
+        <div class="tone-option" data-tone="informal">Informal</div>
+        <div class="tone-option" data-tone="friendly">Friendly</div>
+        <div class="tone-option" data-tone="professional">Professional</div>
+      </div>
+
+      <div id="langPopup" class="hidden">
+        <button id="closeLangPopup">&times;</button>
+        <h2>Select Preferred Language</h2>
+        <div class="lang-option" data-tone="english">English</div>
+        <div class="lang-option" data-tone="french">French</div>
+        <div class="lang-option" data-tone="german">German</div>
+        <div class="lang-option" data-tone="italian">Italian</div>
+        <div class="lang-option" data-tone="portuguese">Portuguese</div>
+        <div class="lang-option" data-tone="dutch">Dutch</div>
+        <div class="lang-option" data-tone="russian">Russian</div>
+        <div class="lang-option" data-tone="chinese">Chinese</div>
+        <div class="lang-option" data-tone="japanese">Japanese</div>
+        <div class="lang-option" data-tone="korean">Korean</div>
+        <div class="lang-option" data-tone="arabic">Arabic</div>
+        <div class="lang-option" data-tone="hindi">Hindi</div>
+      </div>
+
+      <div id="wordCountPopup" class="hidden">
+        <button id="closeWordCountPopup">&times;</button>
+        <h2>Set Word Count</h2>
+        <div class="slider-container">
+          <input
+            type="range"
+            id="wordCountSlider"
+            min="0"
+            max="10"
+            step="1"
+            value="0"
+          />
+          <div id="sliderTooltip" class="slider-tooltip">Default</div>
+        </div>
+      </div>
+
       <div id="chatInputArea">
         <button id="bookmarkButton"><i class="fas fa-bookmark"></i></button>
-        <textarea
-          id="chatbotInput"
-          placeholder="Type your message"
-        ></textarea>
+        <textarea id="chatbotInput" placeholder="Type your message"></textarea>
         <button id="ellipsisButton">
           <i class="fa fa-ellipsis-h"></i>
         </button>
