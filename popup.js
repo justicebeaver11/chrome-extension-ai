@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     wordCountPopup.classList.add("show-tooltip");
 
     const sliderWidth = wordCountSlider.offsetWidth;
-    const thumbPosition = (value / 10) * sliderWidth;
+    const thumbPosition = (value / (wordCountValues.length - 1)) * sliderWidth;
     sliderTooltip.style.left = `${thumbPosition}px`;
   });
 
@@ -97,10 +97,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedValue = wordCountValues[value];
 
     wordCountText.textContent = `Word Count: ${selectedValue}`;
+    chrome.storage.local.set({ selectedWordCount: selectedValue });
 
     wordCountPopup.classList.remove("show-tooltip");
     wordCountPopup.classList.add("hidden");
   });
+
+  
+
+  const storedWordCount = await new Promise((resolve) => {
+    chrome.storage.local.get(["selectedWordCount"], (result) => {
+      resolve(result.selectedWordCount || "Default");
+    });
+  });
+
+  const initialIndex = wordCountValues.indexOf(storedWordCount);
+wordCountSlider.value = initialIndex !== -1 ? initialIndex : 0;
+wordCountText.textContent = `Word Count: ${wordCountValues[initialIndex !== -1 ? initialIndex : 0]}`;
+sliderTooltip.textContent = wordCountText.textContent;
+  
 
   document.getElementById("closeChatButton").addEventListener("click", () => {
     window.close();
@@ -284,7 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           resolve(result.selectedTone || 'default');
      });
      });
-      const wordCount = "Default";
+    
       const googleSearchStatus = false;
 
     
@@ -303,7 +318,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           timezoneOffset,
           language: selectedLanguage,
           tone: selectedTone,
-          wordcount: wordCount,
+          wordcount: storedWordCount,
           googleSearchStatus,
         }),
         credentials: "include",
