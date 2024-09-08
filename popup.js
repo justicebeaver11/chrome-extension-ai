@@ -19,13 +19,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   langOptions.forEach((option) => {
     option.addEventListener("click", () => {
-      const selectedLang = option.dataset.lang;
+      const selectedLang = option.dataset.lang || "english";
       const langText = langButton.querySelector("span.lang-text");
       langText.textContent = `Language: ${option.textContent}`;
       langPopup.classList.add("hidden");
-      chrome.storage.local.set({ selectedLang });
+      chrome.storage.local.set({ selectedLang }, () => {
+        console.log(`Language updated: ${selectedLang}`);
+      });
     });
   });
+
+
+  const loadStoredLang = async () => {
+    const storedLang = await new Promise((resolve) => {
+      chrome.storage.local.get(["selectedLang"], (result) => {
+        resolve(result.selectedLang || "english"); // Default to English if not set
+      });
+    });
+
+    const langText = langButton.querySelector("span.lang-text");
+    langText.textContent = `Language: ${storedLang}`;
+    console.log("Loaded stored language:", storedLang);
+  };
+
+  // Call to load stored language on popup load
+  loadStoredLang();
+
+  
 
   const toneButton = document.getElementById("toneButton");
   const tonePopup = document.getElementById("tonePopup");
@@ -46,7 +66,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const toneText = toneButton.querySelector("span.tone-text");
       toneText.textContent = `Tone: ${option.textContent}`;
       tonePopup.classList.add("hidden");
-      chrome.storage.local.set({ selectedTone });
+      chrome.storage.local.set({ selectedTone }, () => {
+        console.log(`Tone updated: ${selectedTone}`);
+      });
     });
   });
 
@@ -97,25 +119,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedValue = wordCountValues[value];
 
     wordCountText.textContent = `Word Count: ${selectedValue}`;
-    chrome.storage.local.set({ selectedWordCount: selectedValue });
+   // chrome.storage.local.set({ selectedWordCount: selectedValue });
+   chrome.storage.local.set({ selectedWordCount: selectedValue }, () => {
+    console.log("Word count updated:", selectedValue);
+    
+  });
+  
 
     wordCountPopup.classList.remove("show-tooltip");
     wordCountPopup.classList.add("hidden");
   });
 
   
-
+  const loadStoredWordCount = async () => {
   const storedWordCount = await new Promise((resolve) => {
     chrome.storage.local.get(["selectedWordCount"], (result) => {
       resolve(result.selectedWordCount || "Default");
     });
   });
 
+
+
   const initialIndex = wordCountValues.indexOf(storedWordCount);
 wordCountSlider.value = initialIndex !== -1 ? initialIndex : 0;
 wordCountText.textContent = `Word Count: ${wordCountValues[initialIndex !== -1 ? initialIndex : 0]}`;
 sliderTooltip.textContent = wordCountText.textContent;
-  
+  };
+
+  loadStoredWordCount();
+
+
+
+
 
   document.getElementById("closeChatButton").addEventListener("click", () => {
     window.close();
@@ -132,6 +167,26 @@ sliderTooltip.textContent = wordCountText.textContent;
     if (!event.target.matches("#caretIcon")) {
       document.getElementById("caretDropdown").style.display = "none";
     }
+  });
+
+  const chatbotMessages = document.getElementById("chatbotMessages");
+  
+
+  function clearChat() {
+    chatbotMessages.innerHTML = ''; 
+  }
+
+  // Function to reset the chat interface
+  function resetChatInterface() {
+    clearChat(); 
+    
+  }
+
+  // Event listener for "openNewTabButton" to start a new chat
+  const openNewTabButton = document.getElementById("openNewTabButton");
+  openNewTabButton.addEventListener("click", () => {
+    resetChatInterface(); 
+    
   });
 
   // Options toggle logic
@@ -192,13 +247,36 @@ sliderTooltip.textContent = wordCountText.textContent;
     }
   });
 
-  // Auto-resize the input field based on text input
-  document
-    .getElementById("chatbotInput")
-    .addEventListener("input", function () {
-      this.style.height = "auto";
-      this.style.height = this.scrollHeight + "px";
-    });
+  
+
+  // Adjust text area height dynamically when typing
+document
+.getElementById("chatbotInput")
+.addEventListener("input", function () {
+  this.style.height = "auto";
+  this.style.height = this.scrollHeight + "px";
+});
+
+// Send message and reset input and height
+document.getElementById("sendButton").addEventListener("click", () => {
+const chatbotInput = document.getElementById("chatbotInput");
+const messageText = chatbotInput.value.trim();
+
+if (messageText) {
+    // Display the message in the chat box
+    displayMessage("user", messageText);
+
+    // Send the message to chatbot (this function needs to be defined)
+    sendMessageToChatbot(messageText);
+    
+    // Clear the text input
+    chatbotInput.value = "";
+    
+    // Reset the text area height to its default value
+    chatbotInput.style.height = "30px";  // This should match the initial height of your text area
+}
+});
+
 
   async function getSessionTokenFromStorage() {
     return new Promise((resolve) => {
@@ -288,6 +366,7 @@ sliderTooltip.textContent = wordCountText.textContent;
       const conversation = [{ role: "user", content: messageText }];
 
       const timezoneOffset = new Date().getTimezoneOffset();
+
       const selectedLanguage = await new Promise((resolve) => {
         chrome.storage.local.get(["selectedLang"], (result) => {
             resolve(result.selectedLang || 'english'); 
@@ -299,6 +378,14 @@ sliderTooltip.textContent = wordCountText.textContent;
           resolve(result.selectedTone || 'default');
      });
      });
+
+
+     const selectedWordCount = await new Promise((resolve) => {
+      chrome.storage.local.get(["selectedWordCount"], (result) => {
+        resolve(result.selectedWordCount || 'Default');
+      });
+    });
+     
     
       const googleSearchStatus = false;
 
@@ -318,7 +405,7 @@ sliderTooltip.textContent = wordCountText.textContent;
           timezoneOffset,
           language: selectedLanguage,
           tone: selectedTone,
-          wordcount: storedWordCount,
+          wordcount: selectedWordCount,
           googleSearchStatus,
         }),
         credentials: "include",
@@ -386,15 +473,7 @@ sliderTooltip.textContent = wordCountText.textContent;
     }
   }
 
-  document.getElementById("sendButton").addEventListener("click", () => {
-    const chatbotInput = document.getElementById("chatbotInput");
-    const messageText = chatbotInput.value.trim();
-    if (messageText) {
-      displayMessage("user", messageText);
-      sendMessageToChatbot(messageText);
-      chatbotInput.value = "";
-    }
-  });
+ 
 
   function handleSignIn() {
     const loginButton = document.getElementById("loginButton");

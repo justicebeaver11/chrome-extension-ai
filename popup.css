@@ -510,6 +510,7 @@ input:checked + .slider:before {
   margin-right: 5px;
   margin-top: 2px;
   margin-bottom: 2px;
+  transition: height 0.2s ease;
 }
 
 #bookmarkButton {
