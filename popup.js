@@ -148,11 +148,7 @@ sliderTooltip.textContent = wordCountText.textContent;
 
   loadStoredWordCount();
 
-
-
-
-
-  document.getElementById("closeChatButton").addEventListener("click", () => {
+document.getElementById("closeChatButton").addEventListener("click", () => {
     window.close();
   });
 
@@ -429,12 +425,101 @@ if (messageText) {
       displayMessage("assistant", formattedResponse || "No content");
 
       // Remove Loading... message
+      updateCreditBalance();
       removeLoadingMessage();
     } catch (error) {
       console.error("Error sending message to chatbot:", error);
       removeLoadingMessage();
     }
   }
+
+  function updateCreditBalance() {
+    const creditBalanceElement = document.getElementById("creditbalance");
+    const generationCostElement = document.getElementById("initialCreditBalance");
+
+    if (creditBalanceElement && generationCostElement) {
+      let currentBalance = parseInt(creditBalanceElement.innerHTML, 10);
+      let generationCost = parseInt(generationCostElement.innerHTML, 10);
+
+      // Subtract the generation cost from the current balance
+      if (currentBalance >= generationCost) {
+        currentBalance -= generationCost;
+        creditBalanceElement.innerHTML = currentBalance;
+
+        if (currentBalance === 0) {
+          showAlert2(); // Show alert when balance reaches 0
+        }
+      } else {
+        console.log("Not enough credits!");
+      }
+    }
+  }
+
+  // function fetchCreditBalance() {
+  //   const url = "https://app.ai4chat.co/chat/1c4e0b81-329a-4640-b399-2c6ca1901830"; // Adjust this to the correct endpoint
+  
+  //   fetch(url, {
+  //     method: "GET",
+  //     credentials: "include", // Ensures cookies are sent for authenticated requests
+  //   })
+  //     .then((response) => {
+  //       // Ensure the response is JSON
+  //       const contentType = response.headers.get("content-type");
+  //       if (!contentType || !contentType.includes("application/json")) {
+  //         throw new Error("Received non-JSON response");
+  //       }
+  //       return response.json(); // Parse response as JSON
+  //     })
+  //     .then((data) => {
+  //       console.log("Received data:", data); // Log the full data response for debugging
+        
+  //       // Try to access the credits field, ensure it's nested correctly
+  //       if (data && data.credits !== undefined) {
+  //         const creditBalanceElement = document.getElementById("creditbalance");
+  //         creditBalanceElement.innerHTML = data.credits; // Update UI with credits
+  //         updateCreditBalance(); // Call your function to update balance display logic
+  //       } else {
+  //         throw new Error("Credits field not found in response");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching credit balance:", error);
+  
+  //       // Optional: Log the raw HTML response if JSON parsing fails
+  //       fetch(url)
+  //         .then((response) => response.text())
+  //         .then((html) => {
+  //           console.log("Received HTML response instead of JSON:", html);
+  //         })
+  //         .catch((err) => console.error("Error logging the response:", err));
+  //     });
+  // }
+  
+  // Call this function after sending the message to update the credit balance
+  // function updateCreditBalance() {
+  //   const creditBalanceElement = document.getElementById("creditbalance");
+  //   const generationCostElement = document.getElementById("initialCreditBalance");
+  
+  //   if (creditBalanceElement && generationCostElement) {
+  //     let currentBalance = parseInt(creditBalanceElement.innerHTML, 10);
+  //     let generationCost = parseInt(generationCostElement.innerHTML, 10);
+  
+  //     // Subtract the generation cost from the current balance
+  //     if (currentBalance >= generationCost) {
+  //       currentBalance -= generationCost;
+  //       creditBalanceElement.innerHTML = currentBalance;
+  
+  //       if (currentBalance === 0) {
+  //         showAlert2(); // Show alert when balance reaches 0
+  //       }
+  //     } else {
+  //       console.log("Not enough credits!");
+  //     }
+  //   }
+  // }
+  
+  // Call the fetchCreditBalance() whenever you need to update the balance
+  //fetchCreditBalance();
 
   function displayMessage(role, content) {
     const messageDiv = document.createElement("div");
