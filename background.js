@@ -34,6 +34,33 @@ chrome.webNavigation.onCompleted.addListener(
     { url: [{ hostContains: 'app.ai4chat.co' }] }
 );
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'updateCredits') {
+        const updatedCredits = message.credits;
+
+        // Store the updated credits in chrome storage
+        chrome.storage.local.set({ credits: updatedCredits }, () => {
+            console.log('Credits updated in storage:', updatedCredits);
+
+        
+            chrome.runtime.sendMessage({ action: 'creditsUpdated', credits: updatedCredits });
+        });
+    }
+});
+
+
+setInterval(() => {
+    chrome.storage.local.get('credits', (result) => {
+        if (result.credits) {
+            console.log('Credits currently in storage:', result.credits);
+        }
+    });
+}, 60000); 
+
+
+
+
+
 
 
 

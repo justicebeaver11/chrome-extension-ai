@@ -659,6 +659,21 @@ input:checked + .slider:before {
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+#tonePopup::-webkit-scrollbar {
+  width: 4px; 
+}
+
+#tonePopup::-webkit-scrollbar-thumb {
+  background-color: #3996fb; 
+  border-radius: 4px; 
+}
+
+#tonePopup::-webkit-scrollbar-track {
+  background: #17182b; 
 }
 
 #tonePopup h2 {
@@ -706,7 +721,7 @@ input:checked + .slider:before {
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
 }
 

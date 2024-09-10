@@ -3,7 +3,133 @@ document.addEventListener("DOMContentLoaded", async () => {
   closeButton.addEventListener("click", () => {
     window.close();
   });
+  
+chrome.storage.local.get('credits', function (result) {
+  const creditBalanceElement = document.getElementById('creditbalance');
+  if (result.credits) {
+      creditBalanceElement.textContent = result.credits;
+  } else {
+      console.log('No credits found in storage');
+  }
+});
 
+// Listen for any updates from the background script
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'creditsUpdated') {
+      const creditBalanceElement = document.getElementById('creditbalance');
+      creditBalanceElement.textContent = message.credits;
+  }
+});
+
+
+const modelCredits = {
+  "OpenChat 3.5 8B": 1,
+    "Mistral 7B Instruct": 1,
+    "Mistral 7B Instruct v0.2": 1,
+    "Mistral 7B Instruct v0.3": 1,
+    "Phi-3 Mini Instruct": 1,
+    "Qwen 1.5 4B Chat": 1,
+    "Llama 3 Soliloquy 8B v2": 1,
+    "Gemma 7B": 1,
+    "Gemma 2 9B": 1,
+    "Gemma 7B (Fast)": 1,
+    "OpenChat 3.6 8B": 1,
+    "Llama v3 8B": 1,
+    "Llama v3 8B (Fast)": 1,
+    "Llama v3.1 8B": 1,
+    "Llama v3.1 8B (Fast)": 1,
+    "Llama 3.1 Sonar 8B Online": 55,
+    "Qwen 2 7B": 1,
+    "Phi-3.5 Mini 128K Instruct": 1,
+    "Hermes 2 Pro - Llama-3 8B": 2,
+    "Mistral 7B Instruct v0.1": 2,
+    "Hermes 2 - Mistral 7B DPO": 2,
+    "Llama3 Sonar 8B Online": 55,
+    "DeepSeek-V2 Chat": 2,
+    "Deepseek Coder": 2,
+    "OLMo 7B Instruct": 2,
+    "Qwen 1.5 7B Chat": 2,
+    "Llama 3 Lumimaid 8B": 2,
+    "WizardLM-2 7B": 2,
+    "Chronos Hermes 13B v2": 2,
+    "MythoMax 13B": 2,
+    "Capybara 7B": 2,
+    "OpenHermes 2.5 Mistral 7B": 2,
+    "Mistral OpenOrca 7B": 2,
+    "Hermes 13B": 2,
+    "Llama v2 13B": 2,
+    "FireLLaVA 13B": 3,
+    "Claude 3 Haiku": 3,
+    "Yi Large Turbo": 2,
+    "Hermes 2 Mixtral 8x7B DPO": 3,
+    "Mixtral 8x7B Instruct": 3,
+    "Mixtral 8x7B Instruct (Fast)": 3,
+    "StripedHyena Nous 7B": 3,
+    "Yi 6B": 3,
+    "Gemma 2 27B": 3,
+    "MythoMist 7B": 4,
+    "Mistral Nemo": 4,
+    "Codestral Mamba": 4,
+    "Hermes 3 70B Instruct": 4,
+    "Jamba 1.5 Mini": 4,
+    "Command R": 5,
+    "Dolphin 2.6 Mixtral 8x7B": 5,
+    "Hermes 2 Mixtral 8x7B SFT": 6,
+    "lzlv 70B": 6,
+    "GPT 4o Mini": 6,
+    "Mixtral 8x22B Instruct": 7,
+    "WizardLM-2 8x22B": 7,
+    "Llama v2 70B": 7,
+    "Jamba Instruct": 7,
+    "Claude Instant v1": 8,
+    "Yi 34B": 8,
+    "Dolphin Llama 3 70B": 8,
+    "CodeLlama 34B": 8,
+    "Phind CodeLlama 34B v2": 8,
+    "Llama v3 70B": 8,
+    "Llama v3 70B (Fast)": 8,
+    "Llama v3.1 70B": 8,
+    "Llama v3.1 70B (Fast)": 8,
+    "Qwen 2 72B": 8,
+    "Yi 1.5 34B": 8,
+    "Phi-3 Medium Instruct": 10,
+    "Llama3 Sonar 70B Online": 60,
+    "Llama 3.1 Sonar 70B Online": 60,
+    "Llama 3.1 Sonar 405B Online": 100,
+    "LLaVA v1.6 34B": 10,
+    "Qwen 1.5 72B": 10,
+    "DBRX 132B Instruct": 10,
+    "Command": 10,
+    "Capybara 34B": 10,
+    "Gemini 1.5 Flash": 10,
+    "Dolphin 2.9.2 Mixtral 8x22B": 10,
+    "Hermes 2 Theta 8B": 12,
+    "Noromaid 20B": 15,
+    "ChatGPT (GPT 3.5)": 15,
+    "Gemini 1.0 Pro": 15,
+    "Qwen 1.5 110B Chat": 17,
+    "Hermes 3 405B Instruct": 25,
+    "Command R+": 30,
+    "Claude 3 Sonnet": 30,
+    "Llama v3.1 405B": 30,
+    "Llama v3.1 405B (Fast)": 30,
+    "Yi Large": 30,
+    "Llama 3 Lumimaid 70B": 35,
+    "NVIDIA Nemotron-4 340B Instruct": 45,
+    "Magnum 72B": 45,
+    "Dolphin 2.6 Mixtral 8x7B": 50,
+    "Claude v2.0": 80,
+    "Claude v2.1": 80,
+    "CodeLlama 70B Instruct": 80,
+    "Noromaid Mixtral 8x7B Instruct": 80,
+    "Jamba 1.5 Large": 80,
+    "Midnight Rose 70B": 90,
+    "Gemini 1.5 Pro": 100,
+    "Claude 3 Opus": 750,
+    "Claude 3.5 Sonnet": 150,
+    "GPT 4o": 150
+    
+}
   
 
 
@@ -228,15 +354,21 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
 
       // Update the current model based on the selection
       currentModel = modelName;
+      chrome.storage.local.set({ selectedModel: currentModel });
+      updateInitialCreditBalance(currentModel);
 
-      // Optionally, close the dropdown after selection
-    //  modelDropdown.style.display = 'none';
     }
   });
 
   chrome.storage.local.get(["selectedModel"], (result) => {
     if (result.selectedModel) {
+      currentModel = result.selectedModel;
       selectedModelSpan.textContent = result.selectedModel;
+      updateInitialCreditBalance(currentModel);
+    }  else {
+      chrome.storage.local.set({ selectedModel: currentModel });
+    selectedModelSpan.textContent = currentModel;
+    updateInitialCreditBalance(currentModel); 
     }
   });
 
@@ -454,6 +586,16 @@ if (messageText) {
     }
   }
 
+
+  function updateInitialCreditBalance(modelName) {
+    const creditValue = modelCredits[modelName];
+    if (creditValue !== undefined) {
+      document.getElementById('initialCreditBalance').textContent = creditValue;
+    } else {
+      console.error('Model not found');
+    }
+  }
+
   function updateCreditBalance() {
     const creditBalanceElement = document.getElementById("creditbalance");
     const generationCostElement = document.getElementById("initialCreditBalance");
@@ -475,74 +617,8 @@ if (messageText) {
       }
     }
   }
-
-  // function fetchCreditBalance() {
-  //   const url = "https://app.ai4chat.co/chat/1c4e0b81-329a-4640-b399-2c6ca1901830"; // Adjust this to the correct endpoint
   
-  //   fetch(url, {
-  //     method: "GET",
-  //     credentials: "include", // Ensures cookies are sent for authenticated requests
-  //   })
-  //     .then((response) => {
-  //       // Ensure the response is JSON
-  //       const contentType = response.headers.get("content-type");
-  //       if (!contentType || !contentType.includes("application/json")) {
-  //         throw new Error("Received non-JSON response");
-  //       }
-  //       return response.json(); // Parse response as JSON
-  //     })
-  //     .then((data) => {
-  //       console.log("Received data:", data); // Log the full data response for debugging
-        
-  //       // Try to access the credits field, ensure it's nested correctly
-  //       if (data && data.credits !== undefined) {
-  //         const creditBalanceElement = document.getElementById("creditbalance");
-  //         creditBalanceElement.innerHTML = data.credits; // Update UI with credits
-  //         updateCreditBalance(); // Call your function to update balance display logic
-  //       } else {
-  //         throw new Error("Credits field not found in response");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching credit balance:", error);
-  
-  //       // Optional: Log the raw HTML response if JSON parsing fails
-  //       fetch(url)
-  //         .then((response) => response.text())
-  //         .then((html) => {
-  //           console.log("Received HTML response instead of JSON:", html);
-  //         })
-  //         .catch((err) => console.error("Error logging the response:", err));
-  //     });
-  // }
-  
-  // Call this function after sending the message to update the credit balance
-  // function updateCreditBalance() {
-  //   const creditBalanceElement = document.getElementById("creditbalance");
-  //   const generationCostElement = document.getElementById("initialCreditBalance");
-  
-  //   if (creditBalanceElement && generationCostElement) {
-  //     let currentBalance = parseInt(creditBalanceElement.innerHTML, 10);
-  //     let generationCost = parseInt(generationCostElement.innerHTML, 10);
-  
-  //     // Subtract the generation cost from the current balance
-  //     if (currentBalance >= generationCost) {
-  //       currentBalance -= generationCost;
-  //       creditBalanceElement.innerHTML = currentBalance;
-  
-  //       if (currentBalance === 0) {
-  //         showAlert2(); // Show alert when balance reaches 0
-  //       }
-  //     } else {
-  //       console.log("Not enough credits!");
-  //     }
-  //   }
-  // }
-  
-  // Call the fetchCreditBalance() whenever you need to update the balance
-  //fetchCreditBalance();
-
-  function displayMessage(role, content) {
+function displayMessage(role, content) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `chat-message ${role}`;
     messageDiv.innerHTML = content;

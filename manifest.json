@@ -20,6 +20,12 @@
     "https://*/*"
     
   ],
+  "content_scripts": [
+    {
+      "matches": ["https://app.ai4chat.co/*"],
+      "js": ["content.js"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },
