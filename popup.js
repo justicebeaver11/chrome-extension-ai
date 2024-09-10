@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
+  
+
+
+
   const langButton = document.getElementById("langButton");
   const langPopup = document.getElementById("langPopup");
   const closeLangPopupButton = document.getElementById("closeLangPopup");
@@ -212,6 +216,23 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
   const modelDropdown = document.querySelector("#modelDropdown");
   const modelButton = document.querySelector("#modelButton");
   const selectedModelSpan = document.getElementById("selectedModel");
+  let currentModel = 'GPT 4o Mini';
+
+  modelDropdown.addEventListener('click', (event) => {
+    if (event.target.tagName === 'A') {
+      const modelName = event.target.getAttribute('data-model');
+      const modelText = event.target.innerText;
+      
+      // Update the displayed selected model
+      selectedModelSpan.innerText = modelText;
+
+      // Update the current model based on the selection
+      currentModel = modelName;
+
+      // Optionally, close the dropdown after selection
+    //  modelDropdown.style.display = 'none';
+    }
+  });
 
   chrome.storage.local.get(["selectedModel"], (result) => {
     if (result.selectedModel) {
@@ -358,7 +379,7 @@ if (messageText) {
         return;
       }
 
-      const aiengine = "GPT 4o Mini";
+      const aiengine = currentModel;
       const conversation = [{ role: "user", content: messageText }];
 
       const timezoneOffset = new Date().getTimezoneOffset();
