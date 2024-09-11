@@ -435,20 +435,97 @@ if (messageText) {
     });
   }
 
+  // const chatWithChatbotButton = document.getElementById("chatWithChatbot");
+  // const chatWithWebpageButton = document.getElementById("chatWithWebpage");
+
+  // chatWithChatbotButton.addEventListener("click", () => {
+  //   document.getElementById("selectionContainer").style.display = "none";
+  //   document.getElementById("chatbotContainer").style.display = "flex";
+  // });
+
+  // chatWithWebpageButton.addEventListener("click", () => {
+  //   document.getElementById("selectionContainer").style.display = "none";
+  //   document.getElementById("webpageContainer").style.display = "flex";
+  // });
+
+  // async function updateUI() {
+  //   const sessionToken = await getSessionTokenFromStorage();
+  //   const contentDiv = document.getElementById("content");
+  //   const chatbotContainer = document.getElementById("chatbotContainer");
+
+  //   if (sessionToken) {
+  //     contentDiv.style.display = "none";
+  //     chatbotContainer.style.display = "flex";
+  //     document.getElementById("selectionContainer").style.display = "flex";
+  //   } else {
+  //     contentDiv.style.display = "flex";
+  //     chatbotContainer.style.display = "none";
+  //     document.getElementById("selectionContainer").style.display = "none";
+  //     handleSignIn();
+  //   }
+  // }
   async function updateUI() {
     const sessionToken = await getSessionTokenFromStorage();
     const contentDiv = document.getElementById("content");
     const chatbotContainer = document.getElementById("chatbotContainer");
-
+  
+    // Check if user is signed in
     if (sessionToken) {
-      contentDiv.style.display = "none";
-      chatbotContainer.style.display = "flex";
+      // Check if a selection has been stored in Chrome storage
+      chrome.storage.local.get('selectedOption', (result) => {
+        if (result.selectedOption) {
+          // Hide content div and show the previously selected option
+          contentDiv.style.display = "none";
+          document.getElementById("selectionContainer").style.display = "none";
+          
+          if (result.selectedOption === "chatbot") {
+            chatbotContainer.style.display = "flex";
+          } else if (result.selectedOption === "webpage") {
+            document.getElementById("webpageContainer").style.display = "flex";
+          }
+        } else {
+          // If no option selected yet, show selectionContainer
+          contentDiv.style.display = "none";
+          chatbotContainer.style.display = "none";
+          document.getElementById("selectionContainer").style.display = "flex";
+        }
+      });
     } else {
+      // If not signed in, show sign-in screen
       contentDiv.style.display = "flex";
       chatbotContainer.style.display = "none";
-      handleSignIn();
+      document.getElementById("selectionContainer").style.display = "none";
+      handleSignIn();  // Implement your sign-in logic here
     }
   }
+  
+  // Event listeners for buttons
+  const chatWithChatbotButton = document.getElementById("chatWithChatbot");
+  const chatWithWebpageButton = document.getElementById("chatWithWebpage");
+  
+  function handleSelection(selectedOption) {
+    // Save the selected option to Chrome storage
+    chrome.storage.local.set({ selectedOption }, () => {
+      console.log(`Selected option saved: ${selectedOption}`);
+    });
+  
+    // Hide the selection container and show the appropriate UI
+    document.getElementById("selectionContainer").style.display = "none";
+    
+    if (selectedOption === "chatbot") {
+      document.getElementById("chatbotContainer").style.display = "flex";
+    } else if (selectedOption === "webpage") {
+      document.getElementById("webpageContainer").style.display = "flex";
+    }
+  }
+  
+  chatWithChatbotButton.addEventListener("click", () => {
+    handleSelection("chatbot");
+  });
+  
+  chatWithWebpageButton.addEventListener("click", () => {
+    handleSelection("webpage");
+  });
 
   async function getLatestChatId() {
     try {
@@ -641,27 +718,7 @@ function displayMessage(role, content) {
   // Display "Loading..." message
   
 
-  // function displayLoadingMessage() {
-  //   // Check if the loading message is already present
-  //   if (document.getElementById("loadingMessage")) return;
-  
-  //   // Create the loading message element
-  //   const loadingDiv = document.createElement("div");
-  //   loadingDiv.id = "loadingMessage";
-  //   loadingDiv.className = "chat-message assistant";
-  //   loadingDiv.innerHTML = "Loading...";
-  
-  //   const chatbotMessages = document.getElementById("chatbotMessages");
-  
-  //   // Immediately append the loading message to avoid delays
-  //   chatbotMessages.appendChild(loadingDiv);
-    
-  //   // Use requestAnimationFrame to ensure the browser processes the UI update before further logic
-  //   requestAnimationFrame(() => {
-  //     // Scroll to the bottom of the chat messages after the element is rendered
-  //     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-  //   });
-  // }
+ 
   function displayLoadingMessage() {
     // Check if the loading message is already present
     if (document.getElementById("loadingMessage")) return;
@@ -695,6 +752,8 @@ function displayMessage(role, content) {
       loadingDiv.remove();
     }
   }
+
+
 
  
 

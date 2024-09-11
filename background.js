@@ -63,8 +63,8 @@ function openMovablePopup() {
     chrome.windows.create({
       url: "popup.html",
       type: "popup",
-      width: 500,
-      height: 600,
+      width: 550,
+      height: 650,
       top: 100,
       left: 100
     }, (window) => {
