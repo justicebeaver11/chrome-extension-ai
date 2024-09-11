@@ -29,8 +29,15 @@
   "background": {
     "service_worker": "background.js"
   },
+   "commands": {
+    "open_movale_popup": {
+      "suggested_key": {
+        "default": "Ctrl+Space"
+      },
+      "description": "Open the extension popup"
+    }
+  },
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "icon.png",
       "48": "icon.png",

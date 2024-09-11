@@ -4,7 +4,7 @@ function updateCredits() {
     if (creditElement) {
         const remainingCredits = creditElement.textContent.trim();
         
-        
+        console.log(remainingCredits);
         chrome.runtime.sendMessage({ action: 'updateCredits', credits: remainingCredits });
     }
 }

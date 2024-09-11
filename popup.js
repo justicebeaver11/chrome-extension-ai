@@ -452,7 +452,7 @@ if (messageText) {
 
   async function getLatestChatId() {
     try {
-      const response = await fetch("https://app.ai4chat.co/chat", {
+      const response = await fetch("https://app.ai4chat.co/new-chat", {
         method: "GET",
         credentials: "include",
       });
@@ -498,6 +498,7 @@ if (messageText) {
   }
 
   async function sendMessageToChatbot(messageText) {
+    displayLoadingMessage();
     try {
       const sessionToken = await getSessionTokenFromStorage();
       if (!sessionToken) {
@@ -510,6 +511,7 @@ if (messageText) {
         console.log("Failed to retrieve chat ID.");
         return;
       }
+      
 
       const aiengine = currentModel;
       const conversation = [{ role: "user", content: messageText }];
@@ -539,7 +541,7 @@ if (messageText) {
       const googleSearchStatus = false;
 
     
-      displayLoadingMessage();
+     
 
       const response = await fetch("https://app.ai4chat.co/chatgpt", {
         method: "POST",
@@ -617,7 +619,7 @@ if (messageText) {
       }
     }
   }
-  
+
 function displayMessage(role, content) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `chat-message ${role}`;
@@ -637,15 +639,54 @@ function displayMessage(role, content) {
   }
 
   // Display "Loading..." message
+  
+
+  // function displayLoadingMessage() {
+  //   // Check if the loading message is already present
+  //   if (document.getElementById("loadingMessage")) return;
+  
+  //   // Create the loading message element
+  //   const loadingDiv = document.createElement("div");
+  //   loadingDiv.id = "loadingMessage";
+  //   loadingDiv.className = "chat-message assistant";
+  //   loadingDiv.innerHTML = "Loading...";
+  
+  //   const chatbotMessages = document.getElementById("chatbotMessages");
+  
+  //   // Immediately append the loading message to avoid delays
+  //   chatbotMessages.appendChild(loadingDiv);
+    
+  //   // Use requestAnimationFrame to ensure the browser processes the UI update before further logic
+  //   requestAnimationFrame(() => {
+  //     // Scroll to the bottom of the chat messages after the element is rendered
+  //     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  //   });
+  // }
   function displayLoadingMessage() {
+    // Check if the loading message is already present
+    if (document.getElementById("loadingMessage")) return;
+  
+    // Create the loading message element
     const loadingDiv = document.createElement("div");
     loadingDiv.id = "loadingMessage";
     loadingDiv.className = "chat-message assistant";
     loadingDiv.innerHTML = "Loading...";
+  
     const chatbotMessages = document.getElementById("chatbotMessages");
-    chatbotMessages.appendChild(loadingDiv);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  
+    // Use setTimeout to add a 1-second delay
+    setTimeout(() => {
+      // Append the loading message after the delay
+      chatbotMessages.appendChild(loadingDiv);
+  
+      // Use requestAnimationFrame to ensure the browser processes the UI update before further logic
+      requestAnimationFrame(() => {
+        // Scroll to the bottom of the chat messages after the element is rendered
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      });
+    }, 2000); // 1000 milliseconds = 1 second
   }
+  
 
   // Remove "Loading..." message
   function removeLoadingMessage() {

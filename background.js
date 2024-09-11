@@ -57,6 +57,40 @@ setInterval(() => {
     });
 }, 60000); 
 
+  
+// Function to create a movable popup window
+function openMovablePopup() {
+    chrome.windows.create({
+      url: "popup.html",
+      type: "popup",
+      width: 500,
+      height: 600,
+      top: 100,
+      left: 100
+    }, (window) => {
+      // Store window position in localStorage to restore it later if needed
+      chrome.windows.onBoundsChanged.addListener(() => {
+        chrome.windows.get(window.id, (updatedWindow) => {
+          localStorage.setItem('windowTop', updatedWindow.top);
+          localStorage.setItem('windowLeft', updatedWindow.left);
+        });
+      });
+    });
+  }
+  
+  // Handle the click event on the extension icon
+  chrome.action.onClicked.addListener(() => {
+    openMovablePopup();
+  });
+  
+  // Handle keyboard shortcut (Ctrl + Space)
+  chrome.commands.onCommand.addListener((command) => {
+    if (command === "open_movable_popup") {
+      openMovablePopup();
+    }
+  });
+  
+
 
 
 
