@@ -89,10 +89,11 @@ function openMovablePopup() {
       openMovablePopup();
     }
   });
-  
 
 
-
+  // Fetch the Turndown library and include it in background.js
+// background.js
+// Function to convert HTML to Markdown by making a POST request to your backend
 
 
 

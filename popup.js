@@ -3,27 +3,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   closeButton.addEventListener("click", () => {
     window.close();
   });
-  
-chrome.storage.local.get('credits', function (result) {
-  const creditBalanceElement = document.getElementById('creditbalance');
-  if (result.credits) {
+
+  chrome.storage.local.get("credits", function (result) {
+    const creditBalanceElement = document.getElementById("creditbalance");
+    if (result.credits) {
       creditBalanceElement.textContent = result.credits;
-  } else {
-      console.log('No credits found in storage');
-  }
-});
+    } else {
+      console.log("No credits found in storage");
+    }
+  });
 
-// Listen for any updates from the background script
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === 'creditsUpdated') {
-      const creditBalanceElement = document.getElementById('creditbalance');
+  // Listen for any updates from the background script
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "creditsUpdated") {
+      const creditBalanceElement = document.getElementById("creditbalance");
       creditBalanceElement.textContent = message.credits;
-  }
-});
+    }
+  });
 
-
-const modelCredits = {
-  "OpenChat 3.5 8B": 1,
+  const modelCredits = {
+    "OpenChat 3.5 8B": 1,
     "Mistral 7B Instruct": 1,
     "Mistral 7B Instruct v0.2": 1,
     "Mistral 7B Instruct v0.3": 1,
@@ -99,7 +98,7 @@ const modelCredits = {
     "LLaVA v1.6 34B": 10,
     "Qwen 1.5 72B": 10,
     "DBRX 132B Instruct": 10,
-    "Command": 10,
+    Command: 10,
     "Capybara 34B": 10,
     "Gemini 1.5 Flash": 10,
     "Dolphin 2.9.2 Mixtral 8x22B": 10,
@@ -127,12 +126,8 @@ const modelCredits = {
     "Gemini 1.5 Pro": 100,
     "Claude 3 Opus": 750,
     "Claude 3.5 Sonnet": 150,
-    "GPT 4o": 150
-    
-}
-  
-
-
+    "GPT 4o": 150,
+  };
 
   const langButton = document.getElementById("langButton");
   const langPopup = document.getElementById("langPopup");
@@ -159,7 +154,6 @@ const modelCredits = {
     });
   });
 
-
   const loadStoredLang = async () => {
     const storedLang = await new Promise((resolve) => {
       chrome.storage.local.get(["selectedLang"], (result) => {
@@ -174,8 +168,6 @@ const modelCredits = {
 
   // Call to load stored language on popup load
   loadStoredLang();
-
-  
 
   const toneButton = document.getElementById("toneButton");
   const tonePopup = document.getElementById("tonePopup");
@@ -249,36 +241,33 @@ const modelCredits = {
     const selectedValue = wordCountValues[value];
 
     wordCountText.textContent = `Word Count: ${selectedValue}`;
-   // chrome.storage.local.set({ selectedWordCount: selectedValue });
-   chrome.storage.local.set({ selectedWordCount: selectedValue }, () => {
-    console.log("Word count updated:", selectedValue);
-    
-  });
-  
+    // chrome.storage.local.set({ selectedWordCount: selectedValue });
+    chrome.storage.local.set({ selectedWordCount: selectedValue }, () => {
+      console.log("Word count updated:", selectedValue);
+    });
 
     wordCountPopup.classList.remove("show-tooltip");
     wordCountPopup.classList.add("hidden");
   });
 
-  
   const loadStoredWordCount = async () => {
-  const storedWordCount = await new Promise((resolve) => {
-    chrome.storage.local.get(["selectedWordCount"], (result) => {
-      resolve(result.selectedWordCount || "Default");
+    const storedWordCount = await new Promise((resolve) => {
+      chrome.storage.local.get(["selectedWordCount"], (result) => {
+        resolve(result.selectedWordCount || "Default");
+      });
     });
-  });
 
-
-
-  const initialIndex = wordCountValues.indexOf(storedWordCount);
-wordCountSlider.value = initialIndex !== -1 ? initialIndex : 0;
-wordCountText.textContent = `Word Count: ${wordCountValues[initialIndex !== -1 ? initialIndex : 0]}`;
-sliderTooltip.textContent = wordCountText.textContent;
+    const initialIndex = wordCountValues.indexOf(storedWordCount);
+    wordCountSlider.value = initialIndex !== -1 ? initialIndex : 0;
+    wordCountText.textContent = `Word Count: ${
+      wordCountValues[initialIndex !== -1 ? initialIndex : 0]
+    }`;
+    sliderTooltip.textContent = wordCountText.textContent;
   };
 
   loadStoredWordCount();
 
-document.getElementById("closeChatButton").addEventListener("click", () => {
+  document.getElementById("closeChatButton").addEventListener("click", () => {
     window.close();
   });
 
@@ -296,24 +285,8 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
   });
 
   const chatbotMessages = document.getElementById("chatbotMessages");
-  
-
-  function clearChat() {
-    chatbotMessages.innerHTML = ''; 
-  }
-
-  // Function to reset the chat interface
-  function resetChatInterface() {
-    clearChat(); 
-    
-  }
 
   // Event listener for "openNewTabButton" to start a new chat
-  const openNewTabButton = document.getElementById("openNewTabButton");
-  openNewTabButton.addEventListener("click", () => {
-    resetChatInterface(); 
-    
-  });
 
   // Options toggle logic
   const ellipsisButton = document.getElementById("ellipsisButton");
@@ -342,13 +315,13 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
   const modelDropdown = document.querySelector("#modelDropdown");
   const modelButton = document.querySelector("#modelButton");
   const selectedModelSpan = document.getElementById("selectedModel");
-  let currentModel = 'GPT 4o Mini';
+  let currentModel = "GPT 4o Mini";
 
-  modelDropdown.addEventListener('click', (event) => {
-    if (event.target.tagName === 'A') {
-      const modelName = event.target.getAttribute('data-model');
+  modelDropdown.addEventListener("click", (event) => {
+    if (event.target.tagName === "A") {
+      const modelName = event.target.getAttribute("data-model");
       const modelText = event.target.innerText;
-      
+
       // Update the displayed selected model
       selectedModelSpan.innerText = modelText;
 
@@ -356,7 +329,6 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
       currentModel = modelName;
       chrome.storage.local.set({ selectedModel: currentModel });
       updateInitialCreditBalance(currentModel);
-
     }
   });
 
@@ -365,10 +337,10 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
       currentModel = result.selectedModel;
       selectedModelSpan.textContent = result.selectedModel;
       updateInitialCreditBalance(currentModel);
-    }  else {
+    } else {
       chrome.storage.local.set({ selectedModel: currentModel });
-    selectedModelSpan.textContent = currentModel;
-    updateInitialCreditBalance(currentModel); 
+      selectedModelSpan.textContent = currentModel;
+      updateInitialCreditBalance(currentModel);
     }
   });
 
@@ -396,36 +368,33 @@ document.getElementById("closeChatButton").addEventListener("click", () => {
     }
   });
 
-  
-
   // Adjust text area height dynamically when typing
-document
-.getElementById("chatbotInput")
-.addEventListener("input", function () {
-  this.style.height = "auto";
-  this.style.height = this.scrollHeight + "px";
-});
+  document
+    .getElementById("chatbotInput")
+    .addEventListener("input", function () {
+      this.style.height = "auto";
+      this.style.height = this.scrollHeight + "px";
+    });
 
-// Send message and reset input and height
-document.getElementById("sendButton").addEventListener("click", () => {
-const chatbotInput = document.getElementById("chatbotInput");
-const messageText = chatbotInput.value.trim();
+  // Send message and reset input and height
+  document.getElementById("sendButton").addEventListener("click", () => {
+    const chatbotInput = document.getElementById("chatbotInput");
+    const messageText = chatbotInput.value.trim();
 
-if (messageText) {
-    // Display the message in the chat box
-    displayMessage("user", messageText);
+    if (messageText) {
+      // Display the message in the chat box
+      displayMessage("user", messageText);
 
-    // Send the message to chatbot (this function needs to be defined)
-    sendMessageToChatbot(messageText);
-    
-    // Clear the text input
-    chatbotInput.value = "";
-    
-    // Reset the text area height to its default value
-    chatbotInput.style.height = "30px";  // This should match the initial height of your text area
-}
-});
+      // Send the message to chatbot (this function needs to be defined)
+      sendMessageToChatbot(messageText);
 
+      // Clear the text input
+      chatbotInput.value = "";
+
+      // Reset the text area height to its default value
+      chatbotInput.style.height = "30px"; // This should match the initial height of your text area
+    }
+  });
 
   async function getSessionTokenFromStorage() {
     return new Promise((resolve) => {
@@ -435,49 +404,364 @@ if (messageText) {
     });
   }
 
-  // const chatWithChatbotButton = document.getElementById("chatWithChatbot");
-  // const chatWithWebpageButton = document.getElementById("chatWithWebpage");
+  // function openChatSelectionWindow() {
+  //   // Clear the current chat interface
+  //   clearChat();
 
-  // chatWithChatbotButton.addEventListener("click", () => {
-  //   document.getElementById("selectionContainer").style.display = "none";
-  //   document.getElementById("chatbotContainer").style.display = "flex";
+  //   // Open the selection window
+  //   const selectionContainer = document.getElementById("selectionContainer");
+  //   selectionContainer.style.display = "flex";
+
+  //   // Hide the chatbot interface temporarily
+  //   const chatbotContainer = document.getElementById("chatbotContainer");
+  //   chatbotContainer.style.display = "none";
+
+  //   // Load the user's previous selection from local storage
+  //   chrome.storage.local.get(["chatSelection"], (result) => {
+  //     const previousSelection = result.chatSelection || "chatWithChatbot"; // Default is chatbot
+  //     const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+  //     const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+  //     // Highlight the previously selected option
+  //     if (previousSelection === "chatWithChatbot") {
+  //       chatWithChatbotButton1.classList.add("selected");
+  //     } else {
+  //       chatWithWebpageButton1.classList.add("selected");
+  //     }
+  //   });
+  // }
+
+  // // Listen for the "New Chat" button click
+  // const openNewTabButton = document.getElementById("openNewTabButton");
+  // openNewTabButton.addEventListener("click", () => {
+  //   openChatSelectionWindow();
   // });
 
-  // chatWithWebpageButton.addEventListener("click", () => {
-  //   document.getElementById("selectionContainer").style.display = "none";
-  //   document.getElementById("webpageContainer").style.display = "flex";
+  // // Event listeners for chat selection buttons
+  // const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+  // const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+  // chatWithChatbotButton1.addEventListener("click", () => {
+  //   chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
+  //     console.log("Selected Chat with Chatbot");
+  //   });
+  //   switchToChatbot(); // Switch to the chatbot interface
   // });
 
-  // async function updateUI() {
-  //   const sessionToken = await getSessionTokenFromStorage();
-  //   const contentDiv = document.getElementById("content");
+  // chatWithWebpageButton1.addEventListener("click", () => {
+  //   chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
+  //     console.log("Selected Chat with Webpage");
+  //   });
+  //   switchToWebpageChat(); // Switch to the webpage chat interface
+  // });
+
+  // // Function to switch to the chatbot interface
+  // function switchToChatbot() {
+  //   const selectionContainer = document.getElementById("selectionContainer");
   //   const chatbotContainer = document.getElementById("chatbotContainer");
 
-  //   if (sessionToken) {
-  //     contentDiv.style.display = "none";
-  //     chatbotContainer.style.display = "flex";
-  //     document.getElementById("selectionContainer").style.display = "flex";
-  //   } else {
-  //     contentDiv.style.display = "flex";
-  //     chatbotContainer.style.display = "none";
-  //     document.getElementById("selectionContainer").style.display = "none";
-  //     handleSignIn();
-  //   }
+  //   selectionContainer.style.display = "none"; // Hide the selection window
+  //   chatbotContainer.style.display = "flex"; // Show the chatbot interface
   // }
+
+  // // Function to switch to the webpage chat interface
+  // function switchToWebpageChat() {
+  //   const selectionContainer = document.getElementById("selectionContainer");
+  //   const webpageContainer = document.getElementById("webpageContainer");
+
+  //   selectionContainer.style.display = "none"; // Hide the selection window
+  //   webpageContainer.style.display = "flex"; // Show the webpage chat interface
+  // }
+
+  // // Function to clear the current chat messages
+  // function clearChat() {
+  //   const chatbotMessages = document.getElementById("chatbotMessages");
+  //   chatbotMessages.innerHTML = ""; // Clear the chat messages
+  // }
+
+  // // Load the user's previous selection on popup load
+  // const storedSelection = await new Promise((resolve) => {
+  //   chrome.storage.local.get(["chatSelection"], (result) => {
+  //     resolve(result.chatSelection || "chatWithChatbot");
+  //   });
+  // });
+
+  // // Automatically switch to the last used interface (chatbot or webpage chat)
+  // if (storedSelection === "chatWithChatbot") {
+  //   switchToChatbot();
+  // } else {
+  //   switchToWebpageChat();
+  // }
+
+  // Function to open the selection window
+// function openChatSelectionWindow() {
+//   const selectionContainer = document.getElementById("selectionContainer");
+//   const chatbotContainer = document.getElementById("chatbotContainer");
+
+//   if (selectionContainer && chatbotContainer) {
+//       selectionContainer.style.display = "flex";  // Show selection window
+//       chatbotContainer.style.display = "none";    // Hide chatbot initially
+//   }
+
+//   chrome.storage.local.get(["chatSelection"], (result) => {
+//       const previousSelection = result.chatSelection || "chatWithChatbot"; // Default to chatbot
+//       const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+//       const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+//       if (chatWithChatbotButton1 && chatWithWebpageButton1) {
+//           if (previousSelection === "chatWithChatbot") {
+//               chatWithChatbotButton1.classList.add("selected");
+//               chatWithWebpageButton1.classList.remove("selected");
+//           } else {
+//               chatWithWebpageButton1.classList.add("selected");
+//               chatWithChatbotButton1.classList.remove("selected");
+//           }
+//       }
+//   });
+// }
+
+// // Listen for the "New Chat" button click
+// const openNewTabButton = document.getElementById("openNewTabButton");
+// if (openNewTabButton) {
+//   openNewTabButton.addEventListener("click", () => {
+//       openChatSelectionWindow();
+//   });
+// }
+
+// // Event listeners for chat selection buttons
+// const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+// const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+// if (chatWithChatbotButton1) {
+//   chatWithChatbotButton1.addEventListener("click", () => {
+//       chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
+//           console.log("Selected Chat with Chatbot");
+//       });
+//       switchToChatbot(); // Switch to the chatbot interface
+//   });
+// }
+
+// if (chatWithWebpageButton1) {
+//   chatWithWebpageButton1.addEventListener("click", () => {
+//       chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
+//           console.log("Selected Chat with Webpage");
+//       });
+//       switchToWebpageChat(); // Switch to the webpage chat interface
+//   });
+// }
+
+// // Function to switch to the chatbot interface
+// function switchToChatbot() {
+//   const selectionContainer = document.getElementById("selectionContainer");
+//   const chatbotContainer = document.getElementById("chatbotContainer");
+
+//   if (selectionContainer && chatbotContainer) {
+//       selectionContainer.style.display = "none";  // Hide the selection window
+//       chatbotContainer.style.display = "flex";    // Show the chatbot interface
+//   }
+
+//   clearChat(); // Clear the chat messages when switching to chatbot
+// }
+
+// // Function to switch to the webpage chat interface AND show chatbot
+// function switchToWebpageChat() {
+//   const selectionContainer = document.getElementById("selectionContainer");
+//   const webpageContainer = document.getElementById("webpageContainer");
+//   const chatbotContainer = document.getElementById("chatbotContainer");
+
+//   if (selectionContainer && webpageContainer && chatbotContainer) {
+//       selectionContainer.style.display = "none";  // Hide the selection window
+//       webpageContainer.style.display = "flex";    // Show the webpage chat interface
+//       chatbotContainer.style.display = "flex";    // Show the chatbot interface as well
+//   }
+
+//   clearChat(); // Clear the chat messages when switching to webpage chat
+// }
+
+// // Function to clear the current chat messages
+// function clearChat() {
+//   const chatbotMessages = document.getElementById("chatbotMessages");
+//   if (chatbotMessages) {
+//       chatbotMessages.innerHTML = ""; // Clear the chat messages
+//   }
+// }
+
+// // Async function to load the user's previous selection on popup load
+// async function loadPreviousSelection() {
+//   const storedSelection = await new Promise((resolve) => {
+//       chrome.storage.local.get(["chatSelection"], (result) => {
+//           resolve(result.chatSelection || "chatWithChatbot");
+//       });
+//   });
+
+//   // Automatically switch to the last used interface (chatbot or webpage chat)
+//   if (storedSelection === "chatWithChatbot") {
+//       switchToChatbot();
+//   } else {
+//       switchToWebpageChat();
+//   }
+// }
+
+// // Call the function to load the previous selection when the popup loads
+// loadPreviousSelection();
+
+
+//Function to open the chat selection window
+function openChatSelectionWindow() {
+  const selectionContainer = document.getElementById("selectionContainer");
+  const chatbotContainer = document.getElementById("chatbotContainer");
+
+  if (selectionContainer && chatbotContainer) {
+    selectionContainer.style.display = "flex";  // Show selection window
+    chatbotContainer.style.display = "none";    // Hide chatbot initially
+  }
+
+  chrome.storage.local.get(["chatSelection"], (result) => {
+    const previousSelection = result.chatSelection || "chatWithChatbot"; // Default to chatbot
+    const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+    const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+    if (chatWithChatbotButton1 && chatWithWebpageButton1) {
+      if (previousSelection === "chatWithChatbot") {
+        chatWithChatbotButton1.classList.add("selected");
+        chatWithWebpageButton1.classList.remove("selected");
+      } else {
+        chatWithWebpageButton1.classList.add("selected");
+        chatWithChatbotButton1.classList.remove("selected");
+      }
+    }
+  });
+}
+
+// Event listener for the 'Open New Tab' button
+const openNewTabButton = document.getElementById("openNewTabButton");
+
+if (openNewTabButton) {
+  openNewTabButton.addEventListener("click", () => {
+    openChatSelectionWindow(); // Open the chat selection window
+  });
+}
+
+// Event listeners for chat selection buttons
+const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+
+if (chatWithChatbotButton1) {
+  chatWithChatbotButton1.addEventListener("click", () => {
+    chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
+      console.log("Selected Chat with Chatbot");
+    });
+    
+    switchToChatbot(); // Switch to the chatbot interface
+  });
+}
+
+if (chatWithWebpageButton1) {
+  chatWithWebpageButton1.addEventListener('click', () => {
+    chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
+      console.log("Selected Chat with Webpage");
+    });
+
+    // Send message to background.js to convert HTML to Markdown and get the current URL
+    chrome.runtime.sendMessage({ action: 'convert_html_to_markdown' }, (response) => {
+      if (response.error) {
+        console.error('Failed to convert HTML to Markdown:', response.error);
+        return;
+      }
+
+      
+
+      // Show the chatbot interface and webpage chat interface
+      document.getElementById('chatbotContainer').style.display = 'block';
+      document.getElementById('webpageContainer').style.display = 'block';
+
+      // Update the interface to show "Chatting with: <current webpage URL>"
+      const webpageContainer = document.getElementById('webpageContainer');
+      webpageContainer.innerHTML = `<h3>Chatting with: ${url}</h3>`;
+
+      // Here you can now use the `markdown` content to chat with the chatbot based on the webpage
+      console.log('Converted Markdown:', markdown);
+    });
+
+    switchToWebpageChat(); // Switch to the webpage chat interface
+  });
+}
+
+// Function to switch to the chatbot interface
+function switchToChatbot() {
+  const selectionContainer = document.getElementById("selectionContainer");
+  const chatbotContainer = document.getElementById("chatbotContainer");
+
+  if (selectionContainer && chatbotContainer) {
+    selectionContainer.style.display = "none";  // Hide the selection window
+    chatbotContainer.style.display = "flex";    // Show the chatbot interface
+  }
+
+  clearChat(); // Clear the chat messages when switching to chatbot
+}
+
+// Function to switch to the webpage chat interface AND show chatbot
+function switchToWebpageChat() {
+  const selectionContainer = document.getElementById("selectionContainer");
+  const webpageContainer = document.getElementById("webpageContainer");
+  const chatbotContainer = document.getElementById("chatbotContainer");
+
+  if (selectionContainer && webpageContainer && chatbotContainer) {
+    selectionContainer.style.display = "none";  // Hide the selection window
+    webpageContainer.style.display = "flex";    // Show the webpage chat interface
+    chatbotContainer.style.display = "flex";    // Show the chatbot interface as well
+
+  }
+
+  clearChat(); // Clear the chat messages when switching to webpage chat
+}
+
+// Function to clear the current chat messages
+function clearChat() {
+  const chatbotMessages = document.getElementById("chatbotMessages");
+  if (chatbotMessages) {
+    chatbotMessages.innerHTML = ""; // Clear the chat messages
+  }
+}
+
+// Async function to load the user's previous selection on popup load
+async function loadPreviousSelection() {
+  const storedSelection = await new Promise((resolve) => {
+    chrome.storage.local.get(["chatSelection"], (result) => {
+      resolve(result.chatSelection || "chatWithChatbot");
+    });
+  });
+
+  // Automatically switch to the last used interface (chatbot or webpage chat)
+  if (storedSelection === "chatWithChatbot") {
+    switchToChatbot();
+  } else {
+    switchToWebpageChat();
+  }
+}
+
+// Call the function to load the previous selection when the popup loads
+loadPreviousSelection();
+ 
+
+
+
+
+
   async function updateUI() {
     const sessionToken = await getSessionTokenFromStorage();
     const contentDiv = document.getElementById("content");
     const chatbotContainer = document.getElementById("chatbotContainer");
-  
+
     // Check if user is signed in
     if (sessionToken) {
       // Check if a selection has been stored in Chrome storage
-      chrome.storage.local.get('selectedOption', (result) => {
+      chrome.storage.local.get("selectedOption", (result) => {
         if (result.selectedOption) {
           // Hide content div and show the previously selected option
           contentDiv.style.display = "none";
           document.getElementById("selectionContainer").style.display = "none";
-          
+
           if (result.selectedOption === "chatbot") {
             chatbotContainer.style.display = "flex";
           } else if (result.selectedOption === "webpage") {
@@ -495,34 +779,34 @@ if (messageText) {
       contentDiv.style.display = "flex";
       chatbotContainer.style.display = "none";
       document.getElementById("selectionContainer").style.display = "none";
-      handleSignIn();  // Implement your sign-in logic here
+      handleSignIn(); // Implement your sign-in logic here
     }
   }
-  
+
   // Event listeners for buttons
   const chatWithChatbotButton = document.getElementById("chatWithChatbot");
   const chatWithWebpageButton = document.getElementById("chatWithWebpage");
-  
+
   function handleSelection(selectedOption) {
     // Save the selected option to Chrome storage
     chrome.storage.local.set({ selectedOption }, () => {
       console.log(`Selected option saved: ${selectedOption}`);
     });
-  
+
     // Hide the selection container and show the appropriate UI
     document.getElementById("selectionContainer").style.display = "none";
-    
+
     if (selectedOption === "chatbot") {
       document.getElementById("chatbotContainer").style.display = "flex";
     } else if (selectedOption === "webpage") {
       document.getElementById("webpageContainer").style.display = "flex";
     }
   }
-  
+
   chatWithChatbotButton.addEventListener("click", () => {
     handleSelection("chatbot");
   });
-  
+
   chatWithWebpageButton.addEventListener("click", () => {
     handleSelection("webpage");
   });
@@ -588,7 +872,6 @@ if (messageText) {
         console.log("Failed to retrieve chat ID.");
         return;
       }
-      
 
       const aiengine = currentModel;
       const conversation = [{ role: "user", content: messageText }];
@@ -597,28 +880,23 @@ if (messageText) {
 
       const selectedLanguage = await new Promise((resolve) => {
         chrome.storage.local.get(["selectedLang"], (result) => {
-            resolve(result.selectedLang || 'english'); 
+          resolve(result.selectedLang || "english");
         });
-    });
-
-     const selectedTone = await new Promise((resolve) => {
-        chrome.storage.local.get(["selectedTone"], (result) => {
-          resolve(result.selectedTone || 'default');
-     });
-     });
-
-
-     const selectedWordCount = await new Promise((resolve) => {
-      chrome.storage.local.get(["selectedWordCount"], (result) => {
-        resolve(result.selectedWordCount || 'Default');
       });
-    });
-     
-    
-      const googleSearchStatus = false;
 
-    
-     
+      const selectedTone = await new Promise((resolve) => {
+        chrome.storage.local.get(["selectedTone"], (result) => {
+          resolve(result.selectedTone || "default");
+        });
+      });
+
+      const selectedWordCount = await new Promise((resolve) => {
+        chrome.storage.local.get(["selectedWordCount"], (result) => {
+          resolve(result.selectedWordCount || "Default");
+        });
+      });
+
+      const googleSearchStatus = false;
 
       const response = await fetch("https://app.ai4chat.co/chatgpt", {
         method: "POST",
@@ -665,19 +943,20 @@ if (messageText) {
     }
   }
 
-
   function updateInitialCreditBalance(modelName) {
     const creditValue = modelCredits[modelName];
     if (creditValue !== undefined) {
-      document.getElementById('initialCreditBalance').textContent = creditValue;
+      document.getElementById("initialCreditBalance").textContent = creditValue;
     } else {
-      console.error('Model not found');
+      console.error("Model not found");
     }
   }
 
   function updateCreditBalance() {
     const creditBalanceElement = document.getElementById("creditbalance");
-    const generationCostElement = document.getElementById("initialCreditBalance");
+    const generationCostElement = document.getElementById(
+      "initialCreditBalance"
+    );
 
     if (creditBalanceElement && generationCostElement) {
       let currentBalance = parseInt(creditBalanceElement.innerHTML, 10);
@@ -697,7 +976,7 @@ if (messageText) {
     }
   }
 
-function displayMessage(role, content) {
+  function displayMessage(role, content) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `chat-message ${role}`;
     messageDiv.innerHTML = content;
@@ -716,26 +995,24 @@ function displayMessage(role, content) {
   }
 
   // Display "Loading..." message
-  
 
- 
   function displayLoadingMessage() {
     // Check if the loading message is already present
     if (document.getElementById("loadingMessage")) return;
-  
+
     // Create the loading message element
     const loadingDiv = document.createElement("div");
     loadingDiv.id = "loadingMessage";
     loadingDiv.className = "chat-message assistant";
     loadingDiv.innerHTML = "Loading...";
-  
+
     const chatbotMessages = document.getElementById("chatbotMessages");
-  
+
     // Use setTimeout to add a 1-second delay
     setTimeout(() => {
       // Append the loading message after the delay
       chatbotMessages.appendChild(loadingDiv);
-  
+
       // Use requestAnimationFrame to ensure the browser processes the UI update before further logic
       requestAnimationFrame(() => {
         // Scroll to the bottom of the chat messages after the element is rendered
@@ -743,7 +1020,6 @@ function displayMessage(role, content) {
       });
     }, 2000); // 1000 milliseconds = 1 second
   }
-  
 
   // Remove "Loading..." message
   function removeLoadingMessage() {
@@ -752,10 +1028,6 @@ function displayMessage(role, content) {
       loadingDiv.remove();
     }
   }
-
-
-
- 
 
   function handleSignIn() {
     const loginButton = document.getElementById("loginButton");

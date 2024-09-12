@@ -1,10 +1,18 @@
 const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
+//const cheerio = require('cheerio');
+//const showdown = require('showdown');
+// const cors = require('cors');
+// app.use(cors());
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
+
+
+
 
 // Endpoint to handle requests from the Chrome extension
 app.post('/chatgpt', async (req, res) => {
@@ -61,6 +69,8 @@ app.post('/chatgpt', async (req, res) => {
         }
     }
 });
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -22,7 +22,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://app.ai4chat.co/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],
