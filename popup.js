@@ -403,345 +403,180 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
-
-  // function openChatSelectionWindow() {
-  //   // Clear the current chat interface
-  //   clearChat();
-
-  //   // Open the selection window
-  //   const selectionContainer = document.getElementById("selectionContainer");
-  //   selectionContainer.style.display = "flex";
-
-  //   // Hide the chatbot interface temporarily
-  //   const chatbotContainer = document.getElementById("chatbotContainer");
-  //   chatbotContainer.style.display = "none";
-
-  //   // Load the user's previous selection from local storage
-  //   chrome.storage.local.get(["chatSelection"], (result) => {
-  //     const previousSelection = result.chatSelection || "chatWithChatbot"; // Default is chatbot
-  //     const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-  //     const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-  //     // Highlight the previously selected option
-  //     if (previousSelection === "chatWithChatbot") {
-  //       chatWithChatbotButton1.classList.add("selected");
-  //     } else {
-  //       chatWithWebpageButton1.classList.add("selected");
-  //     }
-  //   });
-  // }
-
-  // // Listen for the "New Chat" button click
-  // const openNewTabButton = document.getElementById("openNewTabButton");
-  // openNewTabButton.addEventListener("click", () => {
-  //   openChatSelectionWindow();
-  // });
-
-  // // Event listeners for chat selection buttons
-  // const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-  // const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-  // chatWithChatbotButton1.addEventListener("click", () => {
-  //   chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
-  //     console.log("Selected Chat with Chatbot");
-  //   });
-  //   switchToChatbot(); // Switch to the chatbot interface
-  // });
-
-  // chatWithWebpageButton1.addEventListener("click", () => {
-  //   chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
-  //     console.log("Selected Chat with Webpage");
-  //   });
-  //   switchToWebpageChat(); // Switch to the webpage chat interface
-  // });
-
-  // // Function to switch to the chatbot interface
-  // function switchToChatbot() {
-  //   const selectionContainer = document.getElementById("selectionContainer");
-  //   const chatbotContainer = document.getElementById("chatbotContainer");
-
-  //   selectionContainer.style.display = "none"; // Hide the selection window
-  //   chatbotContainer.style.display = "flex"; // Show the chatbot interface
-  // }
-
-  // // Function to switch to the webpage chat interface
-  // function switchToWebpageChat() {
-  //   const selectionContainer = document.getElementById("selectionContainer");
-  //   const webpageContainer = document.getElementById("webpageContainer");
-
-  //   selectionContainer.style.display = "none"; // Hide the selection window
-  //   webpageContainer.style.display = "flex"; // Show the webpage chat interface
-  // }
-
-  // // Function to clear the current chat messages
-  // function clearChat() {
-  //   const chatbotMessages = document.getElementById("chatbotMessages");
-  //   chatbotMessages.innerHTML = ""; // Clear the chat messages
-  // }
-
-  // // Load the user's previous selection on popup load
-  // const storedSelection = await new Promise((resolve) => {
-  //   chrome.storage.local.get(["chatSelection"], (result) => {
-  //     resolve(result.chatSelection || "chatWithChatbot");
-  //   });
-  // });
-
-  // // Automatically switch to the last used interface (chatbot or webpage chat)
-  // if (storedSelection === "chatWithChatbot") {
-  //   switchToChatbot();
-  // } else {
-  //   switchToWebpageChat();
-  // }
-
-  // Function to open the selection window
-// function openChatSelectionWindow() {
-//   const selectionContainer = document.getElementById("selectionContainer");
-//   const chatbotContainer = document.getElementById("chatbotContainer");
-
-//   if (selectionContainer && chatbotContainer) {
-//       selectionContainer.style.display = "flex";  // Show selection window
-//       chatbotContainer.style.display = "none";    // Hide chatbot initially
-//   }
-
-//   chrome.storage.local.get(["chatSelection"], (result) => {
-//       const previousSelection = result.chatSelection || "chatWithChatbot"; // Default to chatbot
-//       const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-//       const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-//       if (chatWithChatbotButton1 && chatWithWebpageButton1) {
-//           if (previousSelection === "chatWithChatbot") {
-//               chatWithChatbotButton1.classList.add("selected");
-//               chatWithWebpageButton1.classList.remove("selected");
-//           } else {
-//               chatWithWebpageButton1.classList.add("selected");
-//               chatWithChatbotButton1.classList.remove("selected");
-//           }
-//       }
-//   });
-// }
-
-// // Listen for the "New Chat" button click
-// const openNewTabButton = document.getElementById("openNewTabButton");
-// if (openNewTabButton) {
-//   openNewTabButton.addEventListener("click", () => {
-//       openChatSelectionWindow();
-//   });
-// }
-
-// // Event listeners for chat selection buttons
-// const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-// const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-// if (chatWithChatbotButton1) {
-//   chatWithChatbotButton1.addEventListener("click", () => {
-//       chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
-//           console.log("Selected Chat with Chatbot");
-//       });
-//       switchToChatbot(); // Switch to the chatbot interface
-//   });
-// }
-
-// if (chatWithWebpageButton1) {
-//   chatWithWebpageButton1.addEventListener("click", () => {
-//       chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
-//           console.log("Selected Chat with Webpage");
-//       });
-//       switchToWebpageChat(); // Switch to the webpage chat interface
-//   });
-// }
-
-// // Function to switch to the chatbot interface
-// function switchToChatbot() {
-//   const selectionContainer = document.getElementById("selectionContainer");
-//   const chatbotContainer = document.getElementById("chatbotContainer");
-
-//   if (selectionContainer && chatbotContainer) {
-//       selectionContainer.style.display = "none";  // Hide the selection window
-//       chatbotContainer.style.display = "flex";    // Show the chatbot interface
-//   }
-
-//   clearChat(); // Clear the chat messages when switching to chatbot
-// }
-
-// // Function to switch to the webpage chat interface AND show chatbot
-// function switchToWebpageChat() {
-//   const selectionContainer = document.getElementById("selectionContainer");
-//   const webpageContainer = document.getElementById("webpageContainer");
-//   const chatbotContainer = document.getElementById("chatbotContainer");
-
-//   if (selectionContainer && webpageContainer && chatbotContainer) {
-//       selectionContainer.style.display = "none";  // Hide the selection window
-//       webpageContainer.style.display = "flex";    // Show the webpage chat interface
-//       chatbotContainer.style.display = "flex";    // Show the chatbot interface as well
-//   }
-
-//   clearChat(); // Clear the chat messages when switching to webpage chat
-// }
-
-// // Function to clear the current chat messages
-// function clearChat() {
-//   const chatbotMessages = document.getElementById("chatbotMessages");
-//   if (chatbotMessages) {
-//       chatbotMessages.innerHTML = ""; // Clear the chat messages
-//   }
-// }
-
-// // Async function to load the user's previous selection on popup load
-// async function loadPreviousSelection() {
-//   const storedSelection = await new Promise((resolve) => {
-//       chrome.storage.local.get(["chatSelection"], (result) => {
-//           resolve(result.chatSelection || "chatWithChatbot");
-//       });
-//   });
-
-//   // Automatically switch to the last used interface (chatbot or webpage chat)
-//   if (storedSelection === "chatWithChatbot") {
-//       switchToChatbot();
-//   } else {
-//       switchToWebpageChat();
-//   }
-// }
-
-// // Call the function to load the previous selection when the popup loads
-// loadPreviousSelection();
-
-
-//Function to open the chat selection window
-function openChatSelectionWindow() {
-  const selectionContainer = document.getElementById("selectionContainer");
   const chatbotContainer = document.getElementById("chatbotContainer");
+  const selectionContainer = document.getElementById("selectionContainer");
+  const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+  const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+  const urlInput = document.getElementById("urlInput");
+  const fetchContentButton = document.getElementById("fetchContentButton");
+  const webpageOptions = document.getElementById("webpageOptions");
 
-  if (selectionContainer && chatbotContainer) {
-    selectionContainer.style.display = "flex";  // Show selection window
-    chatbotContainer.style.display = "none";    // Hide chatbot initially
-  }
-
-  chrome.storage.local.get(["chatSelection"], (result) => {
-    const previousSelection = result.chatSelection || "chatWithChatbot"; // Default to chatbot
-    const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-    const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-    if (chatWithChatbotButton1 && chatWithWebpageButton1) {
-      if (previousSelection === "chatWithChatbot") {
-        chatWithChatbotButton1.classList.add("selected");
-        chatWithWebpageButton1.classList.remove("selected");
-      } else {
-        chatWithWebpageButton1.classList.add("selected");
-        chatWithChatbotButton1.classList.remove("selected");
+  let markdownContent = "";
+  
+  fetchContentButton.addEventListener("click", () => {
+    const url = urlInput.value.trim();
+    if (url) {
+      console.log("Webpage URL:", url);
+  
+      // Fetch the HTML content from the URL
+      fetch(url)
+        .then((response) => response.text())
+        .then((html) => {
+          // Use turndown.js to convert HTML to Markdown directly in popup.js
+          const turndownService = new TurndownService();
+          const markdownContent = turndownService.turndown(html);
+  
+          console.log("Markdown content:", markdownContent);
+        })
+        .catch((error) => {
+          console.error("Error fetching HTML:", error);
+        });
+  
+      webpageOptions.style.display = "none";
+      chatbotContainer.style.display = "flex";
+    }
+  });
+  
+  // Check if user has a stored option, and update UI accordingly
+  chrome.storage.local.get("selectedOption", (result) => {
+    if (result.selectedOption) {
+      selectionContainer.style.display = "none";
+      chatbotContainer.style.display = "flex";
+  
+      if (result.selectedOption === "webpage") {
+        webpageOptions.style.display = "flex";
       }
     }
   });
-}
-
-// Event listener for the 'Open New Tab' button
-const openNewTabButton = document.getElementById("openNewTabButton");
-
-if (openNewTabButton) {
-  openNewTabButton.addEventListener("click", () => {
-    openChatSelectionWindow(); // Open the chat selection window
-  });
-}
-
-// Event listeners for chat selection buttons
-const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-
-if (chatWithChatbotButton1) {
+  
+  // Chat with Chatbot logic
   chatWithChatbotButton1.addEventListener("click", () => {
-    chrome.storage.local.set({ chatSelection: "chatWithChatbot" }, () => {
-      console.log("Selected Chat with Chatbot");
-    });
-    
-    switchToChatbot(); // Switch to the chatbot interface
-  });
-}
-
-if (chatWithWebpageButton1) {
-  chatWithWebpageButton1.addEventListener('click', () => {
-    chrome.storage.local.set({ chatSelection: "chatWithWebpage" }, () => {
-      console.log("Selected Chat with Webpage");
-    });
-
-    // Send message to background.js to convert HTML to Markdown and get the current URL
-    chrome.runtime.sendMessage({ action: 'convert_html_to_markdown' }, (response) => {
-      if (response.error) {
-        console.error('Failed to convert HTML to Markdown:', response.error);
-        return;
-      }
-
-      
-
-      // Show the chatbot interface and webpage chat interface
-      document.getElementById('chatbotContainer').style.display = 'block';
-      document.getElementById('webpageContainer').style.display = 'block';
-
-      // Update the interface to show "Chatting with: <current webpage URL>"
-      const webpageContainer = document.getElementById('webpageContainer');
-      webpageContainer.innerHTML = `<h3>Chatting with: ${url}</h3>`;
-
-      // Here you can now use the `markdown` content to chat with the chatbot based on the webpage
-      console.log('Converted Markdown:', markdown);
-    });
-
-    switchToWebpageChat(); // Switch to the webpage chat interface
-  });
-}
-
-// Function to switch to the chatbot interface
-function switchToChatbot() {
-  const selectionContainer = document.getElementById("selectionContainer");
-  const chatbotContainer = document.getElementById("chatbotContainer");
-
-  if (selectionContainer && chatbotContainer) {
-    selectionContainer.style.display = "none";  // Hide the selection window
-    chatbotContainer.style.display = "flex";    // Show the chatbot interface
-  }
-
-  clearChat(); // Clear the chat messages when switching to chatbot
-}
-
-// Function to switch to the webpage chat interface AND show chatbot
-function switchToWebpageChat() {
-  const selectionContainer = document.getElementById("selectionContainer");
-  const webpageContainer = document.getElementById("webpageContainer");
-  const chatbotContainer = document.getElementById("chatbotContainer");
-
-  if (selectionContainer && webpageContainer && chatbotContainer) {
-    selectionContainer.style.display = "none";  // Hide the selection window
-    webpageContainer.style.display = "flex";    // Show the webpage chat interface
-    chatbotContainer.style.display = "flex";    // Show the chatbot interface as well
-
-  }
-
-  clearChat(); // Clear the chat messages when switching to webpage chat
-}
-
-// Function to clear the current chat messages
-function clearChat() {
-  const chatbotMessages = document.getElementById("chatbotMessages");
-  if (chatbotMessages) {
-    chatbotMessages.innerHTML = ""; // Clear the chat messages
-  }
-}
-
-// Async function to load the user's previous selection on popup load
-async function loadPreviousSelection() {
-  const storedSelection = await new Promise((resolve) => {
-    chrome.storage.local.get(["chatSelection"], (result) => {
-      resolve(result.chatSelection || "chatWithChatbot");
+    selectionContainer.style.display = "none";
+    chatbotContainer.style.display = "flex";
+    webpageOptions.style.display = "none";
+  
+    // Store the selected option
+    chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
+      console.log("Chat with Chatbot selected and stored.");
     });
   });
-
-  // Automatically switch to the last used interface (chatbot or webpage chat)
-  if (storedSelection === "chatWithChatbot") {
-    switchToChatbot();
-  } else {
-    switchToWebpageChat();
+  
+  // Chat with Webpage logic
+  chatWithWebpageButton1.addEventListener("click", () => {
+    selectionContainer.style.display = "none";
+    chatbotContainer.style.display = "flex";
+    webpageOptions.style.display = "flex";
+  
+    // Store the selected option
+    chrome.storage.local.set({ selectedOption: "webpage" }, () => {
+      console.log("Chat with Webpage selected and stored.");
+    });
+  });
+  
+  // Fetch Content button click event
+  fetchContentButton.addEventListener("click", () => {
+    const url = urlInput.value.trim();
+    if (url) {
+      console.log("Webpage URL:", url);
+  
+      // Hide URL input and fetch button, and show the chatbot interface
+      webpageOptions.style.display = "none";
+      chatbotContainer.style.display = "flex";
+    }
+  });
+  
+  // If there's an "Open New Tab" button logic, ensure it resets the state correctly
+  const openNewTabButton = document.getElementById("openNewTabButton");
+  if (openNewTabButton) {
+    openNewTabButton.addEventListener("click", () => {
+      // Reset to show the two options again
+      selectionContainer.style.display = "block";
+      chatbotContainer.style.display = "none";
+      webpageOptions.style.display = "none";
+  
+      // Clear the stored option for a new selection
+      chrome.storage.local.remove("selectedOption", () => {
+        console.log("Previous selection cleared, ready for new chat.");
+      });
+    });
   }
-}
+  
+  // const chatbotContainer = document.getElementById("chatbotContainer");
+  // const selectionContainer = document.getElementById("selectionContainer");
+  // const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+  // const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+  // const urlInput = document.getElementById("urlInput");
+  // const fetchContentButton = document.getElementById("fetchContentButton");
+  // const openNewTabButton = document.getElementById("openNewTabButton");
 
-// Call the function to load the previous selection when the popup loads
-loadPreviousSelection();
+  // // Check if user has a stored option, and update UI accordingly
+  // chrome.storage.local.get("selectedOption", (result) => {
+  //   if (result.selectedOption) {
+  //     selectionContainer.style.display = "none";
+  //     chatbotContainer.style.display = "flex";
+
+  //     if (result.selectedOption === "webpage") {
+  //       urlInput.style.display = "block";
+  //       fetchContentButton.style.display = "block";
+  //     }
+  //   }
+  // });
+
+  // // Chat with Chatbot logic
+  // chatWithChatbotButton1.addEventListener("click", () => {
+  //   selectionContainer.style.display = "none";
+  //   chatbotContainer.style.display = "flex";
+  //   urlInput.style.display = "none";
+  //   fetchContentButton.style.display = "none";
+
+  //   // Store the selected option
+  //   chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
+  //     console.log("Chat with Chatbot selected and stored.");
+  //   });
+  // });
+
+  // // Chat with Webpage logic
+  // chatWithWebpageButton1.addEventListener("click", () => {
+  //   selectionContainer.style.display = "none";
+  //   chatbotContainer.style.display = "flex";
+  //   urlInput.style.display = "block";
+  //   fetchContentButton.style.display = "block";
+
+  //   // Store the selected option
+  //   chrome.storage.local.set({ selectedOption: "webpage" }, () => {
+  //     console.log("Chat with Webpage selected and stored.");
+  //   });
+  // });
+
+  // // Fetch Content button click event
+  // fetchContentButton.addEventListener("click", () => {
+  //   const url = urlInput.value.trim();
+  //   if (url) {
+  //     console.log("Webpage URL:", url);
+
+  //     // Logic for sending the URL to the chatbot or handling webpage chat
+  //     // e.g., send URL to the background or another part of your extension for processing.
+  //   }
+  // });
+
+  // // Open New Tab Button logic
+  // openNewTabButton.addEventListener("click", () => {
+  //   // Reset to show the two options again
+  //   selectionContainer.style.display = "block";
+  //   chatbotContainer.style.display = "none";
+  //   urlInput.style.display = "none";
+  //   fetchContentButton.style.display = "none";
+
+  //   // Clear the stored option for a new selection
+  //   chrome.storage.local.remove("selectedOption", () => {
+  //     console.log("Previous selection cleared, ready for new chat.");
+  //   });
+  // });
+
+
+
+
+
  
 
 
@@ -874,7 +709,9 @@ loadPreviousSelection();
       }
 
       const aiengine = currentModel;
-      const conversation = [{ role: "user", content: messageText }];
+
+      const conversation = [{ role: "user", content: markdownContent || messageText }];
+     // const conversation = [{ role: "user", content: messageText }];
 
       const timezoneOffset = new Date().getTimezoneOffset();
 

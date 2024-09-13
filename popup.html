@@ -31,11 +31,18 @@
     <div id="selectionContainer">
       <button class="button-box" id="chatWithChatbot"><i class="fa-solid fa-robot"></i>Chat with Chatbot</button>
       <button class="button-box" id="chatWithWebpage"><i class="fa-solid fa-globe"></i>Chat with Webpage</button>
+      
+      
     </div>
     <div id="chatbotContainer" style="display: none">
       <div id="webpageContainer" style="display:none;">
         <!-- Webpage Chat Interface Goes Here -->
+        <div id="webpageOptions" style="display:none; display: flex; align-items: center;">
+          <input type="text" id="urlInput" placeholder="Enter the webpage URL" style="margin-right: 10px;" />
+          <button id="fetchContentButton">Fetch and Convert</button>
+        </div>
     </div>
+    
       <div id="header">
         <div id="dropdownContainer">
           <button id="dropdownButton" class="icon-button">
@@ -416,5 +423,7 @@
     </div>
 
     <script src="popup.js"></script>
+    <script src="libs/turndown.js"></script>
+    
   </body>
 </html>

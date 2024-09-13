@@ -1,10 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
-//const cheerio = require('cheerio');
-//const showdown = require('showdown');
-// const cors = require('cors');
-// app.use(cors());
 
 const app = express();
 app.use(express.json());
