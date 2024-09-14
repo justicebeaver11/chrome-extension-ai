@@ -412,11 +412,54 @@ document.addEventListener("DOMContentLoaded", async () => {
   const webpageOptions = document.getElementById("webpageOptions");
 
   let markdownContent = "";
+  let webpageUrl = "";
+
+
+  function cleanMarkdown(markdown) {
+    // Remove any <script>, <style>, or other HTML tags that might have remained
+    let cleanedMarkdown = markdown
+    
+    .replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, '')      // Remove JS scripts
+    .replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, '')       // Remove CSS styles
+    .replace(/<!--[\s\S]*?-->/g, '')                       // Remove HTML comments
+    .replace(/<\/?[^>]+(>|$)/g, '')                        // Remove remaining HTML tags
+    .replace(/\bfunction\s*\w*\([\s\S]*?\{[\s\S]*?\}\);?/g, '') // Remove JS function definitions
+    .replace(/window\.[\s\S]+;/g, '')                      // Remove window object references
+    .replace(/\bgtag\([\s\S]*?\);?/g, '')                  // Remove gtag calls (Google Analytics)
+    .replace(/localStorage\.setItem\([\s\S]*?\);?/g, '')    // Remove localStorage operations
+    .replace(/document\.documentElement\.classList\.[\s\S]*?\);?/g, '') // Remove DOM manipulations
+    .replace(/\(\s*function\s*\([\s\S]*?\)\s*\{[\s\S]*?\}\)\(\);?/g, '') // Remove IIFE functions
+    .replace(/document\.getElementById\([\s\S]*?\);?/g, '') // Remove document.getElementById
+    .replace(/document\.querySelector\([\s\S]*?\);?/g, '') // Remove document.querySelector
+    .replace(/setTimeout\([\s\S]*?\);?/g, '')               // Remove setTimeout calls
+    .replace(/setInterval\([\s\S]*?\);?/g, '')              // Remove setInterval calls
+    .replace(/const|let|var\s+\w+\s*=\s*[\s\S]+;/g, '')     // Remove variable declarations
+    .replace(/fetch\([\s\S]*?\);?/g, '')                    // Remove fetch API calls
+    .replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, '')             // Remove Markdown images with embedded JS links
+    .replace(/\.css\([\s\S]*?\);?/g, '')                    // Remove CSS-related JS calls
+    .replace(/document\.createElement\([\s\S]*?\);?/g, '')  // Remove element creation calls
+    .replace(/element\.style\.[\s\S]+;/g, '')               // Remove inline styling operations
+    .replace(/\bconsole\.[\s\S]*?\);?/g, '')                // Remove console log operations
+    .replace(/import\s+['"][\s\S]*?['"];?/g, '')            // Remove import statements
+    .replace(/export\s+\w+\s+[\s\S]*?;/g, '')               // Remove export statements
+    .replace(/require\([\s\S]*?\);?/g, '')                  // Remove require calls
+    .replace(/\bRLCONF\b[\s\S]*?};/g, '')                   // Remove RLCONF metadata
+    .replace(/\bRLSTATE\b[\s\S]*?};/g, '')                  // Remove RLSTATE metadata
+    .replace(/\bRLPAGEMODULES\b[\s\S]*?];?/g, '')           // Remove RLPAGEMODULES metadata
+    .replace(/\bwg[A-Za-z]+\b[\s\S]*?};/g, '')              // Remove MediaWiki `wg*` variables
+    .replace(/"@context":"[\s\S]+?"/g, '')                  // Remove JSON-LD context metadata
+    .replace(/"@type":"[\s\S]+?"/g, '')                     // Remove JSON-LD type metadata
+    
+    return cleanedMarkdown;
+  }
+
+
   
   fetchContentButton.addEventListener("click", () => {
     const url = urlInput.value.trim();
     if (url) {
       console.log("Webpage URL:", url);
+      webpageUrl = url;
   
       // Fetch the HTML content from the URL
       fetch(url)
@@ -424,9 +467,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         .then((html) => {
           // Use turndown.js to convert HTML to Markdown directly in popup.js
           const turndownService = new TurndownService();
-          const markdownContent = turndownService.turndown(html);
+          let markdownContent = turndownService.turndown(html);
+
+          markdownContent = cleanMarkdown(markdownContent);
   
-          console.log("Markdown content:", markdownContent);
+          //console.log("Markdown content:", markdownContent);
+          console.log("Cleaned Markdown content:", markdownContent);
+
+          sendMessageToChatbot("Here is the content and the url of the webpage I'm on.",webpageUrl, markdownContent);
         })
         .catch((error) => {
           console.error("Error fetching HTML:", error);
@@ -455,6 +503,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     chatbotContainer.style.display = "flex";
     webpageOptions.style.display = "none";
   
+  
     // Store the selected option
     chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
       console.log("Chat with Chatbot selected and stored.");
@@ -466,6 +515,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
     webpageOptions.style.display = "flex";
+
+  
   
     // Store the selected option
     chrome.storage.local.set({ selectedOption: "webpage" }, () => {
@@ -710,8 +761,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const aiengine = currentModel;
 
-      const conversation = [{ role: "user", content: markdownContent || messageText }];
-     // const conversation = [{ role: "user", content: messageText }];
+
+     
+     //const conversation = [{ role: "user", content: messageText }];
+     const conversation = [
+      { role: "system", content: `You are now given context from the following webpage Markdown content. Use this context to answer the user's queries about the webpage content.` },
+      { role: "user", content: markdownContent },
+      { role: "user", content: messageText }
+  ];
+    
+     
 
       const timezoneOffset = new Date().getTimezoneOffset();
 
