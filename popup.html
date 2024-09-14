@@ -37,9 +37,11 @@
     <div id="chatbotContainer" style="display: none">
       <div id="webpageContainer" style="display:none;">
         <!-- Webpage Chat Interface Goes Here -->
+        <div id="webpageOptionsPopup" class="popup hidden">
         <div id="webpageOptions" style="display:none; display: flex; align-items: center;">
           <input type="text" id="urlInput" placeholder="Enter the webpage URL" style="margin-right: 10px;" />
           <button id="fetchContentButton">Continue</button>
+        </div>
         </div>
     </div>
     
@@ -49,7 +51,8 @@
             <img src="icon1.png" alt="Icon" class="icon-image" />
             <span class="arrow">&#9660;</span>
           </button>
-          <div id="advancedContainer">
+         
+           <div id="advancedContainer">
             <button id="settingsButton" class="icon-button">
               <i class="fa fa-gear"></i>
               <div class="tooltip">Advanced Settings</div>
@@ -68,9 +71,16 @@
                 ><span class="tone-text"> Tone: Default</span>
                 <i class="fas fa-volume-up" id="volumeUp"></i
               ></a>
+              
             </div>
+            
           </div>
+          <div id="searchBox">
+            <i class="fas fa-search"></i>
+          </div>
+          
         </div>
+       
 
         <div id="headerButtons">
           <button id="openNewTabButton" class="icon-button">

@@ -403,6 +403,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+  // const searchBox = document.getElementById("searchBox");
+  // const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
+  // const closePopupButton = document.getElementById("closePopupButton");
+  
+  // // Function to show the popup
+  // function showWebpageOptionsPopup() {
+  //   webpageOptionsPopup.classList.remove("hidden");
+  // }
+  
+  // // Function to hide the popup
+  // function hideWebpageOptionsPopup() {
+  //   webpageOptionsPopup.classList.add("hidden");
+  // }
+  
+  // // Add event listener to the search icon
+  // searchBox.addEventListener("click", () => {
+  //   showWebpageOptionsPopup();
+  // });
+  
+  // // Add event listener to the close button in the popup
+  // closePopupButton.addEventListener("click", () => {
+  //   hideWebpageOptionsPopup();
+  // });
+  
+
+
+
+
   const chatbotContainer = document.getElementById("chatbotContainer");
   const selectionContainer = document.getElementById("selectionContainer");
   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
@@ -410,9 +438,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlInput = document.getElementById("urlInput");
   const fetchContentButton = document.getElementById("fetchContentButton");
   const webpageOptions = document.getElementById("webpageOptions");
+  const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
+  const searchBox = document.getElementById("searchBox");
 
   let markdownContent = "";
   let webpageUrl = "";
+  searchBox.style.display = 'none';
+
+  chatWithChatbotButton1.addEventListener('click', () => {
+    chatbotContainer.style.display = 'block';
+    searchBox.style.display = 'none';
+  });
+
+  chatWithWebpageButton1.addEventListener('click', () => {
+    chatbotContainer.style.display = 'block';
+    searchBox.style.display = 'block'; // Show search box
+  });
 
 
   function cleanMarkdown(markdown) {
@@ -479,11 +520,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         .catch((error) => {
           console.error("Error fetching HTML:", error);
         });
-  
-      webpageOptions.style.display = "none";
+        
+        webpageOptionsPopup.style.display = "none";
+      //webpageOptions.style.display = "none";
       chatbotContainer.style.display = "flex";
     }
   });
+
+  searchBox.addEventListener("click", () => {
+    webpageOptionsPopup.style.display = "flex";
+  })
   
   // Check if user has a stored option, and update UI accordingly
   chrome.storage.local.get("selectedOption", (result) => {
@@ -501,7 +547,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   chatWithChatbotButton1.addEventListener("click", () => {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
-    webpageOptions.style.display = "none";
+    //webpageOptions.style.display = "none";
+    webpageOptionsPopup.style.display = "none";
   
   
     // Store the selected option
@@ -514,7 +561,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   chatWithWebpageButton1.addEventListener("click", () => {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
-    webpageOptions.style.display = "flex";
+    //webpageOptions.style.display = "flex";
+    webpageOptionsPopup.style.display = "flex";
 
   
   
@@ -531,7 +579,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("Webpage URL:", url);
   
       // Hide URL input and fetch button, and show the chatbot interface
-      webpageOptions.style.display = "none";
+      //webpageOptions.style.display = "none";
+      webpageOptionsPopup.style.display = "none";
       chatbotContainer.style.display = "flex";
     }
   });
@@ -543,7 +592,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Reset to show the two options again
       selectionContainer.style.display = "block";
       chatbotContainer.style.display = "none";
-      webpageOptions.style.display = "none";
+     // webpageOptions.style.display = "none";
+     webpageOptionsPopup.style.display = "none";
   
       // Clear the stored option for a new selection
       chrome.storage.local.remove("selectedOption", () => {

@@ -933,8 +933,10 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   margin: auto;
+  position: fixed;
   border: 2px solid #3996fb; /* Add the border */
-  width: fit-content; /* Adjust width to content */
+  width: fit-content;
+  transform: translate(-20%, -20%);
   padding: 20px; /* Add some padding for better visibility */
   box-sizing: border-box; /* Ensure padding doesn't affect width calculation */
   position: absolute;
@@ -945,13 +947,14 @@ input:checked + .slider:before {
 
 
 .button-box {
-  margin: 10px;
+  margin: 10px 0;
   padding: 10px;
   border: none;
   border: 2px solid #3996fb;
   border-radius: 5px;
   background-color: #17182b;
   color: white;
+  width: 100%;
   font-size: 16px;
   cursor: pointer;
 }
@@ -962,7 +965,7 @@ input:checked + .slider:before {
 
 #urlInput {
   margin-top: 50px;
-  width: 90%; /* Adjust width to fit within the container */
+  width: 100%; /* Adjust width to fit within the container */
   padding: 10px; /* Padding for consistent height */
   margin: 10px 0; /* Add margin for spacing */
   border: 2px solid #ccc; /* Visible border */
@@ -976,7 +979,7 @@ input:checked + .slider:before {
 
 #fetchContentButton {
   display: block;
-  width: 80%; /* Slightly smaller width */
+  width: 50%; /* Slightly smaller width */
   padding: 10px; /* Padding adjusted to match input height */
   background-color: #3996fb; /* Primary color */
   color: white; /* Text color */
@@ -985,12 +988,75 @@ input:checked + .slider:before {
   cursor: pointer;
   font-size: 16px;
   margin-top: 10px; /* Spacing above the button */
-  height: 42px; /* Same height as input field */
+  height: 30px; /* Same height as input field */
 }
 
 #fetchContentButton:hover {
   background-color: #0056b3; /* Darker shade on hover */
 }
+
+#searchBox {
+  display: inline-block;
+  margin-left: 15px;
+  border: 1px solid #3996fb; /* Border color */
+  background-color: #000319; /* Background color */
+  border-radius: 5px; /* Border radius for rounded corners */
+  padding: 8px 12px; /* Padding inside the box */
+  margin-right: 0px; /* Space between search box and the settings button */
+  cursor: pointer; /* Show pointer cursor */
+}
+
+#searchBox i {
+  color: white; /* Color of the search icon */
+  font-size: 14px; /* Icon size */
+  vertical-align: middle; /* Align the icon vertically */
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 400px;
+  background: #17182b;
+  border: 1px solid #3996fb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures the popup appears on top */
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup #closePopupButton {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
+  float: right;
+}
+
+.popup #urlInput {
+  width: calc(100% - 120px); /* Adjusted to fit the continue button */
+}
+
+.popup button {
+  background-color: #3996fb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.popup button:hover {
+  background-color: #007acc;
+}
+
 
 
 
