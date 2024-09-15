@@ -963,37 +963,7 @@ input:checked + .slider:before {
   background-color: #0056b3;
 }
 
-#urlInput {
-  margin-top: 50px;
-  width: 100%; /* Adjust width to fit within the container */
-  padding: 10px; /* Padding for consistent height */
-  margin: 10px 0; /* Add margin for spacing */
-  border: 2px solid #ccc; /* Visible border */
-  border-radius: 5px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background for contrast */
-  color: #333; /* Darker text color */
-  font-size: 16px; /* Font size for readability */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  height: 16px; /* Explicit height for uniformity with the button */
-}
 
-#fetchContentButton {
-  display: block;
-  width: 50%; /* Slightly smaller width */
-  padding: 10px; /* Padding adjusted to match input height */
-  background-color: #3996fb; /* Primary color */
-  color: white; /* Text color */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px; /* Spacing above the button */
-  height: 30px; /* Same height as input field */
-}
-
-#fetchContentButton:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-}
 
 #searchBox {
   display: inline-block;
@@ -1024,6 +994,9 @@ input:checked + .slider:before {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: 1000; /* Ensures the popup appears on top */
 }
 
@@ -1033,28 +1006,48 @@ input:checked + .slider:before {
 
 .popup #closePopupButton {
   background: transparent;
+  position: absolute;
+  top: 10px; /* Position at the top */
+  right: 10px; 
   border: none;
   font-size: 20px;
-  color: #000;
+  color: #3996fb;
   cursor: pointer;
   float: right;
 }
 
 .popup #urlInput {
-  width: calc(100% - 120px); /* Adjusted to fit the continue button */
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  margin-right: 10px;
+  font-size: 16px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.popup button {
+/* Button styling */
+.popup #fetchContentButton {
+  width: 50%; /* Full width button */
+  padding: 2px 8px;
   background-color: #3996fb;
-  color: #fff;
+  color: white;
   border: none;
-  border-radius: 4px;
-  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  line-height: normal;
+  height: 40px;
+   /* Spacing above the button */
 }
 
-.popup button:hover {
-  background-color: #007acc;
+/* Button hover effect */
+.popup #fetchContentButton:hover {
+  background-color: #0056b3;
 }
 
 

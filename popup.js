@@ -428,108 +428,118 @@ document.addEventListener("DOMContentLoaded", async () => {
   // });
   
 
-
-
-
   const chatbotContainer = document.getElementById("chatbotContainer");
   const selectionContainer = document.getElementById("selectionContainer");
   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
   const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-  const urlInput = document.getElementById("urlInput");
   const fetchContentButton = document.getElementById("fetchContentButton");
-  const webpageOptions = document.getElementById("webpageOptions");
   const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
   const searchBox = document.getElementById("searchBox");
-
+  
+  document.getElementById("closePopupButton").addEventListener("click", function () {
+    webpageOptionsPopup.style.display = "none";  // Close the popup using display none
+  });
+  
+  // Show the popup with the searchBox click event
+  searchBox.addEventListener("click", () => {
+    webpageOptionsPopup.style.display = "flex";  // Open the popup using display flex
+  });
+  
   let markdownContent = "";
-  let webpageUrl = "";
   searchBox.style.display = 'none';
-
+  
   chatWithChatbotButton1.addEventListener('click', () => {
     chatbotContainer.style.display = 'block';
     searchBox.style.display = 'none';
   });
-
+  
   chatWithWebpageButton1.addEventListener('click', () => {
     chatbotContainer.style.display = 'block';
     searchBox.style.display = 'block'; // Show search box
   });
-
-
-  function cleanMarkdown(markdown) {
-    // Remove any <script>, <style>, or other HTML tags that might have remained
-    let cleanedMarkdown = markdown
-    
-    .replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, '')      // Remove JS scripts
-    .replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, '')       // Remove CSS styles
-    .replace(/<!--[\s\S]*?-->/g, '')                       // Remove HTML comments
-    .replace(/<\/?[^>]+(>|$)/g, '')                        // Remove remaining HTML tags
-    .replace(/\bfunction\s*\w*\([\s\S]*?\{[\s\S]*?\}\);?/g, '') // Remove JS function definitions
-    .replace(/window\.[\s\S]+;/g, '')                      // Remove window object references
-    .replace(/\bgtag\([\s\S]*?\);?/g, '')                  // Remove gtag calls (Google Analytics)
-    .replace(/localStorage\.setItem\([\s\S]*?\);?/g, '')    // Remove localStorage operations
-    .replace(/document\.documentElement\.classList\.[\s\S]*?\);?/g, '') // Remove DOM manipulations
-    .replace(/\(\s*function\s*\([\s\S]*?\)\s*\{[\s\S]*?\}\)\(\);?/g, '') // Remove IIFE functions
-    .replace(/document\.getElementById\([\s\S]*?\);?/g, '') // Remove document.getElementById
-    .replace(/document\.querySelector\([\s\S]*?\);?/g, '') // Remove document.querySelector
-    .replace(/setTimeout\([\s\S]*?\);?/g, '')               // Remove setTimeout calls
-    .replace(/setInterval\([\s\S]*?\);?/g, '')              // Remove setInterval calls
-    .replace(/const|let|var\s+\w+\s*=\s*[\s\S]+;/g, '')     // Remove variable declarations
-    .replace(/fetch\([\s\S]*?\);?/g, '')                    // Remove fetch API calls
-    .replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, '')             // Remove Markdown images with embedded JS links
-    .replace(/\.css\([\s\S]*?\);?/g, '')                    // Remove CSS-related JS calls
-    .replace(/document\.createElement\([\s\S]*?\);?/g, '')  // Remove element creation calls
-    .replace(/element\.style\.[\s\S]+;/g, '')               // Remove inline styling operations
-    .replace(/\bconsole\.[\s\S]*?\);?/g, '')                // Remove console log operations
-    .replace(/import\s+['"][\s\S]*?['"];?/g, '')            // Remove import statements
-    .replace(/export\s+\w+\s+[\s\S]*?;/g, '')               // Remove export statements
-    .replace(/require\([\s\S]*?\);?/g, '')                  // Remove require calls
-    .replace(/\bRLCONF\b[\s\S]*?};/g, '')                   // Remove RLCONF metadata
-    .replace(/\bRLSTATE\b[\s\S]*?};/g, '')                  // Remove RLSTATE metadata
-    .replace(/\bRLPAGEMODULES\b[\s\S]*?];?/g, '')           // Remove RLPAGEMODULES metadata
-    .replace(/\bwg[A-Za-z]+\b[\s\S]*?};/g, '')              // Remove MediaWiki `wg*` variables
-    .replace(/"@context":"[\s\S]+?"/g, '')                  // Remove JSON-LD context metadata
-    .replace(/"@type":"[\s\S]+?"/g, '')                     // Remove JSON-LD type metadata
-    
-    return cleanedMarkdown;
-  }
-
-
   
+  // Predefined markdown content for testing
+  const predefinedMarkdown = `
+ # UNPKG
+unpkg is a fast, global content delivery network for everything on [npm](https://www.npmjs.com/). Use it to quickly and easily load any file from any package using a URL like:
+
+unpkg.com/:package@:version/:file
+
+### Examples
+
+Using a fixed version:
+
+*   [unpkg.com/react@16.7.0/umd/react.production.min.js](https://unpkg.com/react@16.7.0/umd/react.production.min.js)
+*   [unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js](https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js)
+
+You may also use a [semver range](https://docs.npmjs.com/misc/semver) or a [tag](https://docs.npmjs.com/cli/dist-tag) instead of a fixed version number, or omit the version/tag entirely to use the latest tag.
+
+*   [unpkg.com/react@^16/umd/react.production.min.js](https://unpkg.com/react@^16/umd/react.production.min.js)
+*   [unpkg.com/react/umd/react.production.min.js](https://unpkg.com/react/umd/react.production.min.js)
+
+If you omit the file path (i.e. use a “bare” URL), unpkg will serve the file specified by the unpkg field in package.json, or fall back to main.
+
+*   [unpkg.com/jquery](https://unpkg.com/jquery)
+*   [unpkg.com/three](https://unpkg.com/three)
+
+Append a / at the end of a URL to view a listing of all the files in a package.
+
+*   [unpkg.com/react/](https://unpkg.com/react/)
+*   [unpkg.com/react-router/](https://unpkg.com/react-router/)
+
+### Query Parameters
+
+?meta
+
+Return metadata about any file in a package as JSON (e.g./any/file?meta)
+
+?module
+
+Expands all [“bare” import specifiers](https://html.spec.whatwg.org/multipage/webappapis.html#resolve-a-module-specifier) in JavaScript modules to unpkg URLs. This feature is _very experimental_
+
+### Cache Behavior
+
+The CDN caches files based on their permanent URL, which includes the npm package version. This works because npm does not allow package authors to overwrite a package that has already been published with a different one at the same version number.
+
+Browsers are instructed (via the Cache-Control header) to cache assets indefinitely (1 year).
+
+URLs that do not specify a package version number redirect to one that does. This is the latest version when no version is specified, or the maxSatisfying version when a [semver version](https://github.com/npm/node-semver) is given. Redirects are cached for 10 minutes at the CDN, 1 minute in browsers.
+
+If you want users to be able to use the latest version when you cut a new release, the best policy is to put the version number in the URL directly in your installation instructions. This will also load more quickly because we won't have to resolve the latest version and redirect them.
+
+### Workflow
+
+For npm package authors, unpkg relieves the burden of publishing your code to a CDN in addition to the npm registry. All you need to do is include your [UMD](https://github.com/umdjs/umd) build in your npm package (not your repo, that's different!).
+
+You can do this easily using the following setup:
+
+*   Add the umd (or dist) directory to your .gitignore file
+*   Add the umd directory to your [files array](https://docs.npmjs.com/files/package.json#files) in package.json
+*   Use a build script to generate your UMD build in the umd directory when you publish
+
+That's it! Now when you npm publish you'll have a version available on unpkg as well.
+
+### About
+
+unpkg is an [open source](https://github.com/mjackson/unpkg) project built and maintained by [Michael Jackson](https://twitter.com/mjackson). unpkg is not affiliated with or supported by npm, Inc. in any way. Please do not contact npm for help with unpkg. Instead, please reach out to [@unpkg](https://twitter.com/unpkg) with any questions or concerns.
+
+The unpkg CDN is powered by [Cloudflare](https://www.cloudflare.com/), one of the world's largest and fastest cloud network platforms.
+
+[![Cloudflare](https://unpkg.com/_client/46bc46bc8accec6a.png)](https://www.cloudflare.com/)
+  `;
+  
+  // Function to send the predefined markdown to the chatbot
   fetchContentButton.addEventListener("click", () => {
-    const url = urlInput.value.trim();
-    if (url) {
-      console.log("Webpage URL:", url);
-      webpageUrl = url;
+    console.log("Using predefined markdown for testing.");
+    
+    markdownContent = predefinedMarkdown;
   
-      // Fetch the HTML content from the URL
-      fetch(url)
-        .then((response) => response.text())
-        .then((html) => {
-          // Use turndown.js to convert HTML to Markdown directly in popup.js
-          const turndownService = new TurndownService();
-          let markdownContent = turndownService.turndown(html);
-
-          markdownContent = cleanMarkdown(markdownContent);
-  
-          //console.log("Markdown content:", markdownContent);
-          console.log("Cleaned Markdown content:", markdownContent);
-
-          sendMessageToChatbot("Here is the content and the url of the webpage I'm on.",webpageUrl, markdownContent);
-        })
-        .catch((error) => {
-          console.error("Error fetching HTML:", error);
-        });
-        
-        webpageOptionsPopup.style.display = "none";
-      //webpageOptions.style.display = "none";
-      chatbotContainer.style.display = "flex";
-    }
+    // Send the predefined markdown to the chatbot
+    sendMessageToChatbot("Here is some predefined markdown content for testing.", "", markdownContent);
+    
+    webpageOptionsPopup.style.display = "none";
+    chatbotContainer.style.display = "flex";
   });
-
-  searchBox.addEventListener("click", () => {
-    webpageOptionsPopup.style.display = "flex";
-  })
   
   // Check if user has a stored option, and update UI accordingly
   chrome.storage.local.get("selectedOption", (result) => {
@@ -538,7 +548,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       chatbotContainer.style.display = "flex";
   
       if (result.selectedOption === "webpage") {
-        webpageOptions.style.display = "flex";
+        webpageOptionsPopup.style.display = "flex";
       }
     }
   });
@@ -547,11 +557,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   chatWithChatbotButton1.addEventListener("click", () => {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
-    //webpageOptions.style.display = "none";
     webpageOptionsPopup.style.display = "none";
   
-  
-    // Store the selected option
     chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
       console.log("Chat with Chatbot selected and stored.");
     });
@@ -561,46 +568,183 @@ document.addEventListener("DOMContentLoaded", async () => {
   chatWithWebpageButton1.addEventListener("click", () => {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
-    //webpageOptions.style.display = "flex";
     webpageOptionsPopup.style.display = "flex";
-
   
-  
-    // Store the selected option
     chrome.storage.local.set({ selectedOption: "webpage" }, () => {
       console.log("Chat with Webpage selected and stored.");
     });
   });
   
-  // Fetch Content button click event
-  fetchContentButton.addEventListener("click", () => {
-    const url = urlInput.value.trim();
-    if (url) {
-      console.log("Webpage URL:", url);
-  
-      // Hide URL input and fetch button, and show the chatbot interface
-      //webpageOptions.style.display = "none";
-      webpageOptionsPopup.style.display = "none";
-      chatbotContainer.style.display = "flex";
-    }
-  });
-  
-  // If there's an "Open New Tab" button logic, ensure it resets the state correctly
+  // Open New Tab button logic
   const openNewTabButton = document.getElementById("openNewTabButton");
   if (openNewTabButton) {
     openNewTabButton.addEventListener("click", () => {
-      // Reset to show the two options again
       selectionContainer.style.display = "block";
       chatbotContainer.style.display = "none";
-     // webpageOptions.style.display = "none";
-     webpageOptionsPopup.style.display = "none";
+      webpageOptionsPopup.style.display = "none";
   
-      // Clear the stored option for a new selection
       chrome.storage.local.remove("selectedOption", () => {
         console.log("Previous selection cleared, ready for new chat.");
       });
     });
   }
+  
+
+
+//   const chatbotContainer = document.getElementById("chatbotContainer");
+//   const selectionContainer = document.getElementById("selectionContainer");
+//   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+//   const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+//   const urlInput = document.getElementById("urlInput");
+//   const fetchContentButton = document.getElementById("fetchContentButton");
+//   const webpageOptions = document.getElementById("webpageOptions");
+//   const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
+//   const searchBox = document.getElementById("searchBox");
+  
+
+//   document.getElementById("closePopupButton").addEventListener("click", function() {
+//     webpageOptionsPopup.style.display = "none";  // Close the popup using display none
+//   });
+  
+//   // Show the popup with the searchBox click event
+//   searchBox.addEventListener("click", () => {
+//     webpageOptionsPopup.style.display = "flex";  // Open the popup using display flex
+//   });
+  
+
+// // Add click event listener to the close button
+
+
+//   let markdownContent = "";
+//   let webpageUrl = "";
+//   searchBox.style.display = 'none';
+
+//   chatWithChatbotButton1.addEventListener('click', () => {
+//     chatbotContainer.style.display = 'block';
+//     searchBox.style.display = 'none';
+//   });
+
+//   chatWithWebpageButton1.addEventListener('click', () => {
+//     chatbotContainer.style.display = 'block';
+//     searchBox.style.display = 'block'; // Show search box
+//   });
+
+
+//   function cleanMarkdown(markdown) {
+    
+//     let cleanedMarkdown = markdown
+    
+   
+//     return cleanedMarkdown;
+//   }
+
+
+  
+//   fetchContentButton.addEventListener("click", () => {
+//     const url = urlInput.value.trim();
+//     if (url) {
+//       console.log("Webpage URL:", url);
+//       webpageUrl = url;
+  
+//       // Fetch the HTML content from the URL
+//       fetch(url)
+//         .then((response) => response.text())
+//         .then((html) => {
+//           // Use turndown.js to convert HTML to Markdown directly in popup.js
+//           const turndownService = new TurndownService();
+//           let markdownContent = turndownService.turndown(html);
+
+//           markdownContent = cleanMarkdown(markdownContent);
+  
+//           //console.log("Markdown content:", markdownContent);
+//           console.log("Cleaned Markdown content:", markdownContent);
+
+//           sendMessageToChatbot("Here is the content and the url of the webpage I'm on.",webpageUrl, markdownContent);
+//         })
+//         .catch((error) => {
+//           console.error("Error fetching HTML:", error);
+//         });
+        
+//         webpageOptionsPopup.style.display = "none";
+//       //webpageOptions.style.display = "none";
+//       chatbotContainer.style.display = "flex";
+//     }
+//   });
+
+//   searchBox.addEventListener("click", () => {
+//     webpageOptionsPopup.style.display = "flex";
+//   })
+  
+//   // Check if user has a stored option, and update UI accordingly
+//   chrome.storage.local.get("selectedOption", (result) => {
+//     if (result.selectedOption) {
+//       selectionContainer.style.display = "none";
+//       chatbotContainer.style.display = "flex";
+  
+//       if (result.selectedOption === "webpage") {
+//         webpageOptions.style.display = "flex";
+//       }
+//     }
+//   });
+  
+//   // Chat with Chatbot logic
+//   chatWithChatbotButton1.addEventListener("click", () => {
+//     selectionContainer.style.display = "none";
+//     chatbotContainer.style.display = "flex";
+//     //webpageOptions.style.display = "none";
+//     webpageOptionsPopup.style.display = "none";
+  
+  
+//     // Store the selected option
+//     chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
+//       console.log("Chat with Chatbot selected and stored.");
+//     });
+//   });
+  
+//   // Chat with Webpage logic
+//   chatWithWebpageButton1.addEventListener("click", () => {
+//     selectionContainer.style.display = "none";
+//     chatbotContainer.style.display = "flex";
+//     //webpageOptions.style.display = "flex";
+//     webpageOptionsPopup.style.display = "flex";
+
+  
+  
+//     // Store the selected option
+//     chrome.storage.local.set({ selectedOption: "webpage" }, () => {
+//       console.log("Chat with Webpage selected and stored.");
+//     });
+//   });
+  
+//   // Fetch Content button click event
+//   fetchContentButton.addEventListener("click", () => {
+//     const url = urlInput.value.trim();
+//     if (url) {
+//       console.log("Webpage URL:", url);
+  
+//       // Hide URL input and fetch button, and show the chatbot interface
+//       //webpageOptions.style.display = "none";
+//       webpageOptionsPopup.style.display = "none";
+//       chatbotContainer.style.display = "flex";
+//     }
+//   });
+  
+//   // If there's an "Open New Tab" button logic, ensure it resets the state correctly
+//   const openNewTabButton = document.getElementById("openNewTabButton");
+//   if (openNewTabButton) {
+//     openNewTabButton.addEventListener("click", () => {
+//       // Reset to show the two options again
+//       selectionContainer.style.display = "block";
+//       chatbotContainer.style.display = "none";
+//      // webpageOptions.style.display = "none";
+//      webpageOptionsPopup.style.display = "none";
+  
+//       // Clear the stored option for a new selection
+//       chrome.storage.local.remove("selectedOption", () => {
+//         console.log("Previous selection cleared, ready for new chat.");
+//       });
+//     });
+//   }
   
   // const chatbotContainer = document.getElementById("chatbotContainer");
   // const selectionContainer = document.getElementById("selectionContainer");
@@ -814,11 +958,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
      
      //const conversation = [{ role: "user", content: messageText }];
-     const conversation = [
-      { role: "system", content: `You are now given context from the following webpage Markdown content. Use this context to answer the user's queries about the webpage content.` },
-      { role: "user", content: markdownContent },
-      { role: "user", content: messageText }
-  ];
+     let conversation;
+     const selectedOption = await new Promise((resolve) => {
+       chrome.storage.local.get("selectedOption", (result) => {
+         resolve(result.selectedOption || "chatbot");
+       });
+     });
+ 
+    // 
+    if (selectedOption === "webpage") {
+      conversation = [
+        {
+          role: "system",
+          content: `You are assisting with the following webpage content: Predefined webpage for testing. Here is the content: ${predefinedMarkdown}`,
+        },
+        {
+          role: "user",
+          content: "What are the examples mentioned on the page or give the page summary?",
+        },
+      ];
+    } else {
+      // Default chatbot conversation
+      conversation = [{ role: "user", content: messageText }];
+    }
     
      
 
