@@ -140,18 +140,19 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     });
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // Check if the tab is fully loaded (status is 'complete') and if it's a valid URL
-    if (changeInfo.status === 'complete' && tab.url && !tab.url.startsWith("chrome-extension://") && tab.url !== "chrome://newtab/") {
-        // Store the current URL as the previous URL for the next tab switch
-        if (previousTabUrl) {
-            chrome.storage.local.set({ lastTabUrl: previousTabUrl }, () => {
-                console.log("Updated last active tab URL in storage:", previousTabUrl);
-            });
-        }
-        previousTabUrl = tab.url;
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "send_selected_text") {
+        // Store the selected text in local storage
+        chrome.storage.local.set({ selectedText: request.text }, () => {
+            console.log("Stored selected text in storage:", request.text);
+        });
+
+        // Send a message to the popup (if it's open) to update the textarea
+        chrome.runtime.sendMessage({ action: "update_chat_input", text: request.text });
     }
 });
+
+
 
 
 

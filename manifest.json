@@ -9,7 +9,9 @@
     "webNavigation",
      "scripting",
      "activeTab", 
-     "alarms"
+     "alarms",
+     "commands",
+     "contextMenus"
      
 
   ],

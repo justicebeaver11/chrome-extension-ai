@@ -63,19 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 //   });
 // }
 
-function getLastTabUrlFromStorage() {
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.get("lastTabUrl", (result) => {
-      if (result.lastTabUrl) {
-        console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
-        resolve(result.lastTabUrl);
-      } else {
-        console.log("No URL found in storage.");
-        reject("No URL found");
-      }
-    });
-  });
-}
+
 
 // Add event listener to the button with id 'testing'
 // document.getElementById('retrieveUrlButton').addEventListener('click', () => {
@@ -91,6 +79,75 @@ document.getElementById('retrieveUrlButton').addEventListener('click', async () 
     console.error("Error retrieving last active tab URL:", error);
   }
 });
+
+
+// function getLastTabUrlFromStorage() {
+//   return new Promise((resolve, reject) => {
+//     chrome.storage.local.get("lastTabUrl", (result) => {
+//       if (result.lastTabUrl) {
+//         console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+//         resolve(result.lastTabUrl);
+//       } else {
+//         console.log("No URL found in storage.");
+//         reject("No URL found");
+//       }
+//     });
+//   });
+// }
+
+function getLastTabUrlAndSelectedTextFromStorage() {
+  return new Promise((resolve, reject) => {
+      chrome.storage.local.get(["lastTabUrl", "selectedText"], (result) => {
+          if (result.lastTabUrl) {
+              console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+          }
+          if (result.selectedText) {
+              console.log("Selected Text from Storage:", result.selectedText);
+          }
+
+          if (result.lastTabUrl || result.selectedText) {
+              resolve({
+                  lastTabUrl: result.lastTabUrl || null,
+                  selectedText: result.selectedText || null
+              });
+          } else {
+              console.log("No data found in storage.");
+              reject("No data found");
+          }
+      });
+  });
+}
+
+// Call the function and update the popup UI
+getLastTabUrlAndSelectedTextFromStorage()
+  .then((data) => {
+      const chatInput = document.getElementById("chatbotInput"); // Chatbot's input area
+
+      if (data.selectedText) {
+          // Set the selected text into the chatbot input
+          chatInput.value = data.selectedText;
+      }
+
+      // If needed, you can use the lastTabUrl as well (for example, display it in the UI)
+      if (data.lastTabUrl) {
+          console.log("Last Active Tab URL:", data.lastTabUrl);
+      }
+  })
+  .catch((error) => {
+      console.log("Error:", error);
+  });
+
+  // Listen for messages from the background script to update the chat input
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "update_chat_input" && request.text) {
+      // Update the textarea with the selected text
+      const chatInput = document.getElementById("chatbotInput");
+      if (chatInput) {
+          chatInput.value = request.text;
+      }
+  }
+});
+
 
 
 
@@ -177,7 +234,7 @@ document.getElementById('retrieveUrlButton').addEventListener('click', async () 
     "LLaVA v1.6 34B": 10,
     "Qwen 1.5 72B": 10,
     "DBRX 132B Instruct": 10,
-    Command: 10,
+    "Command": 10,
     "Capybara 34B": 10,
     "Gemini 1.5 Flash": 10,
     "Dolphin 2.9.2 Mixtral 8x22B": 10,
