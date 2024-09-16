@@ -21,6 +21,85 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+//   function getLastTabUrlFromStorage() {
+//     chrome.storage.local.get("lastTabUrl", (result) => {
+//         if (result.lastTabUrl) {
+//             console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+//         } else {
+//             console.log("No URL found in storage.");
+//         }
+//     });
+// }
+
+// // Add event listener to the button with id 'testing'
+// document.getElementById('testing').addEventListener('click', () => {
+//     getLastTabUrlFromStorage();  // Call the function when button is clicked
+// });
+
+
+//better
+// function getLastTabUrlFromStorage() {
+//   chrome.storage.local.get("lastTabUrl", (result) => {
+//       if (result.lastTabUrl) {
+//           console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+//       } else {
+//           console.log("No URL found in storage.");
+//       }
+//   });
+// }
+
+// // Add event listener to the button with id 'testing'
+// document.getElementById('testing').addEventListener('click', () => {
+//   getLastTabUrlFromStorage();  // Call the function when the button is clicked
+// });
+
+// function getLastTabUrlFromStorage() {
+//   chrome.storage.local.get("lastTabUrl", (result) => {
+//       if (result.lastTabUrl) {
+//           console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+//       } else {
+//           console.log("No URL found in storage.");
+//       }
+//   });
+// }
+
+function getLastTabUrlFromStorage() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get("lastTabUrl", (result) => {
+      if (result.lastTabUrl) {
+        console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+        resolve(result.lastTabUrl);
+      } else {
+        console.log("No URL found in storage.");
+        reject("No URL found");
+      }
+    });
+  });
+}
+
+// Add event listener to the button with id 'testing'
+// document.getElementById('retrieveUrlButton').addEventListener('click', () => {
+//   getLastTabUrlFromStorage();  // Call the function when the button is clicked
+// });
+
+document.getElementById('retrieveUrlButton').addEventListener('click', async () => {
+  try {
+    const lastTabUrl = await getLastTabUrlFromStorage();
+    urlInput.value = lastTabUrl; // Set the URL input to the retrieved tab URL
+    fetchMarkdownFromUrl(lastTabUrl); // Fetch markdown for the last active tab URL
+  } catch (error) {
+    console.error("Error retrieving last active tab URL:", error);
+  }
+});
+
+
+
+
+
+
+
+  
+
   const modelCredits = {
     "OpenChat 3.5 8B": 1,
     "Mistral 7B Instruct": 1,
@@ -428,169 +507,301 @@ document.addEventListener("DOMContentLoaded", async () => {
   // });
   
 
-  const chatbotContainer = document.getElementById("chatbotContainer");
-  const selectionContainer = document.getElementById("selectionContainer");
-  const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
-  const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
-  const fetchContentButton = document.getElementById("fetchContentButton");
-  const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
-  const searchBox = document.getElementById("searchBox");
+//   const chatbotContainer = document.getElementById("chatbotContainer");
+//   const selectionContainer = document.getElementById("selectionContainer");
+//   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+//   const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+//   const fetchContentButton = document.getElementById("fetchContentButton");
+//   const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
+//   const searchBox = document.getElementById("searchBox");
   
-  document.getElementById("closePopupButton").addEventListener("click", function () {
-    webpageOptionsPopup.style.display = "none";  // Close the popup using display none
-  });
+//   document.getElementById("closePopupButton").addEventListener("click", function () {
+//     webpageOptionsPopup.style.display = "none";  // Close the popup using display none
+//   });
   
-  // Show the popup with the searchBox click event
-  searchBox.addEventListener("click", () => {
-    webpageOptionsPopup.style.display = "flex";  // Open the popup using display flex
-  });
+//   // Show the popup with the searchBox click event
+//   searchBox.addEventListener("click", () => {
+//     webpageOptionsPopup.style.display = "flex";  // Open the popup using display flex
+//   });
   
-  let markdownContent = "";
-  searchBox.style.display = 'none';
+//   let markdownContent = "";
+//   searchBox.style.display = 'none';
   
-  chatWithChatbotButton1.addEventListener('click', () => {
-    chatbotContainer.style.display = 'block';
-    searchBox.style.display = 'none';
-  });
+//   chatWithChatbotButton1.addEventListener('click', () => {
+//     chatbotContainer.style.display = 'block';
+//     searchBox.style.display = 'none';
+//   });
   
-  chatWithWebpageButton1.addEventListener('click', () => {
-    chatbotContainer.style.display = 'block';
-    searchBox.style.display = 'block'; // Show search box
-  });
+//   chatWithWebpageButton1.addEventListener('click', () => {
+//     chatbotContainer.style.display = 'block';
+//     searchBox.style.display = 'block'; // Show search box
+//   });
   
-  // Predefined markdown content for testing
-  const predefinedMarkdown = `
- # UNPKG
-unpkg is a fast, global content delivery network for everything on [npm](https://www.npmjs.com/). Use it to quickly and easily load any file from any package using a URL like:
+//   // Predefined markdown content for testing
+//   const predefinedMarkdown = `
+//  # UNPKG
+// unpkg is a fast, global content delivery network for everything on [npm](https://www.npmjs.com/). Use it to quickly and easily load any file from any package using a URL like:
 
-unpkg.com/:package@:version/:file
+// unpkg.com/:package@:version/:file
 
-### Examples
+// ### Examples
 
-Using a fixed version:
+// Using a fixed version:
 
-*   [unpkg.com/react@16.7.0/umd/react.production.min.js](https://unpkg.com/react@16.7.0/umd/react.production.min.js)
-*   [unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js](https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js)
+// *   [unpkg.com/react@16.7.0/umd/react.production.min.js](https://unpkg.com/react@16.7.0/umd/react.production.min.js)
+// *   [unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js](https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js)
 
-You may also use a [semver range](https://docs.npmjs.com/misc/semver) or a [tag](https://docs.npmjs.com/cli/dist-tag) instead of a fixed version number, or omit the version/tag entirely to use the latest tag.
+// You may also use a [semver range](https://docs.npmjs.com/misc/semver) or a [tag](https://docs.npmjs.com/cli/dist-tag) instead of a fixed version number, or omit the version/tag entirely to use the latest tag.
 
-*   [unpkg.com/react@^16/umd/react.production.min.js](https://unpkg.com/react@^16/umd/react.production.min.js)
-*   [unpkg.com/react/umd/react.production.min.js](https://unpkg.com/react/umd/react.production.min.js)
+// *   [unpkg.com/react@^16/umd/react.production.min.js](https://unpkg.com/react@^16/umd/react.production.min.js)
+// *   [unpkg.com/react/umd/react.production.min.js](https://unpkg.com/react/umd/react.production.min.js)
 
-If you omit the file path (i.e. use a “bare” URL), unpkg will serve the file specified by the unpkg field in package.json, or fall back to main.
+// If you omit the file path (i.e. use a “bare” URL), unpkg will serve the file specified by the unpkg field in package.json, or fall back to main.
 
-*   [unpkg.com/jquery](https://unpkg.com/jquery)
-*   [unpkg.com/three](https://unpkg.com/three)
+// *   [unpkg.com/jquery](https://unpkg.com/jquery)
+// *   [unpkg.com/three](https://unpkg.com/three)
 
-Append a / at the end of a URL to view a listing of all the files in a package.
+// Append a / at the end of a URL to view a listing of all the files in a package.
 
-*   [unpkg.com/react/](https://unpkg.com/react/)
-*   [unpkg.com/react-router/](https://unpkg.com/react-router/)
+// *   [unpkg.com/react/](https://unpkg.com/react/)
+// *   [unpkg.com/react-router/](https://unpkg.com/react-router/)
 
-### Query Parameters
+// ### Query Parameters
 
-?meta
+// ?meta
 
-Return metadata about any file in a package as JSON (e.g./any/file?meta)
+// Return metadata about any file in a package as JSON (e.g./any/file?meta)
 
-?module
+// ?module
 
-Expands all [“bare” import specifiers](https://html.spec.whatwg.org/multipage/webappapis.html#resolve-a-module-specifier) in JavaScript modules to unpkg URLs. This feature is _very experimental_
+// Expands all [“bare” import specifiers](https://html.spec.whatwg.org/multipage/webappapis.html#resolve-a-module-specifier) in JavaScript modules to unpkg URLs. This feature is _very experimental_
 
-### Cache Behavior
+// ### Cache Behavior
 
-The CDN caches files based on their permanent URL, which includes the npm package version. This works because npm does not allow package authors to overwrite a package that has already been published with a different one at the same version number.
+// The CDN caches files based on their permanent URL, which includes the npm package version. This works because npm does not allow package authors to overwrite a package that has already been published with a different one at the same version number.
 
-Browsers are instructed (via the Cache-Control header) to cache assets indefinitely (1 year).
+// Browsers are instructed (via the Cache-Control header) to cache assets indefinitely (1 year).
 
-URLs that do not specify a package version number redirect to one that does. This is the latest version when no version is specified, or the maxSatisfying version when a [semver version](https://github.com/npm/node-semver) is given. Redirects are cached for 10 minutes at the CDN, 1 minute in browsers.
+// URLs that do not specify a package version number redirect to one that does. This is the latest version when no version is specified, or the maxSatisfying version when a [semver version](https://github.com/npm/node-semver) is given. Redirects are cached for 10 minutes at the CDN, 1 minute in browsers.
 
-If you want users to be able to use the latest version when you cut a new release, the best policy is to put the version number in the URL directly in your installation instructions. This will also load more quickly because we won't have to resolve the latest version and redirect them.
+// If you want users to be able to use the latest version when you cut a new release, the best policy is to put the version number in the URL directly in your installation instructions. This will also load more quickly because we won't have to resolve the latest version and redirect them.
 
-### Workflow
+// ### Workflow
 
-For npm package authors, unpkg relieves the burden of publishing your code to a CDN in addition to the npm registry. All you need to do is include your [UMD](https://github.com/umdjs/umd) build in your npm package (not your repo, that's different!).
+// For npm package authors, unpkg relieves the burden of publishing your code to a CDN in addition to the npm registry. All you need to do is include your [UMD](https://github.com/umdjs/umd) build in your npm package (not your repo, that's different!).
 
-You can do this easily using the following setup:
+// You can do this easily using the following setup:
 
-*   Add the umd (or dist) directory to your .gitignore file
-*   Add the umd directory to your [files array](https://docs.npmjs.com/files/package.json#files) in package.json
-*   Use a build script to generate your UMD build in the umd directory when you publish
+// *   Add the umd (or dist) directory to your .gitignore file
+// *   Add the umd directory to your [files array](https://docs.npmjs.com/files/package.json#files) in package.json
+// *   Use a build script to generate your UMD build in the umd directory when you publish
 
-That's it! Now when you npm publish you'll have a version available on unpkg as well.
+// That's it! Now when you npm publish you'll have a version available on unpkg as well.
 
-### About
+// ### About
 
-unpkg is an [open source](https://github.com/mjackson/unpkg) project built and maintained by [Michael Jackson](https://twitter.com/mjackson). unpkg is not affiliated with or supported by npm, Inc. in any way. Please do not contact npm for help with unpkg. Instead, please reach out to [@unpkg](https://twitter.com/unpkg) with any questions or concerns.
+// unpkg is an [open source](https://github.com/mjackson/unpkg) project built and maintained by [Michael Jackson](https://twitter.com/mjackson). unpkg is not affiliated with or supported by npm, Inc. in any way. Please do not contact npm for help with unpkg. Instead, please reach out to [@unpkg](https://twitter.com/unpkg) with any questions or concerns.
 
-The unpkg CDN is powered by [Cloudflare](https://www.cloudflare.com/), one of the world's largest and fastest cloud network platforms.
+// The unpkg CDN is powered by [Cloudflare](https://www.cloudflare.com/), one of the world's largest and fastest cloud network platforms.
 
-[![Cloudflare](https://unpkg.com/_client/46bc46bc8accec6a.png)](https://www.cloudflare.com/)
-  `;
+// [![Cloudflare](https://unpkg.com/_client/46bc46bc8accec6a.png)](https://www.cloudflare.com/)
+//   `;
   
-  // Function to send the predefined markdown to the chatbot
-  fetchContentButton.addEventListener("click", () => {
-    console.log("Using predefined markdown for testing.");
+//   // Function to send the predefined markdown to the chatbot
+//   fetchContentButton.addEventListener("click", () => {
+//     console.log("Using predefined markdown for testing.");
     
-    markdownContent = predefinedMarkdown;
+//     markdownContent = predefinedMarkdown;
   
-    // Send the predefined markdown to the chatbot
-    sendMessageToChatbot("Here is some predefined markdown content for testing.", "", markdownContent);
+//     // Send the predefined markdown to the chatbot
+//     sendMessageToChatbot("Here is some predefined markdown content for testing.", "", markdownContent);
     
-    webpageOptionsPopup.style.display = "none";
-    chatbotContainer.style.display = "flex";
-  });
+//     webpageOptionsPopup.style.display = "none";
+//     chatbotContainer.style.display = "flex";
+//   });
   
-  // Check if user has a stored option, and update UI accordingly
-  chrome.storage.local.get("selectedOption", (result) => {
-    if (result.selectedOption) {
-      selectionContainer.style.display = "none";
-      chatbotContainer.style.display = "flex";
+//   // Check if user has a stored option, and update UI accordingly
+//   chrome.storage.local.get("selectedOption", (result) => {
+//     if (result.selectedOption) {
+//       selectionContainer.style.display = "none";
+//       chatbotContainer.style.display = "flex";
   
-      if (result.selectedOption === "webpage") {
-        webpageOptionsPopup.style.display = "flex";
+//       if (result.selectedOption === "webpage") {
+//         webpageOptionsPopup.style.display = "flex";
+//       }
+//     }
+//   });
+  
+//   // Chat with Chatbot logic
+//   chatWithChatbotButton1.addEventListener("click", () => {
+//     selectionContainer.style.display = "none";
+//     chatbotContainer.style.display = "flex";
+//     webpageOptionsPopup.style.display = "none";
+  
+//     chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
+//       console.log("Chat with Chatbot selected and stored.");
+//     });
+//   });
+  
+//   // Chat with Webpage logic
+//   chatWithWebpageButton1.addEventListener("click", () => {
+//     selectionContainer.style.display = "none";
+//     chatbotContainer.style.display = "flex";
+//     webpageOptionsPopup.style.display = "flex";
+  
+//     chrome.storage.local.set({ selectedOption: "webpage" }, () => {
+//       console.log("Chat with Webpage selected and stored.");
+//     });
+//   });
+  
+//   // Open New Tab button logic
+//   const openNewTabButton = document.getElementById("openNewTabButton");
+//   if (openNewTabButton) {
+//     openNewTabButton.addEventListener("click", () => {
+//       selectionContainer.style.display = "block";
+//       chatbotContainer.style.display = "none";
+//       webpageOptionsPopup.style.display = "none";
+  
+//       chrome.storage.local.remove("selectedOption", () => {
+//         console.log("Previous selection cleared, ready for new chat.");
+//       });
+//     });
+//   }
+  
+
+//opensource 
+const chatbotContainer = document.getElementById("chatbotContainer");
+const selectionContainer = document.getElementById("selectionContainer");
+const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
+const chatWithWebpageButton1 = document.getElementById("chatWithWebpage");
+const urlInput = document.getElementById("urlInput");
+const fetchContentButton = document.getElementById("fetchContentButton");
+const webpageOptions = document.getElementById("webpageOptions");
+const webpageOptionsPopup = document.getElementById("webpageOptionsPopup");
+const searchBox = document.getElementById("searchBox");
+
+// Function to send a message to the chatbot
+function sendMessageToChatbot(message, url, markdown) {
+  // Implement your chatbot message handling logic here
+  console.log("Sending message to chatbot:", message);
+  console.log("URL:", url);
+  console.log("Markdown content:", markdown);
+}
+
+// Function to fetch markdown from the URL to Markdown service
+function fetchMarkdownFromUrl(url) {
+  const apiUrl = `https://urltomarkdown.herokuapp.com/?url=${encodeURIComponent(url)}`;
+
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    }
-  });
-  
-  // Chat with Chatbot logic
-  chatWithChatbotButton1.addEventListener("click", () => {
-    selectionContainer.style.display = "none";
-    chatbotContainer.style.display = "flex";
+      return response.text();
+    })
+    .then((markdown) => {
+      console.log("Markdown content:", markdown);
+      sendMessageToChatbot("Here is the content and the URL of the webpage I'm on.", url, markdown);
+    })
+    .catch((error) => {
+      console.error("Error fetching markdown:", error);
+    });
+}
+
+// Event listener for the close button
+document.getElementById("closePopupButton").addEventListener("click", function() {
+  webpageOptionsPopup.style.display = "none";  // Close the popup using display none
+});
+
+// Show the popup with the searchBox click event
+searchBox.addEventListener("click", () => {
+  webpageOptionsPopup.style.display = "flex";  // Open the popup using display flex
+});
+
+// Event listener for the 'Chat with Chatbot' button
+chatWithChatbotButton1.addEventListener('click', () => {
+  chatbotContainer.style.display = 'block';
+  searchBox.style.display = 'none';
+});
+
+// Event listener for the 'Chat with Webpage' button
+chatWithWebpageButton1.addEventListener('click', () => {
+  chatbotContainer.style.display = 'block';
+  searchBox.style.display = 'block'; // Show search box
+});
+
+
+
+// Event listener for the 'Fetch Content' button
+fetchContentButton.addEventListener("click", () => {
+  const url = urlInput.value.trim();
+  if (url) {
+    console.log("Webpage URL:", url);
+
+    // Fetch markdown from the URL
+    fetchMarkdownFromUrl(url);
+
+    // Hide URL input and fetch button, and show the chatbot interface
     webpageOptionsPopup.style.display = "none";
-  
-    chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
-      console.log("Chat with Chatbot selected and stored.");
-    });
-  });
-  
-  // Chat with Webpage logic
-  chatWithWebpageButton1.addEventListener("click", () => {
+    chatbotContainer.style.display = "flex";
+  }
+});
+
+// Check if user has a stored option, and update UI accordingly
+chrome.storage.local.get("selectedOption", (result) => {
+  if (result.selectedOption) {
     selectionContainer.style.display = "none";
     chatbotContainer.style.display = "flex";
-    webpageOptionsPopup.style.display = "flex";
-  
-    chrome.storage.local.set({ selectedOption: "webpage" }, () => {
-      console.log("Chat with Webpage selected and stored.");
+
+    if (result.selectedOption === "webpage") {
+      webpageOptions.style.display = "flex";
+    }
+  }
+});
+
+// Chat with Chatbot logic
+chatWithChatbotButton1.addEventListener("click", () => {
+  selectionContainer.style.display = "none";
+  chatbotContainer.style.display = "flex";
+  webpageOptionsPopup.style.display = "none";
+
+  // Store the selected option
+  chrome.storage.local.set({ selectedOption: "chatbot" }, () => {
+    console.log("Chat with Chatbot selected and stored.");
+  });
+});
+
+// Chat with Webpage logic
+chatWithWebpageButton1.addEventListener("click", () => {
+  selectionContainer.style.display = "none";
+  chatbotContainer.style.display = "flex";
+  webpageOptionsPopup.style.display = "flex";
+
+  // Store the selected option
+  chrome.storage.local.set({ selectedOption: "webpage" }, () => {
+    console.log("Chat with Webpage selected and stored.");
+  });
+});
+
+// If there's an "Open New Tab" button logic, ensure it resets the state correctly
+const openNewTabButton = document.getElementById("openNewTabButton");
+if (openNewTabButton) {
+  openNewTabButton.addEventListener("click", () => {
+    // Reset to show the two options again
+    selectionContainer.style.display = "block";
+    chatbotContainer.style.display = "none";
+    webpageOptionsPopup.style.display = "none";
+
+    // Clear the stored option for a new selection
+    chrome.storage.local.remove("selectedOption", () => {
+      console.log("Previous selection cleared, ready for new chat.");
     });
   });
-  
-  // Open New Tab button logic
-  const openNewTabButton = document.getElementById("openNewTabButton");
-  if (openNewTabButton) {
-    openNewTabButton.addEventListener("click", () => {
-      selectionContainer.style.display = "block";
-      chatbotContainer.style.display = "none";
-      webpageOptionsPopup.style.display = "none";
-  
-      chrome.storage.local.remove("selectedOption", () => {
-        console.log("Previous selection cleared, ready for new chat.");
-      });
-    });
-  }
-  
+}
 
 
+
+//turndown 
 //   const chatbotContainer = document.getElementById("chatbotContainer");
 //   const selectionContainer = document.getElementById("selectionContainer");
 //   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
@@ -959,28 +1170,47 @@ The unpkg CDN is powered by [Cloudflare](https://www.cloudflare.com/), one of th
      
      //const conversation = [{ role: "user", content: messageText }];
      let conversation;
+
+     // Fetch selected option (chatbot or webpage)
      const selectedOption = await new Promise((resolve) => {
        chrome.storage.local.get("selectedOption", (result) => {
          resolve(result.selectedOption || "chatbot");
        });
      });
  
-    // 
-    if (selectedOption === "webpage") {
-      conversation = [
-        {
-          role: "system",
-          content: `You are assisting with the following webpage content: Predefined webpage for testing. Here is the content: ${predefinedMarkdown}`,
-        },
-        {
-          role: "user",
-          content: "What are the examples mentioned on the page or give the page summary?",
-        },
-      ];
-    } else {
-      // Default chatbot conversation
-      conversation = [{ role: "user", content: messageText }];
-    }
+     // Handle "chat with webpage" logic
+     if (selectedOption === "webpage") {
+       // Fetch the markdown content using the provided web service URL
+       const url = urlInput.value.trim();
+       if (url) {
+         const markdownResponse = await fetch(`https://urltomarkdown.herokuapp.com/?url=${encodeURIComponent(url)}`);
+         const markdownContent = await markdownResponse.text();
+ 
+         if (markdownContent) {
+           // If markdown content is successfully fetched, use it in the conversation
+           conversation = [
+             {
+               role: "system",
+               content: `You are assisting with the following webpage content: ${markdownContent}`,
+             },
+             {
+               role: "user",
+               content: "What are the examples mentioned on the page or give the page summary?",
+             },
+           ];
+         } else {
+           console.log("Failed to fetch markdown content.");
+           conversation = [{ role: "user", content: messageText }];
+         }
+       } else {
+         console.log("No URL provided for markdown conversion.");
+         conversation = [{ role: "user", content: messageText }];
+       }
+     } else {
+       // Default chatbot conversation
+       conversation = [{ role: "user", content: messageText }];
+     }
+ 
     
      
 

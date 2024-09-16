@@ -982,6 +982,8 @@ input:checked + .slider:before {
   vertical-align: middle; /* Align the icon vertically */
 }
 
+
+
 .popup {
   position: fixed;
   top: 50%;
@@ -997,7 +999,8 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1000; /* Ensures the popup appears on top */
+  z-index: 1000; 
+  max-height: 90vh;
 }
 
 .popup.hidden {
@@ -1007,7 +1010,7 @@ input:checked + .slider:before {
 .popup #closePopupButton {
   background: transparent;
   position: absolute;
-  top: 10px; /* Position at the top */
+  top: 10px; 
   right: 10px; 
   border: none;
   font-size: 20px;
@@ -1029,9 +1032,9 @@ input:checked + .slider:before {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Button styling */
+
 .popup #fetchContentButton {
-  width: 50%; /* Full width button */
+  width: 50%; 
   padding: 2px 8px;
   background-color: #3996fb;
   color: white;
@@ -1042,13 +1045,39 @@ input:checked + .slider:before {
   margin-top: 10px;
   line-height: normal;
   height: 40px;
-   /* Spacing above the button */
+   
 }
 
-/* Button hover effect */
+
 .popup #fetchContentButton:hover {
   background-color: #0056b3;
 }
+
+
+
+#retrieveUrlContainer {
+  margin-top: 10px; 
+  text-align: center; 
+}
+
+#retrieveUrlButton {
+  background-color: #3996fb; /* Background color of the button */
+  color: white; /* Text color of the button */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Padding inside the button */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size of the button text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+#retrieveUrlButton:hover {
+  background-color: #297bca; 
+}
+
+
+
+
 
 
 
