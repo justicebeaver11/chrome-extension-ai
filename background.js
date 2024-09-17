@@ -84,41 +84,7 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 
-// Listen for tab changes (when the user switches tabs)
 
-// chrome.tabs.onActivated.addListener((activeInfo) => {
-//     chrome.tabs.get(activeInfo.tabId, (tab) => {
-//         let currentTabUrl = tab.url;
-
-//         // Store the current tab's URL in chrome.storage.local
-//         chrome.storage.local.set({ lastTabUrl: currentTabUrl }, () => {
-//             console.log("Stored last active tab URL in storage:", currentTabUrl);
-//         });
-//     });
-// });
-
-
-//better
-// let previousTabUrl = null;
-
-// chrome.tabs.onActivated.addListener((activeInfo) => {
-//     chrome.tabs.get(activeInfo.tabId, (tab) => {
-//         let currentTabUrl = tab.url;
-
-//         // Ignore chrome extension URLs
-//         if (!currentTabUrl.startsWith("chrome-extension://")) {
-//             // Store the previous URL before updating to the new one
-//             if (previousTabUrl) {
-//                 chrome.storage.local.set({ lastTabUrl: previousTabUrl }, () => {
-//                     console.log("Stored last active tab URL in storage:", previousTabUrl);
-//                 });
-//             }
-
-//             // Update the previous URL to the current tab's URL
-//             previousTabUrl = currentTabUrl;
-//         }
-//     });
-// });
 
 
 let previousTabUrl = null;
