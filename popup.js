@@ -475,21 +475,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   let timerInterval;
+
   function startTimer(timerElement) {
-    let secondsElapsed = 0;
-    timerElement.textContent = "0s";
-
+    let startTime = Date.now(); // Record the start time
+  
     timerInterval = setInterval(() => {
-      secondsElapsed++;
-      timerElement.textContent = `${secondsElapsed}s`;
-    }, 1000);
+      let elapsedTime = Date.now() - startTime; // Calculate the elapsed time
+      let seconds = Math.floor(elapsedTime / 1000); // Get seconds
+      let milliseconds = Math.floor((elapsedTime % 1000) / 100); // Get milliseconds as 1/10th of a second
+  
+      timerElement.textContent = `${seconds}.${milliseconds}s`; // Format as 1.2s
+    }, 100); // Update every 100 milliseconds
   }
 
-  // Function to stop the timer once the response is received
-  function stopTimer(timerElement) {
-    clearInterval(timerInterval); // Stop the interval
-    timerElement.style.display = "none"; // Hide the timer element once the response is received
-  }
+// Function to stop the timer once the response is received
+function stopTimer(timerElement) {
+  clearInterval(timerInterval); // Stop the interval
+  timerElement.style.display = "none"; // Hide the timer element once the response is received
+}
 
   async function getSessionTokenFromStorage() {
     return new Promise((resolve) => {
