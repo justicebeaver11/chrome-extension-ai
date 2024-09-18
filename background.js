@@ -106,17 +106,29 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     });
 });
 
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//     if (request.action === "send_selected_text") {
+//         // Store the selected text in local storage
+//         chrome.storage.local.set({ selectedText: request.text }, () => {
+//             console.log("Stored selected text in storage:", request.text);
+//         });
+
+//         // Send a message to the popup (if it's open) to update the textarea
+//         chrome.runtime.sendMessage({ action: "update_chat_input", text: request.text });
+//     }
+// });
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "send_selected_text") {
-        // Store the selected text in local storage
+    if (request.action === "open_popup_with_options") {
         chrome.storage.local.set({ selectedText: request.text }, () => {
             console.log("Stored selected text in storage:", request.text);
         });
 
-        // Send a message to the popup (if it's open) to update the textarea
-        chrome.runtime.sendMessage({ action: "update_chat_input", text: request.text });
+        // Send a message to the popup to open the options modal
+        chrome.runtime.sendMessage({ action: "show_options_modal", text: request.text });
     }
 });
+
 
 
 

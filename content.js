@@ -20,15 +20,26 @@ if (targetNode) {
 
 
 // Detect when the user presses Ctrl + M and get the selected text
+// document.addEventListener("keydown", (event) => {
+//     if (event.ctrlKey && event.key === "m") {
+//         let selectedText = window.getSelection().toString().trim();
+//         if (selectedText.length > 0) {
+//             // Send the selected text to the background script
+//             chrome.runtime.sendMessage({ action: "send_selected_text", text: selectedText });
+//         }
+//     }
+// });
+
 document.addEventListener("keydown", (event) => {
     if (event.ctrlKey && event.key === "m") {
         let selectedText = window.getSelection().toString().trim();
         if (selectedText.length > 0) {
             // Send the selected text to the background script
-            chrome.runtime.sendMessage({ action: "send_selected_text", text: selectedText });
+            chrome.runtime.sendMessage({ action: "open_popup_with_options", text: selectedText });
         }
     }
 });
+
 
 
 

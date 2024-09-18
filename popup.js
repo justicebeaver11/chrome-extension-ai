@@ -56,6 +56,73 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Function to show the options modal
+function showOptionsModal(selectedText) {
+  // Create the modal HTML dynamically
+  const modal = document.createElement('div');
+  modal.innerHTML = `
+      <div id="optionsModal">
+          <h3>What would you like to do with this text?</h3>
+          <p>"${selectedText}"</p>
+          <button id="shortenText">Make Shorter</button>
+          <button id="makeLonger">Make Longer</button>
+          <button id="improveText">Improve Writing</button>
+          <button id="checkGrammar">Check grammar and Spelling</button>
+          <button id="simplifyLanguage">Simplify Language</button>
+      </div>
+      <div id="modalBackdrop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+  `;
+  document.body.appendChild(modal);
+
+  // Attach event listeners to buttons
+  document.getElementById('shortenText').addEventListener('click', () => handleOptionSelection('shorten', selectedText));
+  document.getElementById('makeLonger').addEventListener('click', () => handleOptionSelection('lengthen', selectedText));
+  document.getElementById('improveText').addEventListener('click', () => handleOptionSelection('improve', selectedText));
+  document.getElementById('checkGrammar').addEventListener('click', () => handleOptionSelection('check grammar', selectedText));
+  document.getElementById('simplifyLanguage').addEventListener('click', () => handleOptionSelection('simplify', selectedText));
+
+}
+
+ 
+
+
+// Function to handle option selection
+function handleOptionSelection(option, selectedText) {
+  // Form the message based on the option
+  let prompt = '';
+  switch (option) {
+      case 'shorten':
+          prompt = `Please shorten the following text: "${selectedText}"`;
+          break;
+      case 'lengthen':
+          prompt = `Please expand on the following text: "${selectedText}"`;
+          break;
+      case 'improve':
+          prompt = `Please improve the following text: "${selectedText}"`;
+          break;
+      case 'check grammar':
+          prompt = `Please check the grammar of the following text: "${selectedText}"`;
+          break;
+      case 'simplify':
+        prompt =  `Please simplify he language of the following text: "${selectedText}"`;    
+  }
+
+  // Send the prompt to the chatbot
+  sendMessageToChatbot(prompt);
+
+  // Close the modal
+  document.getElementById('optionsModal').remove();
+  document.getElementById('modalBackdrop').remove();
+}
+
+// Listen for messages from the background script to show the options modal
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "show_options_modal" && request.text) {
+      showOptionsModal(request.text);
+  }
+});
+
+
   // Call the function and update the popup UI
   getLastTabUrlAndSelectedTextFromStorage()
     .then((data) => {
@@ -374,6 +441,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       optionsBox.classList.add("hidden");
     }
   });
+
 
   // Dropdown model selection logic
   const caretIcon = document.querySelector("#caretIcon");
