@@ -106,6 +106,26 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     });
 });
 
+
+
+
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//     if (message.action === 'trigger_modal') {
+//         chrome.storage.local.get('lastTabUrl', (result) => {
+//             const lastTabUrl = result.lastTabUrl;
+//             const showModal = lastTabUrl && lastTabUrl.includes('gmail.com') ? 'true' : 'false';
+
+//             chrome.windows.create({
+//                 url: chrome.runtime.getURL('popup.html') + `?showModal=${showModal}`,
+//                 type: 'popup',
+//                 width: 400,
+//                 height: 600
+//             });
+//         });
+//     }
+// });
+
+
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //     if (request.action === "send_selected_text") {
 //         // Store the selected text in local storage
@@ -129,6 +149,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//     if (message.action === 'open_popup') {
+//         openMovablePopup();
+//     }
+// });
 
 
 
