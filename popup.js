@@ -23,33 +23,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+
   document
     .getElementById("retrieveUrlButton")
     .addEventListener("click", async () => {
-      try {
-        const lastTabUrl = await getLastTabUrlFromStorage();
-        console.log("Last active tab URL:", lastTabUrl);
-        urlInput.value = lastTabUrl; // Set the URL input to the retrieved tab URL
-        fetchMarkdownFromUrl(lastTabUrl); // Fetch markdown for the last active tab URL
-      } catch (error) {
-        console.error("Error retrieving last active tab URL:", error);
-      }
+        try {
+            const lastTabUrl = await getLastTabUrlFromStorage();
+            console.log("Last active tab URL:", lastTabUrl);
+            urlInput.value = lastTabUrl; // Set the URL input to the retrieved tab URL
+            await fetchMarkdownFromUrl(lastTabUrl); // Fetch markdown for the last active tab URL
+        } catch (error) {
+            console.error("Error retrieving last active tab URL:", error);
+        }
     });
 
-
-    function getLastTabUrlFromStorage() {
-      return new Promise((resolve, reject) => {
+function getLastTabUrlFromStorage() {
+    return new Promise((resolve, reject) => {
         chrome.storage.local.get("lastTabUrl", (result) => {
-          if (result.lastTabUrl) {
-            console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
-            resolve(result.lastTabUrl);
-          } else {
-            console.log("No URL found in storage.");
-            reject("No URL found");
-          }
+            if (result.lastTabUrl) {
+                console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+                resolve(result.lastTabUrl);
+            } else {
+                console.log("No URL found in storage.");
+                reject("No URL found");
+            }
         });
-      });
-    }
+    });
+}
+
+
+
+
+
     
     
 
@@ -76,126 +81,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-//   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.action === 'open_popup') {
-        
-//     }
-// });
+
+
+  chrome.storage.local.get('showModal', (data) => {
+    if (data.showModal) {
+        createDynamicModal();
+        chrome.storage.local.remove('showModal'); // Reset state
+    }
+});
+
+function createDynamicModal() {
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.width = '400px';
+    modal.style.padding = '20px';
+    modal.style.backgroundColor = '#fff';
+    modal.style.borderRadius = '8px';
+    modal.style.boxShadow = '0px 4px 12px rgba(0, 0, 0, 0.1)';
+
+    const title = document.createElement('h1');
+    title.innerText = 'Hi there!';
+    title.style.marginBottom = '20px';
+    modal.appendChild(title);
+
+    const closeButton = document.createElement('button');
+    closeButton.innerText = 'Close';
+    closeButton.style.padding = '10px 20px';
+    closeButton.style.backgroundColor = '#3996fb';
+    closeButton.style.color = 'white';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '4px';
+    closeButton.style.cursor = 'pointer';
+
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+
+    modal.appendChild(closeButton);
+    document.body.appendChild(modal);
+}
 
 
 
 
 
 
-//   function createModal() {
-//     // Create modal container
-//     const modal = document.createElement('div');
-//     modal.style.position = 'fixed';
-//     modal.style.top = '0';
-//     modal.style.left = '0';
-//     modal.style.width = '100%';
-//     modal.style.height = '100%';
-//     modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-//     modal.style.display = 'flex';
-//     modal.style.justifyContent = 'center';
-//     modal.style.alignItems = 'center';
-//     modal.style.zIndex = '9999'; // Ensure it's on top
 
-//     // Create modal content
-//     const modalContent = document.createElement('div');
-//     modalContent.style.backgroundColor = '#fff';
-//     modalContent.style.padding = '20px';
-//     modalContent.style.borderRadius = '10px';
-//     modalContent.style.boxShadow = '0px 0px 15px rgba(0, 0, 0, 0.2)';
-//     modalContent.style.width = '400px';
-//     modalContent.style.maxWidth = '90%';
-//     modalContent.style.position = 'relative';
 
-//     // Title
-//     const modalTitle = document.createElement('h2');
-//     modalTitle.textContent = 'We will draft a nice mail for you,write something and press ENTER';
-//     modalTitle.style.color = '#333';
-//     modalTitle.style.fontSize = '1.5em';
-//     modalTitle.style.marginBottom = '15px';
-//     modalContent.appendChild(modalTitle);
 
-//     // Input URL box
-//     const inputUrl = document.createElement('input');
-//     inputUrl.type = 'url';
-//     inputUrl.placeholder = 'Enter URL here';
-//     inputUrl.style.width = '100%';
-//     inputUrl.style.padding = '10px';
-//     inputUrl.style.marginTop = '10px';
-//     inputUrl.style.border = '2px solid #3996fb';
-//     inputUrl.style.borderRadius = '5px';
-//     inputUrl.style.fontSize = '1em';
-//     modalContent.appendChild(inputUrl);
-
-//     // Create the container for the icons
-//     const iconContainer = document.createElement('div');
-//     iconContainer.style.display = 'flex';
-//     iconContainer.style.alignItems = 'center';
-//     iconContainer.style.position = 'absolute';
-//     iconContainer.style.bottom = '20px';
-//     iconContainer.style.left = '20px';
-    
-//     // Send button (paper plane icon)
-//     const sendButton = document.createElement('button');
-//     sendButton.innerHTML = '✈️';  // You can replace this with an actual icon if needed
-//     sendButton.style.backgroundColor = '#3996fb';
-//     sendButton.style.border = 'none';
-//     sendButton.style.padding = '10px';
-//     sendButton.style.marginRight = '10px';
-//     sendButton.style.color = '#fff';
-//     sendButton.style.borderRadius = '50%';
-//     sendButton.style.cursor = 'pointer';
-//     sendButton.style.fontSize = '1.5em';
-    
-//     // Voice button (microphone icon)
-//     const voiceButton = document.createElement('button');
-//     voiceButton.innerHTML = '🎤';  // You can replace this with an actual icon if needed
-//     voiceButton.style.backgroundColor = '#3996fb';
-//     voiceButton.style.border = 'none';
-//     voiceButton.style.padding = '10px';
-//     voiceButton.style.color = '#fff';
-//     voiceButton.style.borderRadius = '50%';
-//     voiceButton.style.cursor = 'pointer';
-//     voiceButton.style.fontSize = '1.5em';
-    
-//     // Append the buttons to the icon container
-//     iconContainer.appendChild(sendButton);
-//     iconContainer.appendChild(voiceButton);
-
-//     // Append icon container to modal content
-//     modalContent.appendChild(iconContainer);
-
-//     // Close Button
-//     const closeButton = document.createElement('button');
-//     closeButton.textContent = 'Close';
-//     closeButton.style.marginTop = '20px';
-//     closeButton.style.backgroundColor = '#3996fb';
-//     closeButton.style.color = '#fff';
-//     closeButton.style.border = 'none';
-//     closeButton.style.padding = '10px 20px';
-//     closeButton.style.borderRadius = '5px';
-//     closeButton.style.cursor = 'pointer';
-//     closeButton.style.fontSize = '1em';
-
-//     closeButton.addEventListener('click', () => {
-//         document.body.removeChild(modal);
-//     });
-    
-//     modalContent.appendChild(closeButton);
-    
-//     // Append modal content to modal container
-//     modal.appendChild(modalContent);
-
-//     // Append modal to body
-//     document.body.appendChild(modal);
-// }
-
-// // Call the function to create the modal when the popup opens
-// createModal();
 
 
 

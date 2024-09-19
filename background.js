@@ -109,34 +109,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 
 
 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.action === 'trigger_modal') {
-//         chrome.storage.local.get('lastTabUrl', (result) => {
-//             const lastTabUrl = result.lastTabUrl;
-//             const showModal = lastTabUrl && lastTabUrl.includes('gmail.com') ? 'true' : 'false';
 
-//             chrome.windows.create({
-//                 url: chrome.runtime.getURL('popup.html') + `?showModal=${showModal}`,
-//                 type: 'popup',
-//                 width: 400,
-//                 height: 600
-//             });
-//         });
-//     }
-// });
-
-
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//     if (request.action === "send_selected_text") {
-//         // Store the selected text in local storage
-//         chrome.storage.local.set({ selectedText: request.text }, () => {
-//             console.log("Stored selected text in storage:", request.text);
-//         });
-
-//         // Send a message to the popup (if it's open) to update the textarea
-//         chrome.runtime.sendMessage({ action: "update_chat_input", text: request.text });
-//     }
-// });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "open_popup_with_options") {
@@ -149,11 +122,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.action === 'open_popup') {
-//         openMovablePopup();
-//     }
-// });
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'trigger_modal' && message.gmail) {
+        // Set Gmail state
+        chrome.storage.local.set({ showModal: true });
+        
+        // Open the extension popup
+        chrome.windows.create({
+            url: "popup.html",
+            type: "popup",
+            width: 500,
+            height: 600,
+            top: 100,
+            left: 100
+        });
+    }
+});
+
 
 
 
