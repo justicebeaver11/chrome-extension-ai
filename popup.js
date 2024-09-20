@@ -90,39 +90,430 @@ function getLastTabUrlFromStorage() {
     }
 });
 
+// function createDynamicModal() {
+//     const modal = document.createElement('div');
+//     modal.id = 'dynamicModal';
+//     modal.style.position = 'fixed';
+//     modal.style.top = '50%';
+//     modal.style.left = '50%';
+//     modal.style.transform = 'translate(-50%, -50%)';
+//     modal.style.width = '400px';
+//     modal.style.padding = '20px';
+//     modal.style.backgroundColor = '#f9f9f9';
+//     modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
+//     modal.style.zIndex = '1000';
+//     modal.style.borderRadius = '10px';
+//     modal.style.fontFamily = 'Arial, sans-serif';
+
+//     // Input box with placeholder text
+//     const inputBox = document.createElement('input');
+//     inputBox.type = 'text';
+//     inputBox.placeholder = 'We will draft a nice mail for you, write something and press ENTER.';
+//     inputBox.style.width = '95%';
+//     inputBox.style.padding = '10px';
+//     inputBox.style.marginBottom = '20px';
+//     inputBox.style.border = '1px solid #ccc';
+//     inputBox.style.borderRadius = '5px';
+//     inputBox.style.fontSize = '16px';
+
+//     // Chatbot response div
+//     const chatbotResponse = document.createElement('div');
+//     chatbotResponse.id = 'chatbotResponse';
+//     chatbotResponse.style.height = '150px';
+//     chatbotResponse.style.marginBottom = '20px';
+//     chatbotResponse.style.backgroundColor = '#f1f1f1';
+//     chatbotResponse.style.borderRadius = '5px';
+//     chatbotResponse.style.padding = '10px';
+//     chatbotResponse.style.overflowY = 'auto';
+//     chatbotResponse.style.fontSize = '14px';
+
+//     // Predefined prompt buttons
+//     const buttonContainer = document.createElement('div');
+//     buttonContainer.style.display = 'flex';
+//     buttonContainer.style.justifyContent = 'space-between';
+
+//     const leftButtons = document.createElement('div');
+//     leftButtons.style.display = 'flex';
+//     leftButtons.style.gap = '10px';
+
+//     const coldEmailButton = document.createElement('button');
+//     coldEmailButton.textContent = 'Cold email';
+//     coldEmailButton.style.padding = '10px 15px';
+//     coldEmailButton.style.backgroundColor = '#3996fb';
+//     coldEmailButton.style.color = 'white';
+//     coldEmailButton.style.border = 'none';
+//     coldEmailButton.style.borderRadius = '5px';
+//     coldEmailButton.style.cursor = 'pointer';
+   
+
+//     const introduceButton = document.createElement('button');
+//     introduceButton.textContent = 'Introduce yourself';
+//     introduceButton.style.padding = '10px 15px';
+//     introduceButton.style.backgroundColor = '#3996fb';
+//     introduceButton.style.color = 'white';
+//     introduceButton.style.border = 'none';
+//     introduceButton.style.borderRadius = '5px';
+//     introduceButton.style.cursor = 'pointer';
+   
+
+//     leftButtons.appendChild(coldEmailButton);
+//     leftButtons.appendChild(introduceButton);
+
+//     const sendButton = document.createElement('button');
+//     sendButton.textContent = 'Send';
+//     sendButton.style.padding = '10px 20px';
+//     sendButton.style.backgroundColor = '#3996fb';
+//     sendButton.style.color = 'white';
+//     sendButton.style.border = 'none';
+//     sendButton.style.borderRadius = '5px';
+//     sendButton.style.cursor = 'pointer';
+
+   
+
+  
+
+//     buttonContainer.appendChild(leftButtons);
+//     buttonContainer.appendChild(sendButton);
+
+//     // Close button
+//     const closeButton = document.createElement('button');
+//     closeButton.textContent = 'Close';
+//     closeButton.style.position = 'absolute';
+//     closeButton.style.top = '10px';
+//     closeButton.style.right = '10px';
+//     closeButton.style.backgroundColor = '#ff4d4d';
+//     closeButton.style.color = 'white';
+//     closeButton.style.border = 'none';
+//     closeButton.style.padding = '5px 10px';
+//     closeButton.style.borderRadius = '5px';
+//     closeButton.style.cursor = 'pointer';
+
+//     closeButton.addEventListener('click', () => {
+//         modal.remove();
+//     });
+
+//     // Append elements to the modal
+//     modal.appendChild(closeButton);
+//     modal.appendChild(inputBox);
+//     modal.appendChild(chatbotResponse);
+//     modal.appendChild(buttonContainer);
+   
+//     document.body.appendChild(modal);
+// }
+
+
+// chrome.storage.local.get('showModal', (data) => {
+//   if (data.showModal) {
+//       createDynamicModal();
+//       chrome.storage.local.remove('showModal'); // Reset state
+//   }
+// });
+
+
+//correct one 
+// function createDynamicModal() {
+//   const modal = document.createElement('div');
+//   modal.id = 'dynamicModal';
+//   modal.style.position = 'fixed';
+//   modal.style.top = '50%';
+//   modal.style.left = '50%';
+//   modal.style.transform = 'translate(-50%, -50%)';
+//   modal.style.width = '400px';
+//   modal.style.padding = '20px';
+//   modal.style.backgroundColor = '#f9f9f9';
+//   modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
+//   modal.style.zIndex = '1000';
+//   modal.style.borderRadius = '10px';
+//   modal.style.fontFamily = 'Arial, sans-serif';
+
+//   // Input box with placeholder text
+//   const inputBox = document.createElement('input');
+//   inputBox.type = 'text';
+//   inputBox.placeholder = 'Type your prompt or select a predefined prompt.';
+//   inputBox.style.width = '95%';
+//   inputBox.style.padding = '10px';
+//   inputBox.style.marginBottom = '20px';
+//   inputBox.style.border = '1px solid #ccc';
+//   inputBox.style.borderRadius = '5px';
+//   inputBox.style.fontSize = '16px';
+
+//   // Chatbot response div
+//   const chatbotResponse = document.createElement('div');
+//   chatbotResponse.id = 'chatbotResponse';
+//   chatbotResponse.style.height = '150px';
+//   chatbotResponse.style.marginBottom = '20px';
+//   chatbotResponse.style.backgroundColor = '#f1f1f1';
+//   chatbotResponse.style.borderRadius = '5px';
+//   chatbotResponse.style.padding = '10px';
+//   chatbotResponse.style.overflowY = 'auto';
+//   chatbotResponse.style.fontSize = '14px';
+
+//   // Predefined prompt buttons
+//   const buttonContainer = document.createElement('div');
+//   buttonContainer.style.display = 'flex';
+//   buttonContainer.style.justifyContent = 'space-between';
+
+//   const leftButtons = document.createElement('div');
+//   leftButtons.style.display = 'flex';
+//   leftButtons.style.gap = '10px';
+
+//   const predefinedPrompts = ['Cold email', 'Introduce yourself'];
+
+//   predefinedPrompts.forEach(prompt => {
+//       const button = document.createElement('button');
+//       button.textContent = prompt;
+//       button.style.padding = '10px 15px';
+//       button.style.backgroundColor = '#3996fb';
+//       button.style.color = 'white';
+//       button.style.border = 'none';
+//       button.style.borderRadius = '5px';
+//       button.style.cursor = 'pointer';
+
+//       button.addEventListener('click', () => {
+//           inputBox.value = prompt; // Set the input box to the predefined prompt
+//           sendMessageToChatbot(prompt, chatbotResponse);
+//       });
+
+//       leftButtons.appendChild(button);
+//   });
+
+//   const sendButton = document.createElement('button');
+//   sendButton.textContent = 'Send';
+//   sendButton.style.padding = '10px 20px';
+//   sendButton.style.backgroundColor = '#3996fb';
+//   sendButton.style.color = 'white';
+//   sendButton.style.border = 'none';
+//   sendButton.style.borderRadius = '5px';
+//   sendButton.style.cursor = 'pointer';
+
+//   sendButton.addEventListener('click', () => {
+//       const prompt = inputBox.value.trim();
+//       if (prompt) {
+//           sendMessageToChatbot(prompt, chatbotResponse);
+//           inputBox.value = ''; // Clear the input box
+//       }
+//   });
+
+//   // Handle Enter key press
+//   inputBox.addEventListener('keydown', (event) => {
+//       if (event.key === 'Enter') {
+//           sendButton.click(); // Trigger the send button click
+//       }
+//   });
+
+//   // Close button
+//   const closeButton = document.createElement('button');
+//   closeButton.textContent = 'Close';
+//   closeButton.style.position = 'absolute';
+//   closeButton.style.top = '10px';
+//   closeButton.style.right = '10px';
+//   closeButton.style.backgroundColor = '#ff4d4d';
+//   closeButton.style.color = 'white';
+//   closeButton.style.border = 'none';
+//   closeButton.style.padding = '5px 10px';
+//   closeButton.style.borderRadius = '5px';
+//   closeButton.style.cursor = 'pointer';
+
+//   closeButton.addEventListener('click', () => {
+//       modal.remove();
+//   });
+
+//   // Append elements to the modal
+//   modal.appendChild(closeButton);
+//   modal.appendChild(inputBox);
+//   modal.appendChild(chatbotResponse);
+//   modal.appendChild(buttonContainer);
+//   buttonContainer.appendChild(leftButtons);
+//   buttonContainer.appendChild(sendButton);
+//   document.body.appendChild(modal);
+// }
+
 function createDynamicModal() {
-    const modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.width = '400px';
-    modal.style.padding = '20px';
-    modal.style.backgroundColor = '#fff';
-    modal.style.borderRadius = '8px';
-    modal.style.boxShadow = '0px 4px 12px rgba(0, 0, 0, 0.1)';
+  const modal = document.createElement('div');
+  modal.id = 'dynamicModal';
+  modal.style.position = 'fixed';
+  modal.style.top = '50%';
+  modal.style.left = '50%';
+  modal.style.transform = 'translate(-50%, -50%)';
+  modal.style.width = '400px';
+  modal.style.padding = '20px';
+  modal.style.backgroundColor = '#f9f9f9';
+  modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
+  modal.style.zIndex = '1000';
+  modal.style.borderRadius = '10px';
+  modal.style.fontFamily = 'Arial, sans-serif';
 
-    const title = document.createElement('h1');
-    title.innerText = 'Hi there!';
-    title.style.marginBottom = '20px';
-    modal.appendChild(title);
+  // Input box for user prompt
+  const inputBox = document.createElement('input');
+  inputBox.type = 'text';
+  inputBox.placeholder = 'We will draft a nice mail for you, write something and press ENTER.';
+  inputBox.style.width = '95%';
+  inputBox.style.padding = '10px';
+  inputBox.style.marginBottom = '20px';
+  inputBox.style.border = '1px solid #ccc';
+  inputBox.style.borderRadius = '5px';
+  inputBox.style.fontSize = '16px';
 
-    const closeButton = document.createElement('button');
-    closeButton.innerText = 'Close';
-    closeButton.style.padding = '10px 20px';
-    closeButton.style.backgroundColor = '#3996fb';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.borderRadius = '4px';
-    closeButton.style.cursor = 'pointer';
+  // Chatbot response area (initially hidden or empty)
+  const chatbotResponse = document.createElement('div');
+  chatbotResponse.id = 'chatbotResponse';
+  chatbotResponse.style.display = 'none';  // Initially hidden
+  chatbotResponse.style.marginBottom = '20px';
+  chatbotResponse.style.backgroundColor = '#f1f1f1';
+  chatbotResponse.style.borderRadius = '5px';
+  chatbotResponse.style.padding = '10px';
+  chatbotResponse.style.fontSize = '14px';
+  chatbotResponse.style.maxHeight = '150px';
+  chatbotResponse.style.overflowY = 'auto';
 
-    closeButton.addEventListener('click', () => {
-        document.body.removeChild(modal);
-    });
+  // Predefined buttons and Send button container
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.display = 'flex';
+  buttonContainer.style.justifyContent = 'space-between';
 
-    modal.appendChild(closeButton);
-    document.body.appendChild(modal);
+  const leftButtons = document.createElement('div');
+  leftButtons.style.display = 'flex';
+  leftButtons.style.gap = '10px';
+
+  const coldEmailButton = document.createElement('button');
+  coldEmailButton.textContent = 'Cold email';
+  coldEmailButton.style.padding = '10px 15px';
+  coldEmailButton.style.backgroundColor = '#3996fb';
+  coldEmailButton.style.color = 'white';
+  coldEmailButton.style.border = 'none';
+  coldEmailButton.style.borderRadius = '5px';
+  coldEmailButton.style.cursor = 'pointer';
+
+  const introduceButton = document.createElement('button');
+  introduceButton.textContent = 'Introduce yourself';
+  introduceButton.style.padding = '10px 15px';
+  introduceButton.style.backgroundColor = '#3996fb';
+  introduceButton.style.color = 'white';
+  introduceButton.style.border = 'none';
+  introduceButton.style.borderRadius = '5px';
+  introduceButton.style.cursor = 'pointer';
+
+  leftButtons.appendChild(coldEmailButton);
+  leftButtons.appendChild(introduceButton);
+
+  const sendButton = document.createElement('button');
+  sendButton.textContent = 'Send';
+  sendButton.style.padding = '10px 20px';
+  sendButton.style.backgroundColor = '#3996fb';
+  sendButton.style.color = 'white';
+  sendButton.style.border = 'none';
+  sendButton.style.borderRadius = '5px';
+  sendButton.style.cursor = 'pointer';
+
+  buttonContainer.appendChild(leftButtons);
+  buttonContainer.appendChild(sendButton);
+
+  // Close button
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Close';
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '10px';
+  closeButton.style.right = '10px';
+  closeButton.style.backgroundColor = '#ff4d4d';
+  closeButton.style.color = 'white';
+  closeButton.style.border = 'none';
+  closeButton.style.padding = '5px 10px';
+  closeButton.style.borderRadius = '5px';
+  closeButton.style.cursor = 'pointer';
+
+  closeButton.addEventListener('click', () => {
+      modal.remove();
+  });
+
+  // Append elements to modal
+  modal.appendChild(closeButton);
+  modal.appendChild(inputBox);
+  modal.appendChild(chatbotResponse);  // Add chatbot response element here
+  modal.appendChild(buttonContainer);
+
+  document.body.appendChild(modal);
+
+  // Event listeners for sending prompt
+  sendButton.addEventListener('click', () => {
+      const userPrompt = inputBox.value;
+      if (userPrompt) {
+          sendMessageToChatbot(userPrompt);
+      }
+  });
+
+  inputBox.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+          const userPrompt = inputBox.value;
+          if (userPrompt) {
+              sendMessageToChatbot(userPrompt);
+          }
+      }
+  });
 }
+
+async function sendMessageToChatbot(messageText) {
+  displayLoadingMessage();
+  try {
+      const sessionToken = await getSessionTokenFromStorage();
+      if (!sessionToken) {
+          console.log("No session token available.");
+          return;
+      }
+
+      const chatid = await getLatestChatId();
+      if (!chatid) {
+          console.log("Failed to retrieve chat ID.");
+          return;
+      }
+
+      const response = await fetch("https://app.ai4chat.co/chatgpt", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionToken}`,
+          },
+          body: JSON.stringify({
+              chatid,
+              conversation: [{ role: "user", content: messageText }],
+              timezoneOffset: new Date().getTimezoneOffset(),
+          }),
+      });
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error from server:", errorData.error);
+          return;
+      }
+
+      const data = await response.text();
+      displayChatbotResponse(data);
+      removeLoadingMessage();
+  } catch (error) {
+      console.error("Error sending message to chatbot:", error);
+      removeLoadingMessage();
+  }
+}
+
+// Function to display the chatbot response in the modal
+function displayChatbotResponse(responseText) {
+  const chatbotResponse = document.getElementById('chatbotResponse');
+  chatbotResponse.style.display = 'block';  // Show the response div
+  chatbotResponse.innerText = responseText;  // Insert the response
+}
+
+// Function to show a "loading" message (optional)
+function displayLoadingMessage() {
+  const chatbotResponse = document.getElementById('chatbotResponse');
+  chatbotResponse.style.display = 'block';  // Make sure it's visible
+  chatbotResponse.innerText = 'Loading...';
+}
+
+// Function to remove the "loading" message
+function removeLoadingMessage() {
+  const chatbotResponse = document.getElementById('chatbotResponse');
+  chatbotResponse.innerText = '';  // Clear the content
+}
+
 
 
 
