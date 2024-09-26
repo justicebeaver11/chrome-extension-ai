@@ -43,13 +43,11 @@ document.addEventListener("keydown", (event) => {
 
 
 
-
-
 function injectReplyAIButton(toolbar) {
     // Ensure no duplicate buttons
     if (!toolbar.querySelector('.ai-reply-button')) {
         const aiButton = document.createElement('button');
-        aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';  // Reuse Gmail's button styling
+        aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';
         aiButton.setAttribute('role', 'button');
         aiButton.setAttribute('tabindex', '1');
         aiButton.setAttribute('data-tooltip', 'AI');
@@ -57,14 +55,14 @@ function injectReplyAIButton(toolbar) {
         aiButton.style.userSelect = 'none';
         aiButton.innerText = 'AI Reply';
 
-        // Custom styling for rounded edges and simple look
-        aiButton.style.borderRadius = '8px';  // Rounded edges
-        aiButton.style.padding = '10px 20px';  // Padding
-        aiButton.style.border = '1px solid #3996fb';  // Light blue border
-        aiButton.style.backgroundColor = '#fff';  // White background
-        aiButton.style.color = '#3996fb';  // Light blue text color
-        aiButton.style.cursor = 'pointer';  // Pointer cursor
-        aiButton.style.marginLeft = '10px';  // Left margin for spacing
+        // Custom styling
+        aiButton.style.borderRadius = '8px';
+        aiButton.style.padding = '10px 20px';
+        aiButton.style.border = '1px solid #3996fb';
+        aiButton.style.backgroundColor = '#fff';
+        aiButton.style.color = '#3996fb';
+        aiButton.style.cursor = 'pointer';
+        aiButton.style.marginLeft = '10px';
 
         // Simple hover effect
         aiButton.addEventListener('mouseover', () => {
@@ -79,7 +77,24 @@ function injectReplyAIButton(toolbar) {
         toolbar.appendChild(aiButton);
 
         aiButton.addEventListener('click', () => {
-            alert('AI Reply button clicked!');
+            // Disable the button to prevent multiple clicks
+            aiButton.disabled = true;
+
+            // Extract the email or name of the recipient from the reply box
+            const emailNode = document.querySelector('.oj div span[email]');
+            const recipientEmail = emailNode ? emailNode.getAttribute('email') : 'Unknown Recipient';
+            const recipientName = emailNode ? emailNode.textContent : recipientEmail;
+
+            // Send message to background script to open popup with the recipient information
+            chrome.runtime.sendMessage({
+                action: 'reply_modal',
+                gmail: true,
+                recipient: { name: recipientName, email: recipientEmail }
+            });
+
+            setTimeout(() => {
+                aiButton.disabled = false;
+            }, 1000); // Adjust delay as necessary
         });
     }
 }
@@ -87,22 +102,91 @@ function injectReplyAIButton(toolbar) {
 function waitForReplyBox() {
     const targetNode = document.body;
 
-    // Set up a mutation observer to watch for changes in the Gmail DOM
     const observer = new MutationObserver((mutationsList) => {
         mutationsList.forEach(mutation => {
-            const replyToolbar = document.querySelector('tr.btC .dC'); // The class where the toolbar is located
+            const replyToolbar = document.querySelector('tr.btC .dC');
             if (replyToolbar) {
-                injectReplyAIButton(replyToolbar);  // Inject the button once the toolbar is found
+                injectReplyAIButton(replyToolbar);
             }
         });
     });
 
-    // Configuration for the observer
     const config = { childList: true, subtree: true };
-
-    // Start observing the DOM
     observer.observe(targetNode, config);
 }
+
+waitForReplyBox();
+
+
+// function injectReplyAIButton(toolbar) {
+//     // Ensure no duplicate buttons
+//     if (!toolbar.querySelector('.ai-reply-button')) {
+//         const aiButton = document.createElement('button');
+//         aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';  // Reuse Gmail's button styling
+//         aiButton.setAttribute('role', 'button');
+//         aiButton.setAttribute('tabindex', '1');
+//         aiButton.setAttribute('data-tooltip', 'AI');
+//         aiButton.setAttribute('aria-label', 'AI');
+//         aiButton.style.userSelect = 'none';
+//         aiButton.innerText = 'AI Reply';
+
+//         // Custom styling for rounded edges and simple look
+//         aiButton.style.borderRadius = '8px';  // Rounded edges
+//         aiButton.style.padding = '10px 20px';  // Padding
+//         aiButton.style.border = '1px solid #3996fb';  // Light blue border
+//         aiButton.style.backgroundColor = '#fff';  // White background
+//         aiButton.style.color = '#3996fb';  // Light blue text color
+//         aiButton.style.cursor = 'pointer';  // Pointer cursor
+//         aiButton.style.marginLeft = '10px';  // Left margin for spacing
+
+//         // Simple hover effect
+//         aiButton.addEventListener('mouseover', () => {
+//             aiButton.style.backgroundColor = '#3996fb';
+//             aiButton.style.color = '#fff';
+//         });
+//         aiButton.addEventListener('mouseout', () => {
+//             aiButton.style.backgroundColor = '#fff';
+//             aiButton.style.color = '#3996fb';
+//         });
+
+//         toolbar.appendChild(aiButton);
+
+//         aiButton.addEventListener('click', () => {
+//             // Disable the button to prevent multiple clicks
+//             aiButton.disabled = true;
+        
+//             // Send message to background script to open popup
+//             chrome.runtime.sendMessage({ action: 'reply_modal', gmail: true });
+        
+//             // Optionally, re-enable the button after a brief delay
+//             setTimeout(() => {
+//                 aiButton.disabled = false;
+//             }, 1000); // Adjust delay as necessary
+//         });
+
+
+//     }
+// }
+
+// function waitForReplyBox() {
+//     const targetNode = document.body;
+
+//     // Set up a mutation observer to watch for changes in the Gmail DOM
+//     const observer = new MutationObserver((mutationsList) => {
+//         mutationsList.forEach(mutation => {
+//             const replyToolbar = document.querySelector('tr.btC .dC'); // The class where the toolbar is located
+//             if (replyToolbar) {
+//                 injectReplyAIButton(replyToolbar);  // Inject the button once the toolbar is found
+//             }
+//         });
+//     });
+
+//     // Configuration for the observer
+//     const config = { childList: true, subtree: true };
+
+//     // Start observing the DOM
+//     observer.observe(targetNode, config);
+// }
 
 function injectComposeAIButton() {
     if (window.location.hostname === "mail.google.com") {
