@@ -45,41 +45,96 @@ document.addEventListener("keydown", (event) => {
 
 
 
+function injectReplyAIButton(toolbar) {
+    // Ensure no duplicate buttons
+    if (!toolbar.querySelector('.ai-reply-button')) {
+        const aiButton = document.createElement('button');
+        aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';  // Reuse Gmail's button styling
+        aiButton.setAttribute('role', 'button');
+        aiButton.setAttribute('tabindex', '1');
+        aiButton.setAttribute('data-tooltip', 'AI');
+        aiButton.setAttribute('aria-label', 'AI');
+        aiButton.style.userSelect = 'none';
+        aiButton.innerText = 'AI Reply';
 
+        // Custom styling for rounded edges and simple look
+        aiButton.style.borderRadius = '8px';  // Rounded edges
+        aiButton.style.padding = '10px 20px';  // Padding
+        aiButton.style.border = '1px solid #3996fb';  // Light blue border
+        aiButton.style.backgroundColor = '#fff';  // White background
+        aiButton.style.color = '#3996fb';  // Light blue text color
+        aiButton.style.cursor = 'pointer';  // Pointer cursor
+        aiButton.style.marginLeft = '10px';  // Left margin for spacing
 
+        // Simple hover effect
+        aiButton.addEventListener('mouseover', () => {
+            aiButton.style.backgroundColor = '#3996fb';
+            aiButton.style.color = '#fff';
+        });
+        aiButton.addEventListener('mouseout', () => {
+            aiButton.style.backgroundColor = '#fff';
+            aiButton.style.color = '#3996fb';
+        });
 
+        toolbar.appendChild(aiButton);
 
+        aiButton.addEventListener('click', () => {
+            alert('AI Reply button clicked!');
+        });
+    }
+}
 
-function injectAIButton() {
+function waitForReplyBox() {
+    const targetNode = document.body;
+
+    // Set up a mutation observer to watch for changes in the Gmail DOM
+    const observer = new MutationObserver((mutationsList) => {
+        mutationsList.forEach(mutation => {
+            const replyToolbar = document.querySelector('tr.btC .dC'); // The class where the toolbar is located
+            if (replyToolbar) {
+                injectReplyAIButton(replyToolbar);  // Inject the button once the toolbar is found
+            }
+        });
+    });
+
+    // Configuration for the observer
+    const config = { childList: true, subtree: true };
+
+    // Start observing the DOM
+    observer.observe(targetNode, config);
+}
+
+function injectComposeAIButton() {
     if (window.location.hostname === "mail.google.com") {
         const composeButton = document.querySelector('div[role="button"][gh="cm"]');
 
         if (composeButton) {
-            if (!document.querySelector('#ai-button')) {
+            if (!document.querySelector('#ai-compose-button')) {
                 const aiButton = document.createElement('button');
-                aiButton.id = 'ai-button';
+                aiButton.id = 'ai-compose-button';
 
                 const icon = document.createElement('span');
-                icon.innerHTML = `
+                icon.innerHTML = ` 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" style="width: 20px; height: 20px; margin-right: 10px;">
                         <path d="M12 17.27L18.18 21l-1.45-6.36L22 9.24l-6.36-.55L12 2 8.36 8.69 2 9.24l5.27 5.27L5.82 21z"/>
                     </svg>
                 `;
-                
+
                 aiButton.appendChild(icon);
                 aiButton.appendChild(document.createTextNode('AI'));
 
-                aiButton.style.marginLeft = '10px';
-                aiButton.style.backgroundColor = '#3996fb';
-                aiButton.style.color = 'white';
-                aiButton.style.border = 'none';
-                aiButton.style.padding = '12px 20px';
-                aiButton.style.borderRadius = '8px';
-                aiButton.style.cursor = 'pointer';
-                aiButton.style.display = 'flex';
-                aiButton.style.alignItems = 'center';
-                aiButton.style.fontSize = '16px';
-                aiButton.style.fontWeight = 'bold';
+                // Custom styling for the compose button
+                aiButton.style.marginLeft = '10px';  // Left margin
+                aiButton.style.backgroundColor = '#3996fb';  // Blue background
+                aiButton.style.color = 'white';  // White text color
+                aiButton.style.border = 'none';  // No border
+                aiButton.style.padding = '12px 20px';  // Padding
+                aiButton.style.borderRadius = '8px';  // Rounded edges
+                aiButton.style.cursor = 'pointer';  // Pointer cursor
+                aiButton.style.display = 'flex';  // Flex display
+                aiButton.style.alignItems = 'center';  // Center items vertically
+                aiButton.style.fontSize = '16px';  // Font size
+                aiButton.style.fontWeight = 'bold';  // Bold text
 
                 composeButton.parentElement.appendChild(aiButton);
 
@@ -91,11 +146,16 @@ function injectAIButton() {
                 });
             }
         } else {
-            setTimeout(injectAIButton, 1000);
+            setTimeout(injectComposeAIButton, 1000);  // Retry if the compose button is not found
         }
     }
 }
 
-window.addEventListener('load', injectAIButton);
+// Event listeners
+window.addEventListener('load', () => {
+    injectComposeAIButton();  // Call the compose button function
+    waitForReplyBox();  // Call the reply box function
+});
+
 
 

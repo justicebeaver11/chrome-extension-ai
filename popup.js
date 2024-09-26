@@ -337,29 +337,33 @@ function createDynamicModal() {
   modal.style.transform = 'translate(-50%, -50%)';
   modal.style.width = '400px';
   modal.style.padding = '20px';
-  modal.style.backgroundColor = '#f9f9f9';
+  modal.style.backgroundColor = '#17182b';
   modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
   modal.style.zIndex = '1000';
   modal.style.borderRadius = '10px';
   modal.style.fontFamily = 'Arial, sans-serif';
+  modal.style.color = '#fff';
 
   // Input box for user prompt
   const inputBox = document.createElement('input');
   inputBox.type = 'text';
+  inputBox.style.marginTop = '20px';
   inputBox.placeholder = 'We will draft a nice mail for you, write something and press ENTER.';
   inputBox.style.width = '95%';
   inputBox.style.padding = '10px';
   inputBox.style.marginBottom = '20px';
-  inputBox.style.border = '1px solid #ccc';
+  inputBox.style.border = '2px solid #3996fb';
   inputBox.style.borderRadius = '5px';
   inputBox.style.fontSize = '16px';
+  inputBox.style.backgroundColor = '#17182b'; // Set input background color
+  inputBox.style.color = '#fff'; // Set input text color
 
   // Chatbot response area (initially hidden or empty)
   const chatbotResponse = document.createElement('div');
   chatbotResponse.id = 'chatbotResponse';
   chatbotResponse.style.display = 'none';  // Initially hidden
   chatbotResponse.style.marginBottom = '20px';
-  chatbotResponse.style.backgroundColor = '#f1f1f1';
+  chatbotResponse.style.backgroundColor = '#17182b';
   chatbotResponse.style.borderRadius = '5px';
   chatbotResponse.style.padding = '10px';
   chatbotResponse.style.fontSize = '14px';
@@ -438,6 +442,7 @@ function createDynamicModal() {
       const userPrompt = inputBox.value;
       if (userPrompt) {
           sendMessageToChatbot(userPrompt);
+          modal.remove();
       }
   });
 
@@ -446,6 +451,7 @@ function createDynamicModal() {
           const userPrompt = inputBox.value;
           if (userPrompt) {
               sendMessageToChatbot(userPrompt);
+              modal.remove();
           }
       }
   });
@@ -513,6 +519,8 @@ function removeLoadingMessage() {
   const chatbotResponse = document.getElementById('chatbotResponse');
   chatbotResponse.innerText = '';  // Clear the content
 }
+
+
 
 
 
