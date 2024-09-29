@@ -47,24 +47,124 @@ document.addEventListener("keydown", (event) => {
 
 
 
-function extractEmailInfo() {
-    // Gmail DOM is dynamic, so we need to carefully select the sender and recipient info
-    let emailContainers = document.querySelectorAll('div[data-message-id]'); // Each email thread/message has a unique data-message-id
+// function extractEmailInfo() {
+//     // Gmail DOM is dynamic, so we need to carefully select the sender and recipient info
+//     let emailContainers = document.querySelectorAll('div[data-message-id]'); // Each email thread/message has a unique data-message-id
 
-    // Traverse the email containers to extract information of the currently opened message
+//     // Traverse the email containers to extract information of the currently opened message
+//     let emailInfo = null;
+
+//     emailContainers.forEach((emailContainer) => {
+//         // Find the active/open email (may need to adjust based on your current scenario)
+//         let senderElement = emailContainer.querySelector('span[email]');
+//         let recipientElements = emailContainer.querySelectorAll('span[email]');
+
+//         if (senderElement && recipientElements.length > 0) {
+//             // Extract sender info
+//             let senderEmail = senderElement.getAttribute('email') || 'Unknown Sender Email';
+//             let senderName = senderElement.getAttribute('name') || senderElement.textContent || 'Unknown Sender Name';
+
+//             // Extract recipient info (Usually the second span, but may change based on structure)
+//             let recipientEmail = recipientElements.length > 1 ? recipientElements[1].getAttribute('email') : 'Unknown Recipient Email';
+//             let recipientName = recipientElements.length > 1 ? recipientElements[1].getAttribute('name') || recipientElements[1].textContent : 'Unknown Recipient Name';
+
+//             emailInfo = {
+//                 sender: {
+//                     name: senderName,
+//                     email: senderEmail
+//                 },
+//                 recipient: {
+//                     name: recipientName,
+//                     email: recipientEmail
+//                 }
+//             };
+
+//             // Log the extracted details
+//             console.log("Sender's Name: " + senderName);
+//             console.log("Sender's Email: " + senderEmail);
+//             console.log("Recipient's Name: " + recipientName);
+//             console.log("Recipient's Email: " + recipientEmail);
+//         }
+//     });
+
+//     if (!emailInfo) {
+//         console.log('Failed to extract email information. The structure may have changed.');
+//     }
+
+//     return emailInfo;
+// }
+
+
+// function injectReplyAIButton(toolbar) {
+//     // Ensure no duplicate buttons
+//     if (!toolbar.querySelector('.ai-reply-button')) {
+//         const aiButton = document.createElement('button');
+//         aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';
+//         aiButton.setAttribute('role', 'button');
+//         aiButton.setAttribute('tabindex', '1');
+//         aiButton.setAttribute('data-tooltip', 'AI');
+//         aiButton.setAttribute('aria-label', 'AI');
+//         aiButton.style.userSelect = 'none';
+//         aiButton.innerText = 'AI Reply';
+
+//         // Custom styling
+//         aiButton.style.borderRadius = '8px';
+//         aiButton.style.padding = '10px 20px';
+//         aiButton.style.border = '1px solid #3996fb';
+//         aiButton.style.backgroundColor = '#fff';
+//         aiButton.style.color = '#3996fb';
+//         aiButton.style.cursor = 'pointer';
+//         aiButton.style.marginLeft = '10px';
+
+//         // Simple hover effect
+//         aiButton.addEventListener('mouseover', () => {
+//             aiButton.style.backgroundColor = '#3996fb';
+//             aiButton.style.color = '#fff';
+//         });
+//         aiButton.addEventListener('mouseout', () => {
+//             aiButton.style.backgroundColor = '#fff';
+//             aiButton.style.color = '#3996fb';
+//         });
+
+//         toolbar.appendChild(aiButton);
+
+//         aiButton.addEventListener('click', () => {
+//             // Disable the button to prevent multiple clicks
+//             aiButton.disabled = true;
+
+//             // Extract sender and recipient information
+//             const emailDetails = extractEmailInfo();
+//             if (emailDetails) {
+//                 console.log("Logging Extracted Details from Click Event: ", emailDetails);
+
+//                 // Send message to background script to open popup with the recipient information
+//                 chrome.runtime.sendMessage({
+//                     action: 'reply_modal',
+//                     gmail: true,
+//                     recipient: emailDetails.sender // Send sender details as recipient
+//                 });
+
+//                 setTimeout(() => {
+//                     aiButton.disabled = false;
+//                 }, 1000); // Adjust delay as necessary
+//             }
+//         });
+//     }
+// }
+
+// Gmail DOM is dynamic, so we need to carefully select the sender and recipient info
+function extractEmailInfo() {
+    let emailContainers = document.querySelectorAll('div[data-message-id]'); // Each email thread/message has a unique data-message-id
     let emailInfo = null;
 
     emailContainers.forEach((emailContainer) => {
-        // Find the active/open email (may need to adjust based on your current scenario)
         let senderElement = emailContainer.querySelector('span[email]');
         let recipientElements = emailContainer.querySelectorAll('span[email]');
 
         if (senderElement && recipientElements.length > 0) {
-            // Extract sender info
+            // Extract sender and recipient info
             let senderEmail = senderElement.getAttribute('email') || 'Unknown Sender Email';
             let senderName = senderElement.getAttribute('name') || senderElement.textContent || 'Unknown Sender Name';
-
-            // Extract recipient info (Usually the second span, but may change based on structure)
             let recipientEmail = recipientElements.length > 1 ? recipientElements[1].getAttribute('email') : 'Unknown Recipient Email';
             let recipientName = recipientElements.length > 1 ? recipientElements[1].getAttribute('name') || recipientElements[1].textContent : 'Unknown Recipient Name';
 
@@ -92,6 +192,26 @@ function extractEmailInfo() {
     }
 
     return emailInfo;
+}
+
+// Function to extract text content from the currently opened Gmail email
+function extractGmailEmailContent() {
+    let emailBody = document.querySelector('div[role="main"]'); // Main content area of the opened email.
+
+    if (!emailBody) {
+        console.error("Could not locate the email body. Make sure an email is open.");
+        return '';
+    }
+
+    // Collect text content inside `span`, `p`, and other relevant tags inside the opened email.
+    let textContent = Array.from(emailBody.querySelectorAll('span, p, div'))
+        .map(element => element.innerText.trim())
+        .filter(text => text.length > 0) // Filter out empty text.
+        .join("\n"); // Join extracted texts with new lines.
+
+    // Log the extracted text content to the console for verification.
+    
+    return textContent;
 }
 
 // Modify the injectReplyAIButton function
@@ -128,29 +248,45 @@ function injectReplyAIButton(toolbar) {
 
         toolbar.appendChild(aiButton);
 
+        // On button click
         aiButton.addEventListener('click', () => {
             // Disable the button to prevent multiple clicks
             aiButton.disabled = true;
 
-            // Extract sender and recipient information
+            // Extract and log the sender and recipient information
             const emailDetails = extractEmailInfo();
             if (emailDetails) {
                 console.log("Logging Extracted Details from Click Event: ", emailDetails);
 
-                // Send message to background script to open popup with the recipient information
+                // Extract and log the email body content
+                const emailText = extractGmailEmailContent();
+
+                // Log combined information (email details + email text content)
+                console.log("Full Email Information: ", {
+                    ...emailDetails,
+                    emailBody: emailText
+                });
+
+                // Send message to background script if needed
                 chrome.runtime.sendMessage({
                     action: 'reply_modal',
                     gmail: true,
-                    recipient: emailDetails.sender // Send sender details as recipient
+                    recipient: emailDetails.sender,
+                    emailBody: emailText
                 });
-
-                setTimeout(() => {
-                    aiButton.disabled = false;
-                }, 1000); // Adjust delay as necessary
             }
+
+            // Re-enable the button after a delay
+            setTimeout(() => {
+                aiButton.disabled = false;
+            }, 1000); // Adjust delay as necessary
         });
     }
 }
+
+
+
+
 
 
 function waitForReplyBox() {
@@ -171,76 +307,6 @@ function waitForReplyBox() {
 
 waitForReplyBox();
 
-
-// function injectReplyAIButton(toolbar) {
-//     // Ensure no duplicate buttons
-//     if (!toolbar.querySelector('.ai-reply-button')) {
-//         const aiButton = document.createElement('button');
-//         aiButton.className = 'T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button';  // Reuse Gmail's button styling
-//         aiButton.setAttribute('role', 'button');
-//         aiButton.setAttribute('tabindex', '1');
-//         aiButton.setAttribute('data-tooltip', 'AI');
-//         aiButton.setAttribute('aria-label', 'AI');
-//         aiButton.style.userSelect = 'none';
-//         aiButton.innerText = 'AI Reply';
-
-//         // Custom styling for rounded edges and simple look
-//         aiButton.style.borderRadius = '8px';  // Rounded edges
-//         aiButton.style.padding = '10px 20px';  // Padding
-//         aiButton.style.border = '1px solid #3996fb';  // Light blue border
-//         aiButton.style.backgroundColor = '#fff';  // White background
-//         aiButton.style.color = '#3996fb';  // Light blue text color
-//         aiButton.style.cursor = 'pointer';  // Pointer cursor
-//         aiButton.style.marginLeft = '10px';  // Left margin for spacing
-
-//         // Simple hover effect
-//         aiButton.addEventListener('mouseover', () => {
-//             aiButton.style.backgroundColor = '#3996fb';
-//             aiButton.style.color = '#fff';
-//         });
-//         aiButton.addEventListener('mouseout', () => {
-//             aiButton.style.backgroundColor = '#fff';
-//             aiButton.style.color = '#3996fb';
-//         });
-
-//         toolbar.appendChild(aiButton);
-
-//         aiButton.addEventListener('click', () => {
-//             // Disable the button to prevent multiple clicks
-//             aiButton.disabled = true;
-        
-//             // Send message to background script to open popup
-//             chrome.runtime.sendMessage({ action: 'reply_modal', gmail: true });
-        
-//             // Optionally, re-enable the button after a brief delay
-//             setTimeout(() => {
-//                 aiButton.disabled = false;
-//             }, 1000); // Adjust delay as necessary
-//         });
-
-
-//     }
-// }
-
-// function waitForReplyBox() {
-//     const targetNode = document.body;
-
-//     // Set up a mutation observer to watch for changes in the Gmail DOM
-//     const observer = new MutationObserver((mutationsList) => {
-//         mutationsList.forEach(mutation => {
-//             const replyToolbar = document.querySelector('tr.btC .dC'); // The class where the toolbar is located
-//             if (replyToolbar) {
-//                 injectReplyAIButton(replyToolbar);  // Inject the button once the toolbar is found
-//             }
-//         });
-//     });
-
-//     // Configuration for the observer
-//     const config = { childList: true, subtree: true };
-
-//     // Start observing the DOM
-//     observer.observe(targetNode, config);
-// }
 
 function injectComposeAIButton() {
     if (window.location.hostname === "mail.google.com") {

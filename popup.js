@@ -87,16 +87,21 @@ function getLastTabUrlFromStorage() {
 let replyModalOpen = false;
 
 // Fetch the recipient info and display the reply modal if needed
-chrome.storage.local.get(['showReplyModal', 'recipientInfo'], (data) => {
+chrome.storage.local.get(['showReplyModal', 'recipientInfo', 'emailBody'], (data) => {
     if (data.showReplyModal && !replyModalOpen) {
         replyModalOpen = true;
-        createReplyModal(data.recipientInfo); // Pass recipient info to the modal
-        chrome.storage.local.remove(['showReplyModal', 'recipientInfo']);
+        createReplyModal(data.recipientInfo, data.emailBody); // Pass recipient info to the modal
+        chrome.storage.local.remove(['showReplyModal', 'recipientInfo', 'emailBody']);
     }
 });
 
+
+
+
+
+
 // Function to create the reply modal
-function createReplyModal(recipient) {
+function createReplyModal(recipient,emailBody) {
     const modal = document.createElement('div');
     modal.id = 'replyModal';
     modal.style.position = 'fixed';
@@ -112,12 +117,32 @@ function createReplyModal(recipient) {
     modal.style.fontFamily = 'Arial, sans-serif';
     modal.style.color = '#fff';
 
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '10px';
+    closeButton.style.backgroundColor = '#ff4d4d';
+    closeButton.style.color = 'white';
+    closeButton.style.border = 'none';
+    closeButton.style.padding = '5px 10px';
+    closeButton.style.borderRadius = '5px';
+    closeButton.style.cursor = 'pointer';
+
+    closeButton.addEventListener('click', () => {
+        modal.remove();
+        replyModalOpen = false; // Reset the flag when modal is closed
+    });
+
     // Display the recipient's information in the title
     const titleBox = document.createElement('div');
     titleBox.textContent = `Replying to: ${recipient.name} <${recipient.email}>`;
     titleBox.style.marginBottom = '15px';
     titleBox.style.fontWeight = 'bold';
     titleBox.style.fontSize = '16px';
+
+    
 
     // Input box for user prompt
     const inputBox = document.createElement('input');
@@ -132,6 +157,8 @@ function createReplyModal(recipient) {
     inputBox.style.fontSize = '16px';
     inputBox.style.backgroundColor = '#17182b';
     inputBox.style.color = '#fff';
+
+
 
     // Chatbot response area (initially hidden or empty)
     const chatbotResponse = document.createElement('div');
@@ -188,26 +215,22 @@ function createReplyModal(recipient) {
     buttonContainer.appendChild(sendButton);
 
     // Close button
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.style.backgroundColor = '#ff4d4d';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.padding = '5px 10px';
-    closeButton.style.borderRadius = '5px';
-    closeButton.style.cursor = 'pointer';
+    const emailBodyBox = document.createElement('div');
+    emailBodyBox.textContent = `Email Content: ${emailBody}`;
+    emailBodyBox.style.marginBottom = '20px';
+    emailBodyBox.style.padding = '10px';
+    emailBodyBox.style.border = '2px solid #3996fb';
+    emailBodyBox.style.borderRadius = '5px';
+    emailBodyBox.style.maxHeight = '150px';
+    emailBodyBox.style.overflowY = 'auto';
 
-    closeButton.addEventListener('click', () => {
-        modal.remove();
-        replyModalOpen = false; // Reset the flag when modal is closed
-    });
+    emailBodyBox.classList.add('custom-scrollbar');
+   
 
     // Append elements to modal
     modal.appendChild(closeButton);
     modal.appendChild(titleBox); // Append recipient title first
+    modal.appendChild(emailBodyBox);
     modal.appendChild(inputBox);
     modal.appendChild(chatbotResponse);  // Add chatbot response element here
     modal.appendChild(buttonContainer);
@@ -222,6 +245,25 @@ function createReplyModal(recipient) {
             modal.remove();
         }
     });
+    
+    coldEmailButton.addEventListener('click', () => {
+      const userPrompt = inputBox.value || '';  // Get the user prompt from the input box
+      const fullPrompt = `Generate a reply for the following email: ${emailBody}\nUser input: ${userPrompt}`;
+      sendMessageToChatbot(fullPrompt);  // Send both the email body and user input
+      modal.remove();
+  });
+  
+  // Handle "Ask for more details" button click
+  introduceButton.addEventListener('click', () => {
+      const userPrompt = inputBox.value || '';  // Get the user prompt from the input box
+      const fullPrompt = `Ask for more details about the following email: ${emailBody}\nUser input: ${userPrompt}`;
+      sendMessageToChatbot(fullPrompt);  // Send both the email body and user input
+      modal.remove();
+  });
+  
+
+  
+
 
     inputBox.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
@@ -234,14 +276,6 @@ function createReplyModal(recipient) {
     });
 }
 
-
-
-// Function to display the chatbot response in the modal
-function showChatbotResponse(response) {
-    const chatbotResponse = document.getElementById('chatbotResponse');
-    chatbotResponse.style.display = 'block'; // Show the response area
-    chatbotResponse.textContent = response.reply || 'No response from chatbot';
-}
 
 
 
@@ -376,6 +410,7 @@ function createDynamicModal() {
           modal.remove();
       }
   });
+
 
   inputBox.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {

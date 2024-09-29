@@ -1133,6 +1133,29 @@ input:checked + .slider:before {
   z-index: 999;
 }
 
+/* Scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Adjust scrollbar width */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #17182b; /* Track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3996fb; /* Scrollbar color */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #3080d1; /* Darker shade on hover */
+}
+
+/* Scrollbar width for Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Make scrollbar thin */
+  scrollbar-color: #3996fb #17182b; /* Thumb color, Track color */
+}
 
 
 

@@ -149,6 +149,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             popupOpen = true;
             chrome.storage.local.set({
                 showReplyModal: true,
+                emailBody: message.emailBody,
                
                 recipientInfo: message.recipient // Store recipient info
             });
@@ -162,7 +163,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 left: 100
             });
         }
-    }
+    }  
 });
 
 chrome.windows.onRemoved.addListener((windowId) => {
