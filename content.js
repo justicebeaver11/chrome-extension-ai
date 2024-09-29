@@ -271,3 +271,12 @@ window.addEventListener("load", () => {
   injectComposeAIButton(); // Call the compose button function
   waitForReplyBox(); // Call the reply box function
 });
+
+
+// Listen for the Ctrl+I key press
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey && event.key === 'I') {
+    chrome.runtime.sendMessage({ action: "inject_popup" });
+  }
+});
+

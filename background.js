@@ -175,3 +175,176 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.windows.onRemoved.addListener((windowId) => {
   popupOpen = false;
 });
+
+
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "inject_popup") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+
+      // Check if the active tab URL is Google Search
+      if (activeTab.url.includes("https://www.google.com/search")) {
+        // Inject the popup content into the active tab
+        chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          function: injectLiveSearchPopup
+        });
+      }
+    });
+  }
+});
+
+
+
+
+
+
+// Function to inject the Live Search Popup into the site
+function injectLiveSearchPopup() {
+  if (document.getElementById("liveSearchPopup")) return; // Avoid duplicates
+
+  // Create a div for the popup
+  const popup = document.createElement("div");
+  popup.id = "liveSearchPopup";
+  popup.style.position = "fixed";
+  popup.style.right = "20px";
+  popup.style.top = "100px";
+  popup.style.width = "350px"; 
+  popup.style.background = "#17182b";
+  popup.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+  popup.style.zIndex = "9999";
+  popup.style.padding = "10px";
+  popup.style.borderRadius = "8px";
+  popup.style.display = "flex";
+  popup.style.flexDirection = "column";
+
+  // Create a top div for the button and search input
+  const topDiv = document.createElement("div");
+  topDiv.style.display = "flex"; 
+  topDiv.style.justifyContent = "space-between"; 
+  topDiv.style.alignItems = "center"; 
+  topDiv.style.width = "100%";
+
+  // "Live Search" button
+  const button = document.createElement("button");
+  button.innerText = "Live Search";
+  button.style.width = "30%";
+  button.style.padding = "10px";
+  button.style.background = "#3996fb";
+  button.style.color = "white";
+  button.style.border = "none";
+  button.style.cursor = "pointer";
+  button.style.borderRadius = "5px";
+
+  // Search input
+  const searchDiv = document.createElement("div");
+  searchDiv.style.width = "65%";
+
+  const searchInput = document.createElement("input");
+  searchInput.type = "text";
+  searchInput.placeholder = "Search";
+  searchInput.style.width = "90%";
+  searchInput.style.padding = "10px";
+  searchInput.style.border = "1px solid #3996fb";
+  searchInput.style.borderRadius = "5px";
+  searchInput.style.background = "#17182b";
+  searchInput.style.color = "white";
+
+  // Append elements to topDiv
+  searchDiv.appendChild(searchInput);
+  topDiv.appendChild(button);
+  topDiv.appendChild(searchDiv);
+
+  // Empty div to display search box value
+  const emptyDiv = document.createElement("div");
+  emptyDiv.style.height = "20px";
+  emptyDiv.style.marginTop = "10px";
+  emptyDiv.style.color = "white";
+  emptyDiv.innerText = "";
+  popup.appendChild(topDiv);
+  popup.appendChild(emptyDiv);
+
+  // Bottom div for buttons
+  const bottomDiv = document.createElement("div");
+  bottomDiv.style.display = "flex";
+  bottomDiv.style.justifyContent = "space-between"; 
+  bottomDiv.style.marginTop = "10px";
+
+  // "Ask a Follow-Up" button
+  const askFollowUpButton = document.createElement("button");
+  askFollowUpButton.innerText = "Ask a Follow-Up";
+  askFollowUpButton.style.padding = "10px";
+  askFollowUpButton.style.background = "#3996fb";
+  askFollowUpButton.style.color = "white";
+  askFollowUpButton.style.border = "none";
+  askFollowUpButton.style.cursor = "pointer";
+  askFollowUpButton.style.borderRadius = "5px";
+  askFollowUpButton.style.flex = "1";
+
+  // "Start a New Chat" button
+  const newChatButton = document.createElement("button");
+  newChatButton.innerText = "Start a New Chat";
+  newChatButton.style.padding = "10px";
+  newChatButton.style.background = "#3996fb";
+  newChatButton.style.color = "white";
+  newChatButton.style.border = "none";
+  newChatButton.style.cursor = "pointer";
+  newChatButton.style.borderRadius = "5px";
+  newChatButton.style.flex = "1";
+  newChatButton.style.marginLeft = "10px";
+
+  // Append buttons to bottomDiv
+  bottomDiv.appendChild(askFollowUpButton);
+  bottomDiv.appendChild(newChatButton);
+
+  // Append bottom div to popup
+  popup.appendChild(bottomDiv);
+
+  // Add popup to body
+  document.body.appendChild(popup);
+
+  // Event listener for Ctrl+I to remove the popup
+  document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.key === 'I') {
+      const existingPopup = document.getElementById("liveSearchPopup");
+      if (existingPopup) existingPopup.remove();
+    }
+  });
+
+  // Event listener for "Live Search" button
+  button.addEventListener("click", () => {
+    const searchBox = document.querySelector('textarea[name="q"], input[name="q"]');
+    if (searchBox) {
+      const searchValue = searchBox.value.trim();
+      console.log("Search Box Value:", searchValue);
+      emptyDiv.innerText = `Search Value: ${searchValue}`;
+      chrome.runtime.sendMessage({ type: "sendSearchValue", searchValue });
+      searchBox.addEventListener('input', (event) => {
+        emptyDiv.innerText = `Search Value: ${event.target.value}`;
+      });
+    }
+  });
+}
+
+// Listen for messages from popup.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "chatbotResponse") {
+    // Send the response to the injected site popup
+    injectLiveSearchPopup();
+    const sitePopup = document.getElementById("liveSearchPopup");
+    if (sitePopup) {
+      const responseDiv = document.createElement("div");
+      responseDiv.style.marginTop = "10px";
+      responseDiv.style.color = "white";
+      responseDiv.innerText = `Response: ${message.response}`;
+      sitePopup.appendChild(responseDiv);
+    }
+  }
+  sendResponse({ status: "Message Received in Background.js" });
+});
+
+
+
+
+
+

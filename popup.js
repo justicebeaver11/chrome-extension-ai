@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
+
+  
+
   chrome.storage.local.get("credits", function (result) {
     const creditBalanceElement = document.getElementById("creditbalance");
     if (result.credits) {
@@ -1357,6 +1360,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
+      chrome.runtime.sendMessage({
+        type: "chatbotResponse",
+        content: formattedResponse,
+      });
+
       lastResponse = formattedResponse;
       displayMessage("assistant", formattedResponse || "No content");
 
@@ -1401,6 +1409,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   }
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === "sendSearchValue") {
+      const searchValue = request.searchValue;
+      console.log("Received Search Value from Background:", searchValue);
+  
+      // Call the sendMessageToChatbot function with the search value
+      if (searchValue) {
+        sendMessageToChatbot(searchValue);
+      }
+    }
+  });
 
   function displayMessage(role, content) {
     const messageDiv = document.createElement("div");
