@@ -43,6 +43,58 @@ document.addEventListener("keydown", (event) => {
 
 
 
+
+
+
+
+function extractEmailInfo() {
+    // Gmail DOM is dynamic, so we need to carefully select the sender and recipient info
+    let emailContainers = document.querySelectorAll('div[data-message-id]'); // Each email thread/message has a unique data-message-id
+
+    // Traverse the email containers to extract information of the currently opened message
+    let emailInfo = null;
+
+    emailContainers.forEach((emailContainer) => {
+        // Find the active/open email (may need to adjust based on your current scenario)
+        let senderElement = emailContainer.querySelector('span[email]');
+        let recipientElements = emailContainer.querySelectorAll('span[email]');
+
+        if (senderElement && recipientElements.length > 0) {
+            // Extract sender info
+            let senderEmail = senderElement.getAttribute('email') || 'Unknown Sender Email';
+            let senderName = senderElement.getAttribute('name') || senderElement.textContent || 'Unknown Sender Name';
+
+            // Extract recipient info (Usually the second span, but may change based on structure)
+            let recipientEmail = recipientElements.length > 1 ? recipientElements[1].getAttribute('email') : 'Unknown Recipient Email';
+            let recipientName = recipientElements.length > 1 ? recipientElements[1].getAttribute('name') || recipientElements[1].textContent : 'Unknown Recipient Name';
+
+            emailInfo = {
+                sender: {
+                    name: senderName,
+                    email: senderEmail
+                },
+                recipient: {
+                    name: recipientName,
+                    email: recipientEmail
+                }
+            };
+
+            // Log the extracted details
+            console.log("Sender's Name: " + senderName);
+            console.log("Sender's Email: " + senderEmail);
+            console.log("Recipient's Name: " + recipientName);
+            console.log("Recipient's Email: " + recipientEmail);
+        }
+    });
+
+    if (!emailInfo) {
+        console.log('Failed to extract email information. The structure may have changed.');
+    }
+
+    return emailInfo;
+}
+
+// Modify the injectReplyAIButton function
 function injectReplyAIButton(toolbar) {
     // Ensure no duplicate buttons
     if (!toolbar.querySelector('.ai-reply-button')) {
@@ -80,24 +132,26 @@ function injectReplyAIButton(toolbar) {
             // Disable the button to prevent multiple clicks
             aiButton.disabled = true;
 
-            // Extract the email or name of the recipient from the reply box
-            const emailNode = document.querySelector('.oj div span[email]');
-            const recipientEmail = emailNode ? emailNode.getAttribute('email') : 'Unknown Recipient';
-            const recipientName = emailNode ? emailNode.textContent : recipientEmail;
+            // Extract sender and recipient information
+            const emailDetails = extractEmailInfo();
+            if (emailDetails) {
+                console.log("Logging Extracted Details from Click Event: ", emailDetails);
 
-            // Send message to background script to open popup with the recipient information
-            chrome.runtime.sendMessage({
-                action: 'reply_modal',
-                gmail: true,
-                recipient: { name: recipientName, email: recipientEmail }
-            });
+                // Send message to background script to open popup with the recipient information
+                chrome.runtime.sendMessage({
+                    action: 'reply_modal',
+                    gmail: true,
+                    recipient: emailDetails.sender // Send sender details as recipient
+                });
 
-            setTimeout(() => {
-                aiButton.disabled = false;
-            }, 1000); // Adjust delay as necessary
+                setTimeout(() => {
+                    aiButton.disabled = false;
+                }, 1000); // Adjust delay as necessary
+            }
         });
     }
 }
+
 
 function waitForReplyBox() {
     const targetNode = document.body;

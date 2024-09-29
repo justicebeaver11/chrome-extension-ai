@@ -149,6 +149,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             popupOpen = true;
             chrome.storage.local.set({
                 showReplyModal: true,
+               
                 recipientInfo: message.recipient // Store recipient info
             });
 
@@ -168,31 +169,6 @@ chrome.windows.onRemoved.addListener((windowId) => {
     popupOpen = false;
 });
 
-
-// let popupOpen = false; // Flag to track if popup is already open
-
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.action === 'reply_modal' && message.gmail) {
-//         if (!popupOpen) { // Check if the popup is already open
-//             popupOpen = true; // Set the flag to true
-//             chrome.storage.local.set({ showReplyModal: true });
-
-//             chrome.windows.create({
-//                 url: "popup.html",
-//                 type: "popup",
-//                 width: 500,
-//                 height: 600,
-//                 top: 100,
-//                 left: 100
-//             });
-//         }
-//     }
-// });
-
-// // Reset the flag when the popup is closed
-// chrome.windows.onRemoved.addListener((windowId) => {
-//     popupOpen = false; // Reset the flag when the window is closed
-// });
 
 
 
