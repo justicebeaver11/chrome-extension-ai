@@ -4,8 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
-  
-
   chrome.storage.local.get("credits", function (result) {
     const creditBalanceElement = document.getElementById("creditbalance");
     if (result.credits) {
@@ -23,40 +21,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-
   document
     .getElementById("retrieveUrlButton")
     .addEventListener("click", async () => {
-        try {
-            const lastTabUrl = await getLastTabUrlFromStorage();
-            console.log("Last active tab URL:", lastTabUrl);
-            urlInput.value = lastTabUrl; // Set the URL input to the retrieved tab URL
-            await fetchMarkdownFromUrl(lastTabUrl); // Fetch markdown for the last active tab URL
-        } catch (error) {
-            console.error("Error retrieving last active tab URL:", error);
-        }
+      try {
+        const lastTabUrl = await getLastTabUrlFromStorage();
+        console.log("Last active tab URL:", lastTabUrl);
+        urlInput.value = lastTabUrl; // Set the URL input to the retrieved tab URL
+        await fetchMarkdownFromUrl(lastTabUrl); // Fetch markdown for the last active tab URL
+      } catch (error) {
+        console.error("Error retrieving last active tab URL:", error);
+      }
     });
 
-function getLastTabUrlFromStorage() {
+  function getLastTabUrlFromStorage() {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.get("lastTabUrl", (result) => {
-            if (result.lastTabUrl) {
-                console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
-                resolve(result.lastTabUrl);
-            } else {
-                console.log("No URL found in storage.");
-                reject("No URL found");
-            }
-        });
+      chrome.storage.local.get("lastTabUrl", (result) => {
+        if (result.lastTabUrl) {
+          console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+          resolve(result.lastTabUrl);
+        } else {
+          console.log("No URL found in storage.");
+          reject("No URL found");
+        }
+      });
     });
-}
-
-
-
-
-
-    
-    
+  }
 
   function getLastTabUrlAndSelectedTextFromStorage() {
     return new Promise((resolve, reject) => {
@@ -81,430 +71,396 @@ function getLastTabUrlFromStorage() {
     });
   }
 
+  let replyModalOpen = false;
 
-
-
-let replyModalOpen = false;
-
-// Fetch the recipient info and display the reply modal if needed
-chrome.storage.local.get(['showReplyModal', 'recipientInfo', 'emailBody'], (data) => {
-    if (data.showReplyModal && !replyModalOpen) {
+  // Fetch the recipient info and display the reply modal if needed
+  chrome.storage.local.get(
+    ["showReplyModal", "recipientInfo", "emailBody"],
+    (data) => {
+      if (data.showReplyModal && !replyModalOpen) {
         replyModalOpen = true;
         createReplyModal(data.recipientInfo, data.emailBody); // Pass recipient info to the modal
-        chrome.storage.local.remove(['showReplyModal', 'recipientInfo', 'emailBody']);
+        chrome.storage.local.remove([
+          "showReplyModal",
+          "recipientInfo",
+          "emailBody",
+        ]);
+      }
     }
-});
+  );
 
+  // Function to create the reply modal
+  function createReplyModal(recipient, emailBody) {
+    const modal = document.createElement("div");
+    modal.id = "replyModal";
+    modal.style.position = "fixed";
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    modal.style.width = "400px";
+    modal.style.padding = "20px";
+    modal.style.backgroundColor = "#17182b";
+    modal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
+    modal.style.zIndex = "1000";
+    modal.style.borderRadius = "10px";
+    modal.style.fontFamily = "Arial, sans-serif";
+    modal.style.color = "#fff";
 
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "10px";
+    closeButton.style.right = "10px";
+    closeButton.style.backgroundColor = "#ff4d4d";
+    closeButton.style.color = "white";
+    closeButton.style.border = "none";
+    closeButton.style.padding = "5px 10px";
+    closeButton.style.borderRadius = "5px";
+    closeButton.style.cursor = "pointer";
 
-
-
-
-// Function to create the reply modal
-function createReplyModal(recipient,emailBody) {
-    const modal = document.createElement('div');
-    modal.id = 'replyModal';
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.width = '400px';
-    modal.style.padding = '20px';
-    modal.style.backgroundColor = '#17182b';
-    modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
-    modal.style.zIndex = '1000';
-    modal.style.borderRadius = '10px';
-    modal.style.fontFamily = 'Arial, sans-serif';
-    modal.style.color = '#fff';
-
-
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.style.backgroundColor = '#ff4d4d';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.padding = '5px 10px';
-    closeButton.style.borderRadius = '5px';
-    closeButton.style.cursor = 'pointer';
-
-    closeButton.addEventListener('click', () => {
-        modal.remove();
-        replyModalOpen = false; // Reset the flag when modal is closed
+    closeButton.addEventListener("click", () => {
+      modal.remove();
+      replyModalOpen = false; // Reset the flag when modal is closed
     });
 
     // Display the recipient's information in the title
-    const titleBox = document.createElement('div');
+    const titleBox = document.createElement("div");
     titleBox.textContent = `Replying to: ${recipient.name} <${recipient.email}>`;
-    titleBox.style.marginBottom = '15px';
-    titleBox.style.fontWeight = 'bold';
-    titleBox.style.fontSize = '16px';
-
-    
+    titleBox.style.marginBottom = "15px";
+    titleBox.style.fontWeight = "bold";
+    titleBox.style.fontSize = "16px";
 
     // Input box for user prompt
-    const inputBox = document.createElement('input');
-    inputBox.type = 'text';
-    inputBox.style.marginTop = '20px';
-    inputBox.placeholder = 'We will draft a nice reply for you. Write something and press ENTER.';
-    inputBox.style.width = '95%';
-    inputBox.style.padding = '10px';
-    inputBox.style.marginBottom = '20px';
-    inputBox.style.border = '2px solid #3996fb';
-    inputBox.style.borderRadius = '5px';
-    inputBox.style.fontSize = '16px';
-    inputBox.style.backgroundColor = '#17182b';
-    inputBox.style.color = '#fff';
-
-
+    const inputBox = document.createElement("input");
+    inputBox.type = "text";
+    inputBox.style.marginTop = "20px";
+    inputBox.placeholder =
+      "We will draft a nice reply for you. Write something and press ENTER.";
+    inputBox.style.width = "95%";
+    inputBox.style.padding = "10px";
+    inputBox.style.marginBottom = "20px";
+    inputBox.style.border = "2px solid #3996fb";
+    inputBox.style.borderRadius = "5px";
+    inputBox.style.fontSize = "16px";
+    inputBox.style.backgroundColor = "#17182b";
+    inputBox.style.color = "#fff";
 
     // Chatbot response area (initially hidden or empty)
-    const chatbotResponse = document.createElement('div');
-    chatbotResponse.id = 'chatbotResponse';
-    chatbotResponse.style.display = 'none';  // Initially hidden
-    chatbotResponse.style.marginBottom = '20px';
-    chatbotResponse.style.backgroundColor = '#17182b';
-    chatbotResponse.style.borderRadius = '5px';
-    chatbotResponse.style.padding = '10px';
-    chatbotResponse.style.fontSize = '14px';
-    chatbotResponse.style.maxHeight = '150px';
-    chatbotResponse.style.overflowY = 'auto';
+    const chatbotResponse = document.createElement("div");
+    chatbotResponse.id = "chatbotResponse";
+    chatbotResponse.style.display = "none"; // Initially hidden
+    chatbotResponse.style.marginBottom = "20px";
+    chatbotResponse.style.backgroundColor = "#17182b";
+    chatbotResponse.style.borderRadius = "5px";
+    chatbotResponse.style.padding = "10px";
+    chatbotResponse.style.fontSize = "14px";
+    chatbotResponse.style.maxHeight = "150px";
+    chatbotResponse.style.overflowY = "auto";
 
     // Predefined buttons and Send button container
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.justifyContent = 'space-between';
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.justifyContent = "space-between";
 
-    const leftButtons = document.createElement('div');
-    leftButtons.style.display = 'flex';
-    leftButtons.style.gap = '10px';
+    const leftButtons = document.createElement("div");
+    leftButtons.style.display = "flex";
+    leftButtons.style.gap = "10px";
 
-    const coldEmailButton = document.createElement('button');
-    coldEmailButton.textContent = 'Generate a reply';
-    coldEmailButton.style.padding = '10px 15px';
-    coldEmailButton.style.backgroundColor = '#3996fb';
-    coldEmailButton.style.color = 'white';
-    coldEmailButton.style.border = 'none';
-    coldEmailButton.style.borderRadius = '5px';
-    coldEmailButton.style.cursor = 'pointer';
+    const coldEmailButton = document.createElement("button");
+    coldEmailButton.textContent = "Generate a reply";
+    coldEmailButton.style.padding = "10px 15px";
+    coldEmailButton.style.backgroundColor = "#3996fb";
+    coldEmailButton.style.color = "white";
+    coldEmailButton.style.border = "none";
+    coldEmailButton.style.borderRadius = "5px";
+    coldEmailButton.style.cursor = "pointer";
 
-    const introduceButton = document.createElement('button');
-    introduceButton.textContent = 'Ask for more details';
-    introduceButton.style.padding = '10px 15px';
-    introduceButton.style.backgroundColor = '#3996fb';
-    introduceButton.style.color = 'white';
-    introduceButton.style.border = 'none';
-    introduceButton.style.borderRadius = '5px';
-    introduceButton.style.cursor = 'pointer';
+    const introduceButton = document.createElement("button");
+    introduceButton.textContent = "Ask for more details";
+    introduceButton.style.padding = "10px 15px";
+    introduceButton.style.backgroundColor = "#3996fb";
+    introduceButton.style.color = "white";
+    introduceButton.style.border = "none";
+    introduceButton.style.borderRadius = "5px";
+    introduceButton.style.cursor = "pointer";
 
     leftButtons.appendChild(coldEmailButton);
     leftButtons.appendChild(introduceButton);
 
-    const sendButton = document.createElement('button');
-    sendButton.textContent = 'Send';
-    sendButton.style.padding = '10px 20px';
-    sendButton.style.backgroundColor = '#3996fb';
-    sendButton.style.color = 'white';
-    sendButton.style.border = 'none';
-    sendButton.style.borderRadius = '5px';
-    sendButton.style.cursor = 'pointer';
+    const sendButton = document.createElement("button");
+    sendButton.textContent = "Send";
+    sendButton.style.padding = "10px 20px";
+    sendButton.style.backgroundColor = "#3996fb";
+    sendButton.style.color = "white";
+    sendButton.style.border = "none";
+    sendButton.style.borderRadius = "5px";
+    sendButton.style.cursor = "pointer";
 
     buttonContainer.appendChild(leftButtons);
     buttonContainer.appendChild(sendButton);
 
     // Close button
-    const emailBodyBox = document.createElement('div');
+    const emailBodyBox = document.createElement("div");
     emailBodyBox.textContent = `Email Content: ${emailBody}`;
-    emailBodyBox.style.marginBottom = '20px';
-    emailBodyBox.style.padding = '10px';
-    emailBodyBox.style.border = '2px solid #3996fb';
-    emailBodyBox.style.borderRadius = '5px';
-    emailBodyBox.style.maxHeight = '150px';
-    emailBodyBox.style.overflowY = 'auto';
+    emailBodyBox.style.marginBottom = "20px";
+    emailBodyBox.style.padding = "10px";
+    emailBodyBox.style.border = "2px solid #3996fb";
+    emailBodyBox.style.borderRadius = "5px";
+    emailBodyBox.style.maxHeight = "150px";
+    emailBodyBox.style.overflowY = "auto";
 
-    emailBodyBox.classList.add('custom-scrollbar');
-   
+    emailBodyBox.classList.add("custom-scrollbar");
 
     // Append elements to modal
     modal.appendChild(closeButton);
     modal.appendChild(titleBox); // Append recipient title first
     modal.appendChild(emailBodyBox);
     modal.appendChild(inputBox);
-    modal.appendChild(chatbotResponse);  // Add chatbot response element here
+    modal.appendChild(chatbotResponse); // Add chatbot response element here
     modal.appendChild(buttonContainer);
 
     document.body.appendChild(modal);
 
     // Handle Send button click and input box "Enter" key event
-    sendButton.addEventListener('click', () => {
-        const userPrompt = inputBox.value;
-        if (userPrompt) {
-            sendMessageToChatbot(userPrompt, recipient);
-            modal.remove();
-        }
-    });
-    
-    coldEmailButton.addEventListener('click', () => {
-      const userPrompt = inputBox.value || '';  // Get the user prompt from the input box
-      const fullPrompt = `Generate a reply for the following email: ${emailBody}\nUser input: ${userPrompt}`;
-      sendMessageToChatbot(fullPrompt);  // Send both the email body and user input
-      modal.remove();
-  });
-  
-  // Handle "Ask for more details" button click
-  introduceButton.addEventListener('click', () => {
-      const userPrompt = inputBox.value || '';  // Get the user prompt from the input box
-      const fullPrompt = `Ask for more details about the following email: ${emailBody}\nUser input: ${userPrompt}`;
-      sendMessageToChatbot(fullPrompt);  // Send both the email body and user input
-      modal.remove();
-  });
-  
-
-  
-
-
-    inputBox.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            const userPrompt = inputBox.value;
-            if (userPrompt) {
-                sendMessageToChatbot(userPrompt, recipient);
-                modal.remove();
-            }
-        }
-    });
-}
-
-
-
-
-
-
-
-
-
-
-  chrome.storage.local.get('showModal', (data) => {
-    if (data.showModal) {
-        createDynamicModal();
-        chrome.storage.local.remove('showModal'); // Reset state
-    }
-});
-
-
-function createDynamicModal() {
-  const modal = document.createElement('div');
-  modal.id = 'dynamicModal';
-  modal.style.position = 'fixed';
-  modal.style.top = '50%';
-  modal.style.left = '50%';
-  modal.style.transform = 'translate(-50%, -50%)';
-  modal.style.width = '400px';
-  modal.style.padding = '20px';
-  modal.style.backgroundColor = '#17182b';
-  modal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.2)';
-  modal.style.zIndex = '1000';
-  modal.style.borderRadius = '10px';
-  modal.style.fontFamily = 'Arial, sans-serif';
-  modal.style.color = '#fff';
-
-  // Input box for user prompt
-  const inputBox = document.createElement('input');
-  inputBox.type = 'text';
-  inputBox.style.marginTop = '20px';
-  inputBox.placeholder = 'We will draft a nice mail for you, write something and press ENTER.';
-  inputBox.style.width = '95%';
-  inputBox.style.padding = '10px';
-  inputBox.style.marginBottom = '20px';
-  inputBox.style.border = '2px solid #3996fb';
-  inputBox.style.borderRadius = '5px';
-  inputBox.style.fontSize = '16px';
-  inputBox.style.backgroundColor = '#17182b'; // Set input background color
-  inputBox.style.color = '#fff'; // Set input text color
-
-  // Chatbot response area (initially hidden or empty)
-  const chatbotResponse = document.createElement('div');
-  chatbotResponse.id = 'chatbotResponse';
-  chatbotResponse.style.display = 'none';  // Initially hidden
-  chatbotResponse.style.marginBottom = '20px';
-  chatbotResponse.style.backgroundColor = '#17182b';
-  chatbotResponse.style.borderRadius = '5px';
-  chatbotResponse.style.padding = '10px';
-  chatbotResponse.style.fontSize = '14px';
-  chatbotResponse.style.maxHeight = '150px';
-  chatbotResponse.style.overflowY = 'auto';
-
-  // Predefined buttons and Send button container
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.display = 'flex';
-  buttonContainer.style.justifyContent = 'space-between';
-
-  const leftButtons = document.createElement('div');
-  leftButtons.style.display = 'flex';
-  leftButtons.style.gap = '10px';
-
-  const coldEmailButton = document.createElement('button');
-  coldEmailButton.textContent = 'Cold email';
-  coldEmailButton.style.padding = '10px 15px';
-  coldEmailButton.style.backgroundColor = '#3996fb';
-  coldEmailButton.style.color = 'white';
-  coldEmailButton.style.border = 'none';
-  coldEmailButton.style.borderRadius = '5px';
-  coldEmailButton.style.cursor = 'pointer';
-
-  const introduceButton = document.createElement('button');
-  introduceButton.textContent = 'Introduce yourself';
-  introduceButton.style.padding = '10px 15px';
-  introduceButton.style.backgroundColor = '#3996fb';
-  introduceButton.style.color = 'white';
-  introduceButton.style.border = 'none';
-  introduceButton.style.borderRadius = '5px';
-  introduceButton.style.cursor = 'pointer';
-
-  leftButtons.appendChild(coldEmailButton);
-  leftButtons.appendChild(introduceButton);
-
-  const sendButton = document.createElement('button');
-  sendButton.textContent = 'Send';
-  sendButton.style.padding = '10px 20px';
-  sendButton.style.backgroundColor = '#3996fb';
-  sendButton.style.color = 'white';
-  sendButton.style.border = 'none';
-  sendButton.style.borderRadius = '5px';
-  sendButton.style.cursor = 'pointer';
-
-  buttonContainer.appendChild(leftButtons);
-  buttonContainer.appendChild(sendButton);
-
-  // Close button
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Close';
-  closeButton.style.position = 'absolute';
-  closeButton.style.top = '10px';
-  closeButton.style.right = '10px';
-  closeButton.style.backgroundColor = '#ff4d4d';
-  closeButton.style.color = 'white';
-  closeButton.style.border = 'none';
-  closeButton.style.padding = '5px 10px';
-  closeButton.style.borderRadius = '5px';
-  closeButton.style.cursor = 'pointer';
-
-  closeButton.addEventListener('click', () => {
-      modal.remove();
-  });
-
-  // Append elements to modal
-  modal.appendChild(closeButton);
-  modal.appendChild(inputBox);
-  modal.appendChild(chatbotResponse);  // Add chatbot response element here
-  modal.appendChild(buttonContainer);
-
-  document.body.appendChild(modal);
-
-  // Event listeners for sending prompt
-  sendButton.addEventListener('click', () => {
+    sendButton.addEventListener("click", () => {
       const userPrompt = inputBox.value;
       if (userPrompt) {
+        sendMessageToChatbot(userPrompt, recipient);
+        modal.remove();
+      }
+    });
+
+    coldEmailButton.addEventListener("click", () => {
+      const userPrompt = inputBox.value || ""; // Get the user prompt from the input box
+      const fullPrompt = `Generate a reply for the following email: ${emailBody}\nUser input: ${userPrompt}`;
+      sendMessageToChatbot(fullPrompt); // Send both the email body and user input
+      modal.remove();
+    });
+
+    // Handle "Ask for more details" button click
+    introduceButton.addEventListener("click", () => {
+      const userPrompt = inputBox.value || ""; // Get the user prompt from the input box
+      const fullPrompt = `Ask for more details about the following email: ${emailBody}\nUser input: ${userPrompt}`;
+      sendMessageToChatbot(fullPrompt); // Send both the email body and user input
+      modal.remove();
+    });
+
+    inputBox.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const userPrompt = inputBox.value;
+        if (userPrompt) {
+          sendMessageToChatbot(userPrompt, recipient);
+          modal.remove();
+        }
+      }
+    });
+  }
+
+  chrome.storage.local.get("showModal", (data) => {
+    if (data.showModal) {
+      createDynamicModal();
+      chrome.storage.local.remove("showModal"); // Reset state
+    }
+  });
+
+  function createDynamicModal() {
+    const modal = document.createElement("div");
+    modal.id = "dynamicModal";
+    modal.style.position = "fixed";
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    modal.style.width = "400px";
+    modal.style.padding = "20px";
+    modal.style.backgroundColor = "#17182b";
+    modal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
+    modal.style.zIndex = "1000";
+    modal.style.borderRadius = "10px";
+    modal.style.fontFamily = "Arial, sans-serif";
+    modal.style.color = "#fff";
+
+    // Input box for user prompt
+    const inputBox = document.createElement("input");
+    inputBox.type = "text";
+    inputBox.style.marginTop = "20px";
+    inputBox.placeholder =
+      "We will draft a nice mail for you, write something and press ENTER.";
+    inputBox.style.width = "95%";
+    inputBox.style.padding = "10px";
+    inputBox.style.marginBottom = "20px";
+    inputBox.style.border = "2px solid #3996fb";
+    inputBox.style.borderRadius = "5px";
+    inputBox.style.fontSize = "16px";
+    inputBox.style.backgroundColor = "#17182b"; // Set input background color
+    inputBox.style.color = "#fff"; // Set input text color
+
+    // Chatbot response area (initially hidden or empty)
+    const chatbotResponse = document.createElement("div");
+    chatbotResponse.id = "chatbotResponse";
+    chatbotResponse.style.display = "none"; // Initially hidden
+    chatbotResponse.style.marginBottom = "20px";
+    chatbotResponse.style.backgroundColor = "#17182b";
+    chatbotResponse.style.borderRadius = "5px";
+    chatbotResponse.style.padding = "10px";
+    chatbotResponse.style.fontSize = "14px";
+    chatbotResponse.style.maxHeight = "150px";
+    chatbotResponse.style.overflowY = "auto";
+
+    // Predefined buttons and Send button container
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.justifyContent = "space-between";
+
+    const leftButtons = document.createElement("div");
+    leftButtons.style.display = "flex";
+    leftButtons.style.gap = "10px";
+
+    const coldEmailButton = document.createElement("button");
+    coldEmailButton.textContent = "Cold email";
+    coldEmailButton.style.padding = "10px 15px";
+    coldEmailButton.style.backgroundColor = "#3996fb";
+    coldEmailButton.style.color = "white";
+    coldEmailButton.style.border = "none";
+    coldEmailButton.style.borderRadius = "5px";
+    coldEmailButton.style.cursor = "pointer";
+
+    const introduceButton = document.createElement("button");
+    introduceButton.textContent = "Introduce yourself";
+    introduceButton.style.padding = "10px 15px";
+    introduceButton.style.backgroundColor = "#3996fb";
+    introduceButton.style.color = "white";
+    introduceButton.style.border = "none";
+    introduceButton.style.borderRadius = "5px";
+    introduceButton.style.cursor = "pointer";
+
+    leftButtons.appendChild(coldEmailButton);
+    leftButtons.appendChild(introduceButton);
+
+    const sendButton = document.createElement("button");
+    sendButton.textContent = "Send";
+    sendButton.style.padding = "10px 20px";
+    sendButton.style.backgroundColor = "#3996fb";
+    sendButton.style.color = "white";
+    sendButton.style.border = "none";
+    sendButton.style.borderRadius = "5px";
+    sendButton.style.cursor = "pointer";
+
+    buttonContainer.appendChild(leftButtons);
+    buttonContainer.appendChild(sendButton);
+
+    // Close button
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "10px";
+    closeButton.style.right = "10px";
+    closeButton.style.backgroundColor = "#ff4d4d";
+    closeButton.style.color = "white";
+    closeButton.style.border = "none";
+    closeButton.style.padding = "5px 10px";
+    closeButton.style.borderRadius = "5px";
+    closeButton.style.cursor = "pointer";
+
+    closeButton.addEventListener("click", () => {
+      modal.remove();
+    });
+
+    // Append elements to modal
+    modal.appendChild(closeButton);
+    modal.appendChild(inputBox);
+    modal.appendChild(chatbotResponse); // Add chatbot response element here
+    modal.appendChild(buttonContainer);
+
+    document.body.appendChild(modal);
+
+    // Event listeners for sending prompt
+    sendButton.addEventListener("click", () => {
+      const userPrompt = inputBox.value;
+      if (userPrompt) {
+        sendMessageToChatbot(userPrompt);
+        modal.remove();
+      }
+    });
+
+    inputBox.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const userPrompt = inputBox.value;
+        if (userPrompt) {
           sendMessageToChatbot(userPrompt);
           modal.remove();
+        }
       }
-  });
+    });
+  }
 
-
-  inputBox.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-          const userPrompt = inputBox.value;
-          if (userPrompt) {
-              sendMessageToChatbot(userPrompt);
-              modal.remove();
-          }
-      }
-  });
-}
-
-async function sendMessageToChatbot(messageText) {
-  displayLoadingMessage();
-  try {
+  async function sendMessageToChatbot(messageText) {
+    displayLoadingMessage();
+    try {
       const sessionToken = await getSessionTokenFromStorage();
       if (!sessionToken) {
-          console.log("No session token available.");
-          return;
+        console.log("No session token available.");
+        return;
       }
 
       const chatid = await getLatestChatId();
       if (!chatid) {
-          console.log("Failed to retrieve chat ID.");
-          return;
+        console.log("Failed to retrieve chat ID.");
+        return;
       }
 
       const response = await fetch("https://app.ai4chat.co/chatgpt", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${sessionToken}`,
-          },
-          body: JSON.stringify({
-              chatid,
-              conversation: [{ role: "user", content: messageText }],
-              timezoneOffset: new Date().getTimezoneOffset(),
-          }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionToken}`,
+        },
+        body: JSON.stringify({
+          chatid,
+          conversation: [{ role: "user", content: messageText }],
+          timezoneOffset: new Date().getTimezoneOffset(),
+        }),
       });
 
       if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error from server:", errorData.error);
-          return;
+        const errorData = await response.json();
+        console.error("Error from server:", errorData.error);
+        return;
       }
 
       const data = await response.text();
       displayChatbotResponse(data);
       removeLoadingMessage();
-  } catch (error) {
+    } catch (error) {
       console.error("Error sending message to chatbot:", error);
       removeLoadingMessage();
+    }
   }
-}
 
-// Function to display the chatbot response in the modal
-function displayChatbotResponse(responseText) {
-  const chatbotResponse = document.getElementById('chatbotResponse');
-  chatbotResponse.style.display = 'block';  // Show the response div
-  chatbotResponse.innerText = responseText;  // Insert the response
-}
+  // Function to display the chatbot response in the modal
+  function displayChatbotResponse(responseText) {
+    const chatbotResponse = document.getElementById("chatbotResponse");
+    chatbotResponse.style.display = "block"; // Show the response div
+    chatbotResponse.innerText = responseText; // Insert the response
+  }
 
-// Function to show a "loading" message (optional)
-function displayLoadingMessage() {
-  const chatbotResponse = document.getElementById('chatbotResponse');
-  chatbotResponse.style.display = 'block';  // Make sure it's visible
-  chatbotResponse.innerText = 'Loading...';
-}
+  // Function to show a "loading" message (optional)
+  function displayLoadingMessage() {
+    const chatbotResponse = document.getElementById("chatbotResponse");
+    chatbotResponse.style.display = "block"; // Make sure it's visible
+    chatbotResponse.innerText = "Loading...";
+  }
 
-// Function to remove the "loading" message
-function removeLoadingMessage() {
-  const chatbotResponse = document.getElementById('chatbotResponse');
-  chatbotResponse.innerText = '';  // Clear the content
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // Function to remove the "loading" message
+  function removeLoadingMessage() {
+    const chatbotResponse = document.getElementById("chatbotResponse");
+    chatbotResponse.innerText = ""; // Clear the content
+  }
 
   // Function to show the options modal
-function showOptionsModal(selectedText) {
-  // Create the modal HTML dynamically
-  const modal = document.createElement('div');
-  modal.innerHTML = `
+  function showOptionsModal(selectedText) {
+    // Create the modal HTML dynamically
+    const modal = document.createElement("div");
+    modal.innerHTML = `
       <div id="optionsModal">
           <h3>What would you like to do with this text?</h3>
           <p>"${selectedText}"</p>
@@ -516,56 +472,75 @@ function showOptionsModal(selectedText) {
       </div>
       <div id="modalBackdrop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
   `;
-  document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-  // Attach event listeners to buttons
-  document.getElementById('shortenText').addEventListener('click', () => handleOptionSelection('shorten', selectedText));
-  document.getElementById('makeLonger').addEventListener('click', () => handleOptionSelection('lengthen', selectedText));
-  document.getElementById('improveText').addEventListener('click', () => handleOptionSelection('improve', selectedText));
-  document.getElementById('checkGrammar').addEventListener('click', () => handleOptionSelection('check grammar', selectedText));
-  document.getElementById('simplifyLanguage').addEventListener('click', () => handleOptionSelection('simplify', selectedText));
-
-}
-
- 
-
-
-// Function to handle option selection
-function handleOptionSelection(option, selectedText) {
-  // Form the message based on the option
-  let prompt = '';
-  switch (option) {
-      case 'shorten':
-          prompt = `Please shorten the following text: "${selectedText}"`;
-          break;
-      case 'lengthen':
-          prompt = `Please expand on the following text: "${selectedText}"`;
-          break;
-      case 'improve':
-          prompt = `Please improve the following text: "${selectedText}"`;
-          break;
-      case 'check grammar':
-          prompt = `Please check the grammar of the following text: "${selectedText}"`;
-          break;
-      case 'simplify':
-        prompt =  `Please simplify he language of the following text: "${selectedText}"`;    
+    // Attach event listeners to buttons
+    document
+      .getElementById("shortenText")
+      .addEventListener("click", () =>
+        handleOptionSelection("shorten", selectedText)
+      );
+    document
+      .getElementById("makeLonger")
+      .addEventListener("click", () =>
+        handleOptionSelection("lengthen", selectedText)
+      );
+    document
+      .getElementById("improveText")
+      .addEventListener("click", () =>
+        handleOptionSelection("improve", selectedText)
+      );
+    document
+      .getElementById("checkGrammar")
+      .addEventListener("click", () =>
+        handleOptionSelection("check grammar", selectedText)
+      );
+    document
+      .getElementById("simplifyLanguage")
+      .addEventListener("click", () =>
+        handleOptionSelection("simplify", selectedText)
+      );
   }
 
-  // Send the prompt to the chatbot
-  sendMessageToChatbot(prompt);
+  // Function to handle option selection
+  function handleOptionSelection(option, selectedText) {
+    // Form the message based on the option
+    let prompt = "";
+    switch (option) {
+      case "shorten":
+        prompt = `Please shorten the following text: "${selectedText}"`;
+        break;
+      case "lengthen":
+        prompt = `Please expand on the following text: "${selectedText}"`;
+        break;
+      case "improve":
+        prompt = `Please improve the following text: "${selectedText}"`;
+        break;
+      case "check grammar":
+        prompt = `Please check the grammar of the following text: "${selectedText}"`;
+        break;
+      case "simplify":
+        prompt = `Please simplify he language of the following text: "${selectedText}"`;
+    }
 
-  // Close the modal
-  document.getElementById('optionsModal').remove();
-  document.getElementById('modalBackdrop').remove();
-}
+    // Send the prompt to the chatbot
+    sendMessageToChatbot(prompt);
 
-// Listen for messages from the background script to show the options modal
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "show_options_modal" && request.text) {
+    chrome.storage.local.remove('selectedText', () => {
+      console.log("Selected text removed from local storage");
+    });
+
+    // Close the modal
+    document.getElementById("optionsModal").remove();
+    document.getElementById("modalBackdrop").remove();
+  }
+
+  // Listen for messages from the background script to show the options modal
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "show_options_modal" && request.text) {
       showOptionsModal(request.text);
-  }
-});
-
+    }
+  });
 
   // Call the function and update the popup UI
   getLastTabUrlAndSelectedTextFromStorage()
@@ -886,7 +861,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
   });
 
-
   // Dropdown model selection logic
   const caretIcon = document.querySelector("#caretIcon");
   const modelDropdown = document.querySelector("#modelDropdown");
@@ -962,25 +936,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       // Display the message in the chat box
       displayMessage("user", messageText);
 
-
       // Clear the text input
       chatbotInput.value = "";
 
       // Reset the text area height to its default value
       chatbotInput.style.height = "30px"; // This should match the initial height of your text area
-      document.querySelector("#sendButton i.fa-paper-plane").style.display = "none";
-      document.querySelector("#sendButton i.fa-spinner").style.display = "inline-block";
-  
+      document.querySelector("#sendButton i.fa-paper-plane").style.display =
+        "none";
+      document.querySelector("#sendButton i.fa-spinner").style.display =
+        "inline-block";
+
       const timerElement = document.getElementById("timer");
       timerElement.style.display = "block";
       startTimer(timerElement); // Start a timer that counts up until the response is received
       sendButton.style.marginTop = "20px";
-  
+
       // Send the message to the chatbot
       sendMessageToChatbot(messageText).then(() => {
         // Hide spinner and show the send button, stop the timer once the response is received
-        document.querySelector("#sendButton i.fa-spinner").style.display = "none";
-        document.querySelector("#sendButton i.fa-paper-plane").style.display = "inline-block";
+        document.querySelector("#sendButton i.fa-spinner").style.display =
+          "none";
+        document.querySelector("#sendButton i.fa-paper-plane").style.display =
+          "inline-block";
         stopTimer(timerElement); // Stop the timer
       });
     }
@@ -990,21 +967,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   function startTimer(timerElement) {
     let startTime = Date.now(); // Record the start time
-  
+
     timerInterval = setInterval(() => {
       let elapsedTime = Date.now() - startTime; // Calculate the elapsed time
       let seconds = Math.floor(elapsedTime / 1000); // Get seconds
       let milliseconds = Math.floor((elapsedTime % 1000) / 100); // Get milliseconds as 1/10th of a second
-  
+
       timerElement.textContent = `${seconds}.${milliseconds}s`; // Format as 1.2s
     }, 100); // Update every 100 milliseconds
   }
 
-// Function to stop the timer once the response is received
-function stopTimer(timerElement) {
-  clearInterval(timerInterval); // Stop the interval
-  timerElement.style.display = "none"; // Hide the timer element once the response is received
-}
+  // Function to stop the timer once the response is received
+  function stopTimer(timerElement) {
+    clearInterval(timerInterval); // Stop the interval
+    timerElement.style.display = "none"; // Hide the timer element once the response is received
+  }
 
   async function getSessionTokenFromStorage() {
     return new Promise((resolve) => {
