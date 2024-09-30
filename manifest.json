@@ -38,12 +38,6 @@
         "default": "Ctrl+Space"
       },
       "description": "Open the extension popup"
-    },
-    "inject_popup": {
-      "suggested_key": {
-        "default": "Ctrl+I"
-      },
-      "description": "Inject live search popup on Google search"
     }
     
   },

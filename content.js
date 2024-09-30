@@ -273,10 +273,127 @@ window.addEventListener("load", () => {
 });
 
 
-// Listen for the Ctrl+I key press
-document.addEventListener("keydown", (event) => {
-  if (event.ctrlKey && event.key === 'I') {
-    chrome.runtime.sendMessage({ action: "inject_popup" });
+function injectComposeAIButtonOutlook() {
+  if (window.location.hostname.includes("outlook")) {
+    const newMailButton = document.querySelector('button[aria-label="New mail"]');
+
+    if (newMailButton) {
+      if (!document.querySelector("#ai-compose-button-outlook")) {
+        const aiButton = document.createElement("button");
+        aiButton.id = "ai-compose-button-outlook";
+
+        const icon = document.createElement("span");
+        icon.innerHTML = ` 
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" style="width: 20px; height: 20px; margin-right: 10px;">
+                        <path d="M12 17.27L18.18 21l-1.45-6.36L22 9.24l-6.36-.55L12 2 8.36 8.69 2 9.24l5.27 5.27L5.82 21z"/>
+                    </svg>
+                `;
+
+        aiButton.appendChild(icon);
+        aiButton.appendChild(document.createTextNode("AI"));
+
+        // Custom styling for the compose button
+        aiButton.style.marginLeft = "8px";
+        aiButton.style.marginTop = "4px";
+        aiButton.style.backgroundColor = "#3996fb";
+        aiButton.style.color = "white";
+        aiButton.style.border = "none";
+        aiButton.style.padding = "4px 10px";
+        aiButton.style.borderRadius = "8px";
+        aiButton.style.cursor = "pointer";
+        aiButton.style.display = "flex";
+        aiButton.style.alignItems = "center";
+        aiButton.style.fontSize = "16px";
+        aiButton.style.fontWeight = "bold";
+
+        newMailButton.parentElement.appendChild(aiButton);
+
+        // aiButton.addEventListener("click", () => {
+        //   newMailButton.click();
+        //   chrome.runtime.sendMessage({ action: "trigger_modal", outlook: true });
+        // });
+      }
+    } else {
+      setTimeout(injectComposeAIButtonOutlook, 1000);
+    }
   }
+}
+
+// Event listeners
+window.addEventListener("load", () => {
+  //injectComposeAIButtonGmail(); // Gmail button
+  injectComposeAIButton();
+  injectComposeAIButtonOutlook(); // Outlook button
+  waitForReplyBox(); // Call the reply box function
 });
+
+
+
+
+
+window.addEventListener('load', function () {
+  // Function to inject the AI-Reply button
+  function injectAIReplyButton() {
+      // Find the toolbar containing Reply and Forward buttons
+      const toolbar = document.querySelector('div[role="toolbar"][aria-label="Quick actions"]');
+
+      if (toolbar) {
+          // Create the AI-Reply button
+          const aiReplyButton = document.createElement('button');
+          aiReplyButton.type = 'button';
+          aiReplyButton.innerText = 'AI-Reply'; // Set the text to AI-Reply
+          aiReplyButton.role = 'menuitem';
+          aiReplyButton.className = 'fui-Button ai-reply-btn';
+
+          // Add styles to the AI-Reply button
+          aiReplyButton.style.backgroundColor = '#ffffff'; // White background
+          aiReplyButton.style.color = '#3996fb'; // Text color blue
+          aiReplyButton.style.border = '1px solid #3996fb'; // Blue border
+          aiReplyButton.style.padding = '6px 12px'; // Padding adjusted for button
+          aiReplyButton.style.marginRight = '4px'; // Space between buttons
+          aiReplyButton.style.cursor = 'pointer'; // Pointer cursor on hover
+          aiReplyButton.style.fontSize = '14px'; // Font size to match other buttons
+          aiReplyButton.style.fontFamily = 'Arial, sans-serif'; // Simple font family
+          aiReplyButton.style.lineHeight = '1.5'; // Line height to ensure text fits properly
+          aiReplyButton.style.height = '29px'; // Set height to ensure uniformity
+          aiReplyButton.style.display = 'inline-flex'; // Inline-flex to match toolbar buttons
+          aiReplyButton.style.alignItems = 'center'; // Vertically align text inside button
+          aiReplyButton.style.justifyContent = 'center'; // Center text inside the button
+          aiReplyButton.style.width = 'auto'; // Let the width adjust based on content
+          aiReplyButton.style.marginLeft = '6px';
+          aiReplyButton.style.marginTop = '6px';
+
+          // Insert the AI-Reply button between Reply and Forward buttons
+          const forwardButton = toolbar.querySelector('button[aria-label="Forward"]');
+          if (forwardButton) {
+              toolbar.insertBefore(aiReplyButton, forwardButton);
+          }
+
+          
+
+          // Add click event listener for AI-Reply button functionality
+          aiReplyButton.addEventListener('click', () => {
+              alert('AI-Reply functionality coming soon!');
+          });
+
+         
+      } else {
+          // Retry injecting the button after some time if the toolbar is not yet available
+          setTimeout(injectAIReplyButton, 1000);
+      }
+  }
+
+  // Run the function to inject the button after page load
+  injectAIReplyButton();
+});
+
+
+
+
+
+
+
+
+
+
 

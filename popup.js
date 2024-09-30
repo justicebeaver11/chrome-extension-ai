@@ -1360,10 +1360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      chrome.runtime.sendMessage({
-        type: "chatbotResponse",
-        content: formattedResponse,
-      });
+      
 
       lastResponse = formattedResponse;
       displayMessage("assistant", formattedResponse || "No content");
