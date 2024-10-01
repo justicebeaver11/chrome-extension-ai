@@ -308,10 +308,13 @@ function injectComposeAIButtonOutlook() {
 
         newMailButton.parentElement.appendChild(aiButton);
 
-        // aiButton.addEventListener("click", () => {
-        //   newMailButton.click();
-        //   chrome.runtime.sendMessage({ action: "trigger_modal", outlook: true });
-        // });
+        aiButton.addEventListener("click", () => {
+          newMailButton.click();
+
+          // Send message to background script to open popup
+          chrome.runtime.sendMessage({ action: "trigger_modal_outlook", outlook: true });
+        });
+
       }
     } else {
       setTimeout(injectComposeAIButtonOutlook, 1000);
@@ -331,61 +334,166 @@ window.addEventListener("load", () => {
 
 
 
+// window.addEventListener('load', function () {
+//   // Function to inject the AI-Reply button
+//   function injectAIReplyButton() {
+//     // Find the toolbar containing Reply and Forward buttons
+//     const toolbar = document.querySelector('div[role="toolbar"][aria-label="Quick actions"]');
+
+//     if (toolbar) {
+//       // Create the AI-Reply button
+//       const aiReplyButton = document.createElement('button');
+//       aiReplyButton.type = 'button';
+//       aiReplyButton.innerText = 'AI-Reply'; // Set the text to AI-Reply
+//       aiReplyButton.role = 'menuitem';
+//       aiReplyButton.className = 'fui-Button ai-reply-btn';
+
+//       // Add styles to the AI-Reply button
+//       aiReplyButton.style.backgroundColor = '#ffffff'; // White background
+//       aiReplyButton.style.color = '#3996fb'; // Text color blue
+//       aiReplyButton.style.border = '1px solid #3996fb'; // Blue border
+//       aiReplyButton.style.padding = '6px 12px'; // Padding adjusted for button
+//       aiReplyButton.style.marginRight = '4px'; // Space between buttons
+//       aiReplyButton.style.cursor = 'pointer'; // Pointer cursor on hover
+//       aiReplyButton.style.fontSize = '14px'; // Font size to match other buttons
+//       aiReplyButton.style.fontFamily = 'Arial, sans-serif'; // Simple font family
+//       aiReplyButton.style.lineHeight = '1.5'; // Line height to ensure text fits properly
+//       aiReplyButton.style.height = '29px'; // Set height to ensure uniformity
+//       aiReplyButton.style.display = 'inline-flex'; // Inline-flex to match toolbar buttons
+//       aiReplyButton.style.alignItems = 'center'; // Vertically align text inside button
+//       aiReplyButton.style.justifyContent = 'center'; // Center text inside the button
+//       aiReplyButton.style.width = 'auto'; // Let the width adjust based on content
+//       aiReplyButton.style.marginLeft = '6px';
+//       aiReplyButton.style.marginTop = '6px';
+
+//       // Insert the AI-Reply button between Reply and Forward buttons
+//       const forwardButton = toolbar.querySelector('button[aria-label="Forward"]');
+//       if (forwardButton) {
+//         toolbar.insertBefore(aiReplyButton, forwardButton);
+//       }
+
+     
+     
+        
+
+//       // Add click event listener for AI-Reply button functionality
+//       aiReplyButton.addEventListener('click', () => {
+//         chrome.runtime.sendMessage({
+//           action: "reply_modal_outlook",
+//           outlook: true,
+//         //  recipient: emailDetails.sender,
+//         });
+//       });
+//     } else {
+//       // Retry injecting the button after some time if the toolbar is not yet available
+//       setTimeout(injectAIReplyButton, 1000);
+//     }
+//   }
+
+//   // Run the function to inject the button after page load
+//   injectAIReplyButton();
+// });
+
+
+//title working
 window.addEventListener('load', function () {
   // Function to inject the AI-Reply button
   function injectAIReplyButton() {
-      // Find the toolbar containing Reply and Forward buttons
-      const toolbar = document.querySelector('div[role="toolbar"][aria-label="Quick actions"]');
+    // Find the toolbar containing Reply and Forward buttons
+    const toolbar = document.querySelector('div[role="toolbar"][aria-label="Quick actions"]');
 
-      if (toolbar) {
-          // Create the AI-Reply button
-          const aiReplyButton = document.createElement('button');
-          aiReplyButton.type = 'button';
-          aiReplyButton.innerText = 'AI-Reply'; // Set the text to AI-Reply
-          aiReplyButton.role = 'menuitem';
-          aiReplyButton.className = 'fui-Button ai-reply-btn';
+    if (toolbar) {
+      // Create the AI-Reply button
+      const aiReplyButton = document.createElement('button');
+      aiReplyButton.type = 'button';
+      aiReplyButton.innerText = 'AI-Reply'; // Set the text to AI-Reply
+      aiReplyButton.role = 'menuitem';
+      aiReplyButton.className = 'fui-Button ai-reply-btn';
 
-          // Add styles to the AI-Reply button
-          aiReplyButton.style.backgroundColor = '#ffffff'; // White background
-          aiReplyButton.style.color = '#3996fb'; // Text color blue
-          aiReplyButton.style.border = '1px solid #3996fb'; // Blue border
-          aiReplyButton.style.padding = '6px 12px'; // Padding adjusted for button
-          aiReplyButton.style.marginRight = '4px'; // Space between buttons
-          aiReplyButton.style.cursor = 'pointer'; // Pointer cursor on hover
-          aiReplyButton.style.fontSize = '14px'; // Font size to match other buttons
-          aiReplyButton.style.fontFamily = 'Arial, sans-serif'; // Simple font family
-          aiReplyButton.style.lineHeight = '1.5'; // Line height to ensure text fits properly
-          aiReplyButton.style.height = '29px'; // Set height to ensure uniformity
-          aiReplyButton.style.display = 'inline-flex'; // Inline-flex to match toolbar buttons
-          aiReplyButton.style.alignItems = 'center'; // Vertically align text inside button
-          aiReplyButton.style.justifyContent = 'center'; // Center text inside the button
-          aiReplyButton.style.width = 'auto'; // Let the width adjust based on content
-          aiReplyButton.style.marginLeft = '6px';
-          aiReplyButton.style.marginTop = '6px';
+      // Add styles to the AI-Reply button
+      aiReplyButton.style.backgroundColor = '#ffffff'; // White background
+      aiReplyButton.style.color = '#3996fb'; // Text color blue
+      aiReplyButton.style.border = '1px solid #3996fb'; // Blue border
+      aiReplyButton.style.padding = '6px 12px'; // Padding adjusted for button
+      aiReplyButton.style.marginRight = '4px'; // Space between buttons
+      aiReplyButton.style.cursor = 'pointer'; // Pointer cursor on hover
+      aiReplyButton.style.fontSize = '14px'; // Font size to match other buttons
+      aiReplyButton.style.fontFamily = 'Arial, sans-serif'; // Simple font family
+      aiReplyButton.style.lineHeight = '1.5'; // Line height to ensure text fits properly
+      aiReplyButton.style.height = '29px'; // Set height to ensure uniformity
+      aiReplyButton.style.display = 'inline-flex'; // Inline-flex to match toolbar buttons
+      aiReplyButton.style.alignItems = 'center'; // Vertically align text inside button
+      aiReplyButton.style.justifyContent = 'center'; // Center text inside the button
+      aiReplyButton.style.width = 'auto'; // Let the width adjust based on content
+      aiReplyButton.style.marginLeft = '6px';
+      aiReplyButton.style.marginTop = '6px';
 
-          // Insert the AI-Reply button between Reply and Forward buttons
-          const forwardButton = toolbar.querySelector('button[aria-label="Forward"]');
-          if (forwardButton) {
-              toolbar.insertBefore(aiReplyButton, forwardButton);
-          }
-
-          
-
-          // Add click event listener for AI-Reply button functionality
-          aiReplyButton.addEventListener('click', () => {
-              alert('AI-Reply functionality coming soon!');
-          });
-
-         
-      } else {
-          // Retry injecting the button after some time if the toolbar is not yet available
-          setTimeout(injectAIReplyButton, 1000);
+      // Insert the AI-Reply button between Reply and Forward buttons
+      const forwardButton = toolbar.querySelector('button[aria-label="Forward"]');
+      if (forwardButton) {
+        toolbar.insertBefore(aiReplyButton, forwardButton);
       }
+
+      // Add click event listener for AI-Reply button functionality
+      aiReplyButton.addEventListener('click', () => {
+        // Call the function to extract sender information
+        const senderInfo = extractSenderInfo();
+
+        if (senderInfo) {
+          // Store sender's name and email in Chrome storage
+          chrome.storage.local.set({ senderInfo });
+
+          // Send a message to open the reply modal in popup.js
+          chrome.runtime.sendMessage({
+            action: "reply_modal_outlook",
+            outlook: true,
+          });
+        }
+      });
+    } else {
+      // Retry injecting the button after some time if the toolbar is not yet available
+      setTimeout(injectAIReplyButton, 1000);
+    }
+  }
+
+  // Function to extract sender information
+  function extractSenderInfo() {
+    const senderElements = document.querySelectorAll('div.PW01N.l8Tnu span.OZZZK');
+
+    if (senderElements.length === 0) {
+      console.log("No sender information found.");
+      return null;
+    }
+
+    for (const element of senderElements) {
+      const fullText = element.textContent.trim();
+      const match = fullText.match(/(.+?)<(.+?)>/);
+
+      if (match) {
+        const senderName = match[1].trim();
+        const senderEmail = match[2].trim();
+        console.log(`Sender Name: ${senderName}, Sender Email: ${senderEmail}`);
+        return { name: senderName, email: senderEmail };
+      }
+    }
+    console.log("Could not extract sender info.");
+    return null;
   }
 
   // Run the function to inject the button after page load
   injectAIReplyButton();
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 

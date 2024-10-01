@@ -178,3 +178,57 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.windows.onRemoved.addListener((windowId) => {
   popupOpen = false;
 });
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (
+    (message.action === "trigger_modal_outlook" && message.outlook) 
+    
+  ) {
+    // Set Gmail state
+    chrome.storage.local.set({ showOutlookModal: true });
+
+    // Open the extension popup
+    chrome.windows.create({
+      url: "popup.html",
+      type: "popup",
+      width: 500,
+      height: 600,
+      top: 100,
+      left: 100,
+    });
+  }
+});
+
+
+
+let popupOpenOutlook = false;
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "reply_modal_outlook" && message.outlook) {
+    if (!popupOpenOutlook) {
+      popupOpenOutlook = true;
+      chrome.storage.local.set({
+        showReplyModalOutlook: true,
+      });
+
+      chrome.windows.create({
+        url: "popup.html",
+        type: "popup",
+        width: 500,
+        height: 600,
+        top: 100,
+        left: 100,
+      });
+    }
+  }
+});
+
+// When the popup window is closed, reset the popupOpenOutlook flag
+chrome.windows.onRemoved.addListener((windowId) => {
+  popupOpenOutlook = false;
+});
+
+
+
+
