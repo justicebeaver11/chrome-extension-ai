@@ -69,6 +69,7 @@ menuButton.addEventListener('click', () => {
     smallTitle1.style.fontSize = '12px';
     smallTitle1.style.marginBottom = '2px'; // Minimum space between title and input field
     smallTitle1.style.textAlign = 'left';
+    smallTitle1.id = 'promptTitle';
 
     // Create first input field
     const inputField1 = document.createElement('input');
@@ -80,6 +81,7 @@ menuButton.addEventListener('click', () => {
     inputField1.style.border = '1px solid #3996fb';
     inputField1.style.color = '#ffffff';
     inputField1.style.padding = '8px';
+    inputField1.id = 'promptInput';
 
     // Create second small title
     const smallTitle2 = document.createElement('div');
@@ -88,6 +90,7 @@ menuButton.addEventListener('click', () => {
     smallTitle2.style.fontSize = '12px';
     smallTitle2.style.marginBottom = '2px'; // Minimum space between title and input field
     smallTitle2.style.textAlign = 'left';
+    smallTitle2.id = 'modelSelectionTitle';
 
 
     const modelDropdown = document.createElement('select');
@@ -97,6 +100,7 @@ modelDropdown.style.backgroundColor = '#17182b';
 modelDropdown.style.border = '1px solid #3996fb';
 modelDropdown.style.color = '#ffffff';
 modelDropdown.style.padding = '8px';
+modelDropdown.id = 'modelDropdownSelect';
 
 const models = [
   { id: 'l4ai', name: 'Luminarium4AI (Proprietary)' },
@@ -143,6 +147,7 @@ models.forEach(model => {
     smallTitle3.style.fontSize = '12px';
     smallTitle3.style.marginBottom = '2px'; // Minimum space between title and input field
     smallTitle3.style.textAlign = 'left';
+    smallTitle3.id = 'resolutionTitle';
 
 
     const modelDropdownResolution = document.createElement('select');
@@ -152,6 +157,7 @@ modelDropdownResolution.style.backgroundColor = '#17182b';
 modelDropdownResolution.style.border = '1px solid #3996fb';
 modelDropdownResolution.style.color = '#ffffff';
 modelDropdownResolution.style.padding = '8px';
+modelDropdownResolution.id = 'resolutionDropdown';
 
 
 function getResolutions(modelId) {
@@ -443,6 +449,80 @@ function updateCreditBalance(model, resolution) {
     submitButton.style.width = '30%'; // Limit button width to 30%
     submitButton.style.borderRadius = '5px'; // Rounded edges for button
     submitButton.style.marginTop = '10px'; // Space above the button
+    submitButton.id = 'generateButton';
+
+    submitButton.addEventListener('click', () => {
+      console.log("generate");
+    });
+
+    const imagePreview = document.createElement('div');
+    imagePreview.style.display = 'none'; // Initially hidden
+    imagePreview.style.marginTop = '10px'; // Space above the advanced fields
+    imagePreview.style.display = 'flex';
+    imagePreview.style.justifyContent = 'space-between'; // Align fields side by side
+    imagePreview.textContent = 'Generated Image';
+
+    submitButton.addEventListener('click', () => {
+      // Get user input values
+      const promptValue = document.getElementById('promptInput').value || "football"; // Default to 'football' if empty
+      const modelValue = document.getElementById('modelDropdownSelect').value || "l4ai"; // Default to 'l4ai' if empty
+      const resolutionValue = document.getElementById('resolutionDropdown').value; // Get selected resolution value
+    
+      // Parse resolution values from dropdown
+      const [width, height] = resolutionValue.split('x').map(Number); // Extract width and height from resolution (e.g., '1024x1024')
+    
+      // Get optional values (negative prompt and seed)
+      const negativePromptValue = document.getElementById('negativePrompt').value || ""; // Default to empty string if not provided
+      const seedValue = document.getElementById('seed').value || null; // Default to null if empty
+    
+      // Construct the request payload
+      const payload = {
+        prompt: promptValue,
+        negative_prompt: negativePromptValue,
+        model: modelValue,
+        width: width || 1024, // Default to 1024 if resolution not properly parsed
+        height: height || 1024, // Default to 1024 if resolution not properly parsed
+        seed: seedValue,
+        steps: 25 // Set steps to 25 as per the given requirement
+      };
+    
+      console.log("Payload: ", payload); // Log the constructed payload for debugging
+    
+      // Send POST request to the specified endpoint
+      fetch("https://app.ai4chat.co/generateAndUploadImage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+          console.log("Response: ", data); // Log the response for debugging
+          const imageUrl = data?.imageUrl; // Assuming the URL is in `data.image_url`
+          if (imageUrl) {
+            // Create an image element
+            const imageElement = document.createElement('img');
+            imageElement.src = imageUrl;
+            imageElement.alt = 'Generated Image';
+            imageElement.style.maxWidth = '300px'; // Set maximum width for the image
+            imageElement.style.border = '2px solid #000'; // Add border for better UI
+    
+            // Clear any previous image in the div and add the new image
+            imagePreview.innerHTML = 'Generated Image:'; // Clear and set header text
+            imagePreview.appendChild(imageElement); // Append the image element
+    
+            // Show the image preview div
+            imagePreview.style.display = 'block';
+          } else {
+            alert("No image URL found in the response."); // Handle if image URL is missing
+          }
+        })
+        .catch(error => {
+          console.error("Error: ", error); // Log any errors for debugging
+         
+        });
+    });
 
     // Add text for advanced settings
     const advancedSettingsText = document.createElement('div');
@@ -469,6 +549,7 @@ function updateCreditBalance(model, resolution) {
     negativePromptField.style.border = '1px solid #3996fb';
     negativePromptField.style.color = '#ffffff';
     negativePromptField.style.padding = '8px';
+    negativePromptField.id = 'negativePrompt';
 
     // Create Seed input field
     const seedField = document.createElement('input');
@@ -479,6 +560,10 @@ function updateCreditBalance(model, resolution) {
     seedField.style.border = '1px solid #3996fb';
     seedField.style.color = '#ffffff';
     seedField.style.padding = '8px';
+    seedField.id = 'seed';
+
+
+   
 
     // Append Negative Prompt and Seed fields to advanced settings container
     advancedSettingsContainer.appendChild(negativePromptField);
@@ -498,6 +583,7 @@ function updateCreditBalance(model, resolution) {
 
     // Append credits info text below the submit button
     chatbotMessages1.appendChild(creditsInfoText);
+    chatbotMessages1.appendChild(imagePreview);
 
     // Event listener to toggle the visibility of advanced settings
     advancedSettingsText.addEventListener('click', () => {
@@ -526,6 +612,12 @@ function updateCreditBalance(model, resolution) {
   // Toggle the mode
   isTextToImageMode = !isTextToImageMode;
 });
+
+
+
+
+
+
 
 
 
