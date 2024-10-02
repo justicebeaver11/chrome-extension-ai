@@ -266,12 +266,171 @@ function getResolutions(modelId) {
   });
 }
 
+
+
+
+
+getResolutions(models[0].id);
+
+let generationCost = 35; // Default generation cost
+let remainingCredits = 7800;
+
+const creditsInfoText = document.createElement('div');
+creditsInfoText.style.color = '#ffffff';
+creditsInfoText.style.fontSize = '12px';
+creditsInfoText.style.marginTop = '10px';
+
+updateCreditsInfo();
+
+
+const creditCosts = {
+  'dall-e-2': {
+    '256x256': 160,
+    '512x512': 180,
+    '1024x1024': 200,
+  },
+  'dall-e-3': {
+    '1024x1024': 400,
+    '1792x1024': 800,
+    '1024x1792': 800,
+  },
+  'sd_xl': {
+    '1024x1024': 20,
+    '768x1344': 20,
+    '915x1144':  20,
+	 '1182x886':  20,
+		 '1254x836':  20,
+		 '1365x768':  20, 
+		 '1564x670':  20,
+  },
+  'leonardo' : {
+     '512x512': 250,
+		 '1024x1024': 1000,
+		 '768x1344': 1000,
+		 '915x1144': 1000,
+		 '1182x886': 1000,
+		 '1254x836': 1000,
+		 '1365x768': 1000,
+		 '1564x670': 1000,
+  },
+  'midjourney' : {
+     '1024x1024': 450,
+		 '1280x1024': 450,
+		 '1254x836': 450,
+		 '1260x720': 450,
+  },
+  'i4ai': {
+     '1024x1024': 35,
+		 '768x1344': 35,
+		 '915x1144': 35,
+		 '1182x886': 35,
+		 '1254x836': 35,
+		 '1365x768': 35,
+		 '1564x670': 35,
+  },
+  'v4ai': {
+     '1024x1024': 35,
+		 '768x1344': 35,
+		 '915x1144': 35,
+		 '1182x886': 35,
+		 '1254x836': 35,
+		 '1365x768': 35,
+		 '1564x670': 35,
+  },
+  'dc4ai': {
+     '1024x1024': 480,
+		 '1280x1024': 480,
+		 '1254x836': 480,
+		 '1260x720': 480,
+  },
+  'pp4ai': {
+     '512x512': 25,
+		 '1024x1024': 45,
+  },
+  'flux-schnell': {
+     '1024x1024': 30,
+     '768x1344': 30,
+     '1344x768': 30,
+     '1536x640': 30,
+     '640x1536': 30,
+     '1216x832': 30,
+     '832x1216': 30,
+     '1088x896': 30,
+     '896x1088': 30,
+  },
+  'flux-dev': {
+     '1024x1024': 300,
+     '768x1344': 300,
+     '1344x768': 300,
+     '1536x640': 300,
+     '640x1536': 300,
+     '1216x832': 300,
+     '832x1216': 300,
+     '1088x896': 300,
+     '896x1088': 300,
+  },
+  'flux-pro': {
+     '1024x1024': 550,
+     '768x1344': 550,
+     '1344x768': 550,
+     '1536x640': 550,
+     '640x1536': 550,
+     '1216x832': 550,
+     '832x1216': 550,
+     '1088x896': 550,
+     '896x1088': 550,
+  },
+  'sd3': {
+     '1024x1024': 350,
+     '768x1344': 350,
+     '1344x768': 350,
+     '1536x640': 350,
+     '640x1536': 350,
+     '1216x832': 350,
+     '832x1216': 350,
+     '1088x896': 350,
+     '896x1088': 350,
+  },
+  'l4ai': {
+     '1024x1024': 35,
+     '768x1344': 35,
+     '1344x768': 35,
+     '1536x640': 35,
+     '640x1536': 35,
+     '1216x832': 35,
+     '832x1216': 35,
+     '1088x896': 35,
+     '896x1088': 35,
+  },
+  default: {
+     '512x512': 10,
+		 '1024x1024': 30,
+  }
+};
+
+function updateCreditsInfo() {
+  creditsInfoText.textContent = `This generation will cost ${generationCost} credits. You have ${remainingCredits} credits remaining. The image generation may take up to 5 minutes for this AI model, please stay patient.`;
+}
+
 modelDropdown.addEventListener('change', (event) => {
   const selectedModelId = event.target.value;
   getResolutions(selectedModelId);
+  updateCreditBalance(selectedModelId, modelDropdownResolution.value); 
 });
 
-getResolutions(models[0].id);
+modelDropdownResolution.addEventListener('change', (event) => {
+  const selectedModelId = modelDropdown.value;
+  updateCreditBalance(selectedModelId, event.target.value); // Update credits on resolution change
+});
+
+function updateCreditBalance(model, resolution) {
+  let credits = creditCosts[model]?.[resolution] || 35; // Default to 35 if no mapping exists
+  generationCost = credits; // Update generation cost dynamically
+  remainingCredits = 7800 - credits; // Deduct from remaining credits as an example (update this based on your logic)
+
+  // Update the credit balance display
+  updateCreditsInfo();
+}
 
     // Create submit button
     const submitButton = document.createElement('button');
@@ -336,12 +495,6 @@ getResolutions(models[0].id);
     chatbotMessages1.appendChild(advancedSettingsContainer); // Append advanced settings container
     chatbotMessages1.appendChild(submitButton); // Add the button after the advanced settings text
 
-    // Add credits info text below the submit button
-    const creditsInfoText = document.createElement('div');
-    creditsInfoText.textContent = 'This generation will cost 35 credits. You have 7800 credits remaining. The image generation may take up to 5 minutes for this AI model, please stay patient.';
-    creditsInfoText.style.color = '#ffffff';
-    creditsInfoText.style.fontSize = '12px';
-    creditsInfoText.style.marginTop = '10px'; // Space above the credits info text
 
     // Append credits info text below the submit button
     chatbotMessages1.appendChild(creditsInfoText);
@@ -373,6 +526,8 @@ getResolutions(models[0].id);
   // Toggle the mode
   isTextToImageMode = !isTextToImageMode;
 });
+
+
 
 
   
