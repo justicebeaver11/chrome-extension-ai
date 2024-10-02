@@ -3,6 +3,383 @@ document.addEventListener("DOMContentLoaded", async () => {
   closeButton.addEventListener("click", () => {
     window.close();
   });
+  
+  const menuButton = document.getElementById('menuButton');
+const chatbotModel = document.getElementById('chatbotmodel');
+const chatbotMessages1 = document.getElementById('chatbotMessages');
+
+// Variable to track toggle state
+let isTextToImageMode = false;
+let isAdvancedSettingsVisible = false; // Track advanced settings visibility
+
+// Store the original content of the chatbotModel
+const originalModelContent = chatbotModel.innerHTML;
+
+// Event listener for the menu button to toggle the content
+menuButton.addEventListener('click', () => {
+  if (!isTextToImageMode) {
+    // Replace the button inside chatbotModel with "Text to Image" text
+    chatbotModel.innerHTML = ''; // Clear existing content
+
+    // Create a container for the title and description
+    const titleContainer = document.createElement('div');
+    titleContainer.style.textAlign = 'center'; // Center the title and description
+
+    // Create title for Text to Image
+    const title = document.createElement('div');
+    title.id = 'textToImage';
+    title.textContent = 'Text to Image';
+    title.style.color = '#3996fb';
+    title.style.fontSize = '24px'; // Bigger font for title
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '5px'; // Small space between title and description
+
+    // Create descriptive text under the title
+    const description = document.createElement('div');
+    description.textContent = 'Enter a description for your image, choose an AI model, and hit Generate below';
+    description.style.color = '#ffffff';
+    description.style.fontSize = '14px'; // Smaller font for description
+    description.style.marginBottom = '20px'; // Space between description and input fields
+
+    // Append title and description to the container
+    titleContainer.appendChild(title);
+    titleContainer.appendChild(description);
+
+    // Append the container to chatbotModel
+    chatbotModel.appendChild(titleContainer);
+
+    // Insert three input fields and a button into chatbotMessages
+    chatbotMessages1.innerHTML = ''; // Clear previous messages
+
+    // Create introductory title
+    const introTitle = document.createElement('div');
+    introTitle.textContent = 'Enter the details below';
+    introTitle.style.color = '#3996fb';
+    introTitle.style.fontSize = '14px';
+    introTitle.style.fontWeight = 'bold';
+    introTitle.style.marginBottom = '10px'; // Space above and below the title
+
+    // Append intro title
+    chatbotMessages1.appendChild(introTitle);
+
+    // Create first small title
+    const smallTitle1 = document.createElement('div');
+    smallTitle1.textContent = 'What do you want to generate?';
+    smallTitle1.style.color = '#ffffff';
+    smallTitle1.style.fontSize = '12px';
+    smallTitle1.style.marginBottom = '2px'; // Minimum space between title and input field
+    smallTitle1.style.textAlign = 'left';
+
+    // Create first input field
+    const inputField1 = document.createElement('input');
+    inputField1.type = 'text';
+    inputField1.placeholder = 'Enter prompt';
+    inputField1.style.display = 'block';
+    inputField1.style.margin = '8px 0'; // Reduced margin
+    inputField1.style.backgroundColor = '#17182b';
+    inputField1.style.border = '1px solid #3996fb';
+    inputField1.style.color = '#ffffff';
+    inputField1.style.padding = '8px';
+
+    // Create second small title
+    const smallTitle2 = document.createElement('div');
+    smallTitle2.textContent = 'Model Selection';
+    smallTitle2.style.color = '#ffffff';
+    smallTitle2.style.fontSize = '12px';
+    smallTitle2.style.marginBottom = '2px'; // Minimum space between title and input field
+    smallTitle2.style.textAlign = 'left';
+
+
+    const modelDropdown = document.createElement('select');
+modelDropdown.style.display = 'block';
+modelDropdown.style.margin = '8px 0'; // Reduced margin
+modelDropdown.style.backgroundColor = '#17182b';
+modelDropdown.style.border = '1px solid #3996fb';
+modelDropdown.style.color = '#ffffff';
+modelDropdown.style.padding = '8px';
+
+const models = [
+  { id: 'l4ai', name: 'Luminarium4AI (Proprietary)' },
+  { id: 'v4ai', name: 'Visionary4AI (Proprietary)' },
+  { id: 'dc4ai', name: 'DreamCanvas4AI (Proprietary)' },
+  { id: 'pp4ai', name: 'PixelPioneer4AI (Proprietary)' },
+  { id: 'flux-schnell', name: 'FLUX.1 [schnell]' },
+  { id: 'flux-dev', name: 'FLUX.1 [dev]' },
+  { id: 'flux-pro', name: 'FLUX.1 [pro]' },
+  { id: 'sd_v1.5', name: 'Stable Diffusion v1.5' },
+  { id: 'sd_v2.1', name: 'Stable Diffusion v2.1' },
+  { id: 'sd_v3', name: 'Stable Diffusion v3' },
+  { id: 'sd_xl', name: 'Stable Diffusion XL' },
+  { id: 'midjourney', name: 'Midjourney' },
+  { id: 'dall-e-2', name: 'DALLE-2' },
+  { id: 'dall-e-3', name: 'DALLE-3' },
+  { id: 'leonardo', name: 'Leonardo AI' },
+  { id: 'van-gogh-diffusion', name: 'Van Gogh Diffusion' },
+  { id: 'neverending-dream', name: 'NeverEnding Dream' },
+  { id: 'icbinp', name: 'ICBINP - I Cannot Believe It Is Not Photography' },
+  { id: 'something-v2-2', name: 'Something V2.2' },
+  { id: 'eimis-anime-diffusion-v1-0', name: 'Anime Diffusion' },
+  { id: 'anashel-rpg', name: 'RPG' },
+  { id: 'xsarchitectural-interior-design', name: 'InteriorDesign' },
+  { id: 'dream-shaper-v8', name: 'DreamShaper v8' },
+  { id: 'synthwave-punk-v2', name: 'SynthwavePunk v2' },
+
+
+
+ 
+];
+
+models.forEach(model => {
+  const option = document.createElement('option');
+  option.value = model.id; // Set the value to the model ID
+  option.textContent = model.name; // Set the displayed name of the model
+  modelDropdown.appendChild(option); // Append option to the dropdown
+});
+
+    // Create third small title
+    const smallTitle3 = document.createElement('div');
+    smallTitle3.textContent = 'Resolution';
+    smallTitle3.style.color = '#ffffff';
+    smallTitle3.style.fontSize = '12px';
+    smallTitle3.style.marginBottom = '2px'; // Minimum space between title and input field
+    smallTitle3.style.textAlign = 'left';
+
+
+    const modelDropdownResolution = document.createElement('select');
+modelDropdownResolution.style.display = 'block';
+modelDropdownResolution.style.margin = '8px 0'; // Reduced margin
+modelDropdownResolution.style.backgroundColor = '#17182b';
+modelDropdownResolution.style.border = '1px solid #3996fb';
+modelDropdownResolution.style.color = '#ffffff';
+modelDropdownResolution.style.padding = '8px';
+
+
+function getResolutions(modelId) {
+  let options = [];
+
+  switch (modelId) {
+    case 'sd_xl':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
+        { text: '768 x 1344: Vertical (9:16)', value: '768x1344' },
+        { text: '915 x 1144: Portrait (4:5)', value: '915x1144' },
+        { text: '1182 x 886: Photo (4:3)', value: '1182x886' },
+        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
+        { text: '1365 x 768: Widescreen (16:9)', value: '1365x768' },
+        { text: '1564 x 670: Cinematic (21:9)', value: '1564x670' }
+      ];
+      break;
+    case 'leonardo-old':
+      options = [
+        { text: '512 x 512: Square (1:1)', value: '512x512' },
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
+        { text: '768 x 1344: Vertical (9:16)', value: '768x1344' },
+        { text: '915 x 1144: Portrait (4:5)', value: '915x1144' },
+        { text: '1182 x 886: Photo (4:3)', value: '1182x886' },
+        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
+        { text: '1365 x 768: Widescreen (16:9)', value: '1365x768' },
+        { text: '1564 x 670: Cinematic (21:9)', value: '1564x670' }
+      ];
+      break;
+    case 'leonardo':
+      options = [
+        { text: '512 x 512: Square (1:1)', value: '512x512' },
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+      break;
+    case 'midjourney':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
+        { text: '1280 x 1024: Frame & Print (5:4)', value: '1280x1024' },
+        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
+        { text: '1260 x 720: HD Screens (7:4)', value: '1260x720' }
+      ];
+      break;
+    case 'dall-e-2':
+      options = [
+        { text: '256 x 256: Square (1:1)', value: '256x256' },
+        { text: '512 x 512: Square (1:1)', value: '512x512' },
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+      break;
+    case 'dall-e-3':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
+        { text: '1792 x 1024: Landscape HD Screens (7:4)', value: '1792x1024' },
+        { text: '1024 x 1792: Portrait HD Screens (7:4)', value: '1024x1792' }
+      ];
+      break;
+    case 'i4ai':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+    case 'v4ai':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+    case 'dc4ai':
+      options = [
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+      break;
+    case 'pp4ai':
+      options = [
+        { text: '512 x 512: Square (1:1)', value: '512x512' },
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ];
+      break;
+      case 'flux-schnell':
+      case 'flux-dev':
+      case 'flux-pro':
+      case 'sd3':
+      case 'l4ai':
+
+
+
+        options = [
+          { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
+          { text: '768 x 1344: Portrait (9:16)', value: '768x1344' },
+          { text: '1344 x 768: Landscape (16:9)', value: '1344x768' },
+          { text: '1536 x 640: Ultra-Wide (21:9)', value: '1536x640' },
+          { text: '640 x 1536: Ultra-Tall (9:21)', value: '640x1536' },
+          { text: '1216 x 832: Landscape (3:2)', value: '1216x832' },
+          { text: '832 x 1216: Portrait (2:3)', value: '832x1216' },
+          { text: '1088 x 896: Square-ish (5:4)', value: '1088x896' },
+          { text: '896 x 1088: Portrait-ish (4:5)', value: '896x1088' }
+        ];
+        break;
+    // Add additional cases as necessary
+    default:
+      options = [
+        { text: '512 x 512: Square (1:1)', value: '512x512' },
+        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
+      ]; // No options for unrecognized model
+  }
+
+  modelDropdownResolution.innerHTML = '';
+
+  options.forEach(option => {
+    const resolutionOption = document.createElement('option');
+    resolutionOption.value = option.value; // Set the value to the resolution value
+    resolutionOption.textContent = option.text; // Set the displayed name of the resolution
+    modelDropdownResolution.appendChild(resolutionOption); // Append option to the resolution dropdown
+  });
+}
+
+modelDropdown.addEventListener('change', (event) => {
+  const selectedModelId = event.target.value;
+  getResolutions(selectedModelId);
+});
+
+getResolutions(models[0].id);
+
+    // Create submit button
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Generate Image';
+    submitButton.style.backgroundColor = '#3996fb'; // Changed button background color
+    submitButton.style.color = '#ffffff'; // Changed button text color
+    submitButton.style.border = 'none';
+    submitButton.style.padding = '10px';
+    submitButton.style.cursor = 'pointer';
+    submitButton.style.width = '30%'; // Limit button width to 30%
+    submitButton.style.borderRadius = '5px'; // Rounded edges for button
+    submitButton.style.marginTop = '10px'; // Space above the button
+
+    // Add text for advanced settings
+    const advancedSettingsText = document.createElement('div');
+    advancedSettingsText.textContent = 'Show Advanced Settings';
+    advancedSettingsText.style.color = '#3996fb'; // Set advanced settings text color
+    advancedSettingsText.style.fontSize = '14px';
+    advancedSettingsText.style.margin = '10px 0'; // Space above and below the text
+    advancedSettingsText.style.textAlign = 'left';
+    advancedSettingsText.style.cursor = 'pointer';
+
+    // Create container for advanced settings input fields
+    const advancedSettingsContainer = document.createElement('div');
+    advancedSettingsContainer.style.display = 'none'; // Initially hidden
+    advancedSettingsContainer.style.marginTop = '10px'; // Space above the advanced fields
+    advancedSettingsContainer.style.display = 'flex';
+    advancedSettingsContainer.style.justifyContent = 'space-between'; // Align fields side by side
+
+    // Create Negative Prompt input field
+    const negativePromptField = document.createElement('input');
+    negativePromptField.type = 'text';
+    negativePromptField.placeholder = 'Negative Prompt';
+    negativePromptField.style.width = '48%'; // Each input field takes 50% width
+    negativePromptField.style.backgroundColor = '#17182b';
+    negativePromptField.style.border = '1px solid #3996fb';
+    negativePromptField.style.color = '#ffffff';
+    negativePromptField.style.padding = '8px';
+
+    // Create Seed input field
+    const seedField = document.createElement('input');
+    seedField.type = 'text';
+    seedField.placeholder = 'Seed';
+    seedField.style.width = '48%'; // Each input field takes 50% width
+    seedField.style.backgroundColor = '#17182b';
+    seedField.style.border = '1px solid #3996fb';
+    seedField.style.color = '#ffffff';
+    seedField.style.padding = '8px';
+
+    // Append Negative Prompt and Seed fields to advanced settings container
+    advancedSettingsContainer.appendChild(negativePromptField);
+    advancedSettingsContainer.appendChild(seedField);
+
+    // Append titles, input fields, and button to chatbotMessages
+    chatbotMessages1.appendChild(smallTitle1);
+    chatbotMessages1.appendChild(inputField1);
+    chatbotMessages1.appendChild(smallTitle2);
+    chatbotMessages1.appendChild(modelDropdown);
+    chatbotMessages1.appendChild(smallTitle3);
+    chatbotMessages1.appendChild(modelDropdownResolution);
+    chatbotMessages1.appendChild(advancedSettingsText); // Add advanced settings text above the button
+    chatbotMessages1.appendChild(advancedSettingsContainer); // Append advanced settings container
+    chatbotMessages1.appendChild(submitButton); // Add the button after the advanced settings text
+
+    // Add credits info text below the submit button
+    const creditsInfoText = document.createElement('div');
+    creditsInfoText.textContent = 'This generation will cost 35 credits. You have 7800 credits remaining. The image generation may take up to 5 minutes for this AI model, please stay patient.';
+    creditsInfoText.style.color = '#ffffff';
+    creditsInfoText.style.fontSize = '12px';
+    creditsInfoText.style.marginTop = '10px'; // Space above the credits info text
+
+    // Append credits info text below the submit button
+    chatbotMessages1.appendChild(creditsInfoText);
+
+    // Event listener to toggle the visibility of advanced settings
+    advancedSettingsText.addEventListener('click', () => {
+      isAdvancedSettingsVisible = !isAdvancedSettingsVisible; // Toggle visibility state
+
+      // Show or hide the advanced settings container and update text
+      if (isAdvancedSettingsVisible) {
+        advancedSettingsContainer.style.display = 'flex'; // Show fields
+        advancedSettingsText.textContent = 'Hide Advanced Settings'; // Change text
+      } else {
+        advancedSettingsContainer.style.display = 'none'; // Hide fields
+        advancedSettingsText.textContent = 'Show Advanced Settings'; // Revert text
+      }
+    });
+
+    // Set the scrollable style to the chatbotMessages1 container
+    chatbotMessages1.style.maxHeight = '300px'; // Set a maximum height for the scrollable area
+    chatbotMessages1.style.overflowY = 'auto'; // Enable vertical scrolling
+
+  } else {
+    // Restore the original content of chatbotModel and chatbotMessages
+    chatbotModel.innerHTML = originalModelContent;
+    chatbotMessages1.innerHTML = ''; // Clear previous inputs
+  }
+
+  // Toggle the mode
+  isTextToImageMode = !isTextToImageMode;
+});
+
+
+  
+
+  
+  
+  
 
 
   
