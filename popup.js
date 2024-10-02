@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   closeButton.addEventListener("click", () => {
     window.close();
   });
-  
+
+
+
   const menuButton = document.getElementById('menuButton');
 const chatbotModel = document.getElementById('chatbotmodel');
 const chatbotMessages1 = document.getElementById('chatbotMessages');
@@ -455,12 +457,63 @@ function updateCreditBalance(model, resolution) {
       console.log("generate");
     });
 
+    const imagePreviewContainer = document.createElement('div'); // Create a container for the image preview and related elements
+imagePreviewContainer.style.marginTop = '10px';
+imagePreviewContainer.style.textAlign = 'center'; // Center the content
+
+
+const imageTitle = document.createElement('h3'); // Create a title for the image
+imageTitle.textContent = 'Generated Image';
+imageTitle.style.fontFamily = 'Arial, sans-serif'; // Set font style
+imageTitle.style.fontSize = '18px';
+imageTitle.style.color = '#333'; // Set title color
+imagePreviewContainer.appendChild(imageTitle); // Append the title above the image preview
+
     const imagePreview = document.createElement('div');
     imagePreview.style.display = 'none'; // Initially hidden
     imagePreview.style.marginTop = '10px'; // Space above the advanced fields
     imagePreview.style.display = 'flex';
     imagePreview.style.justifyContent = 'space-between'; // Align fields side by side
     imagePreview.textContent = 'Generated Image';
+    imagePreviewContainer.appendChild(imagePreview);
+
+    const buttonContainer = document.createElement('div');
+buttonContainer.style.display = 'flex';
+buttonContainer.style.justifyContent = 'center';
+buttonContainer.style.gap = '10px'; // Add space between buttons
+buttonContainer.style.marginTop = '10px';
+imagePreviewContainer.appendChild(buttonContainer); // Append the button container below the image
+
+// Create Download button
+const downloadButton = document.createElement('button');
+downloadButton.textContent = 'Download';
+downloadButton.style.backgroundColor = '#4CAF50'; // Set background color for Download button
+downloadButton.style.color = '#fff';
+downloadButton.style.border = 'none';
+downloadButton.style.padding = '10px 20px';
+downloadButton.style.cursor = 'pointer';
+downloadButton.style.fontFamily = 'Arial, sans-serif';
+downloadButton.style.borderRadius = '5px';
+
+// Create Edit button
+const editButton = document.createElement('button');
+editButton.textContent = 'Edit';
+editButton.style.backgroundColor = '#007BFF'; // Set background color for Edit button
+editButton.style.color = '#fff';
+editButton.style.border = 'none';
+editButton.style.padding = '10px 20px';
+editButton.style.cursor = 'pointer';
+editButton.style.fontFamily = 'Arial, sans-serif';
+editButton.style.borderRadius = '5px';
+
+editButton.addEventListener('click', () => {
+  window.location.href = 'https://your-edit-url.com'; // Replace with your desired URL
+});
+
+// Append both buttons to the button container
+buttonContainer.appendChild(downloadButton);
+buttonContainer.appendChild(editButton);
+
 
     submitButton.addEventListener('click', () => {
       // Get user input values
@@ -583,7 +636,7 @@ function updateCreditBalance(model, resolution) {
 
     // Append credits info text below the submit button
     chatbotMessages1.appendChild(creditsInfoText);
-    chatbotMessages1.appendChild(imagePreview);
+    chatbotMessages1.appendChild(imagePreviewContainer); // Append the container to the body or relevant parent container
 
     // Event listener to toggle the visibility of advanced settings
     advancedSettingsText.addEventListener('click', () => {
@@ -614,24 +667,7 @@ function updateCreditBalance(model, resolution) {
 });
 
 
-
-
-
-
-
-
-
-
-  
-
-  
-  
-  
-
-
-  
-
-  chrome.storage.local.get("credits", function (result) {
+chrome.storage.local.get("credits", function (result) {
     const creditBalanceElement = document.getElementById("creditbalance");
     if (result.credits) {
       creditBalanceElement.textContent = result.credits;
