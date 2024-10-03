@@ -66,16 +66,19 @@ function openMovablePopup() {
     {
       url: "popup.html",
       type: "popup",
-      width: 550,
+      width: 515,
       height: 650,
       top: 100,
       left: 100,
+      
     },
     (window) => {
       chrome.windows.onBoundsChanged.addListener(() => {
         chrome.windows.get(window.id, (updatedWindow) => {
-          localStorage.setItem("windowTop", updatedWindow.top);
-          localStorage.setItem("windowLeft", updatedWindow.left);
+         // localStorage.setItem("windowTop", updatedWindow.top);
+         // localStorage.setItem("windowLeft", updatedWindow.left);
+         chrome.storage.local.set({ windowTop: updatedWindow.top });
+         chrome.storage.local.set({ windowLeft: updatedWindow.left });
         });
       });
     }

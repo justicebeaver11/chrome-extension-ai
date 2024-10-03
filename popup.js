@@ -4,729 +4,712 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
-
-
-  const menuButton = document.getElementById('menuButton');
-const chatbotModel = document.getElementById('chatbotmodel');
-const chatbotMessages1 = document.getElementById('chatbotMessages');
-
-// Variable to track toggle state
-let isTextToImageMode = false;
-let isAdvancedSettingsVisible = false; // Track advanced settings visibility
-
-// Store the original content of the chatbotModel
-const originalModelContent = chatbotModel.innerHTML;
-
-// Event listener for the menu button to toggle the content
-menuButton.addEventListener('click', () => {
-  if (!isTextToImageMode) {
-    // Replace the button inside chatbotModel with "Text to Image" text
-    chatbotModel.innerHTML = ''; // Clear existing content
-
-    // Create a container for the title and description
-    const titleContainer = document.createElement('div');
-    titleContainer.style.textAlign = 'center'; // Center the title and description
-
-    // Create title for Text to Image
-    const title = document.createElement('div');
-    title.id = 'textToImage';
-    title.textContent = 'Text to Image';
-    title.style.color = '#3996fb';
-    title.style.fontSize = '24px'; // Bigger font for title
-    title.style.fontWeight = 'bold';
-    title.style.marginBottom = '5px'; // Small space between title and description
-
-    // Create descriptive text under the title
-    const description = document.createElement('div');
-    description.textContent = 'Enter a description for your image, choose an AI model, and hit Generate below';
-    description.style.color = '#ffffff';
-    description.style.fontSize = '14px'; // Smaller font for description
-    description.style.marginBottom = '20px'; // Space between description and input fields
-
-    // Append title and description to the container
-    titleContainer.appendChild(title);
-    titleContainer.appendChild(description);
-
-    // Append the container to chatbotModel
-    chatbotModel.appendChild(titleContainer);
-
-    // Insert three input fields and a button into chatbotMessages
-    chatbotMessages1.innerHTML = ''; // Clear previous messages
-
-    // Create introductory title
-    const introTitle = document.createElement('div');
-    introTitle.textContent = 'Enter the details below';
-    introTitle.style.color = '#3996fb';
-    introTitle.style.fontSize = '14px';
-    introTitle.style.fontWeight = 'bold';
-    introTitle.style.marginBottom = '10px'; // Space above and below the title
-
-    // Append intro title
-    chatbotMessages1.appendChild(introTitle);
-
-    // Create first small title
-    const smallTitle1 = document.createElement('div');
-    smallTitle1.textContent = 'What do you want to generate?';
-    smallTitle1.style.color = '#ffffff';
-    smallTitle1.style.fontSize = '12px';
-    smallTitle1.style.marginBottom = '2px'; // Minimum space between title and input field
-    smallTitle1.style.textAlign = 'left';
-    smallTitle1.id = 'promptTitle';
-
-    // Create first input field
-    const inputField1 = document.createElement('input');
-    inputField1.type = 'text';
-    inputField1.placeholder = 'Enter prompt';
-    inputField1.style.display = 'block';
-    inputField1.style.margin = '8px 0'; // Reduced margin
-    inputField1.style.backgroundColor = '#17182b';
-    inputField1.style.border = '1px solid #3996fb';
-    inputField1.style.color = '#ffffff';
-    inputField1.style.padding = '8px';
-    inputField1.id = 'promptInput';
-
-    // Create second small title
-    const smallTitle2 = document.createElement('div');
-    smallTitle2.textContent = 'Model Selection';
-    smallTitle2.style.color = '#ffffff';
-    smallTitle2.style.fontSize = '12px';
-    smallTitle2.style.marginBottom = '2px'; // Minimum space between title and input field
-    smallTitle2.style.textAlign = 'left';
-    smallTitle2.id = 'modelSelectionTitle';
-
-
-    const modelDropdown = document.createElement('select');
-modelDropdown.style.display = 'block';
-modelDropdown.style.margin = '8px 0'; // Reduced margin
-modelDropdown.style.backgroundColor = '#17182b';
-modelDropdown.style.border = '1px solid #3996fb';
-modelDropdown.style.color = '#ffffff';
-modelDropdown.style.padding = '8px';
-modelDropdown.id = 'modelDropdownSelect';
-
-const models = [
-  { id: 'l4ai', name: 'Luminarium4AI (Proprietary)' },
-  { id: 'v4ai', name: 'Visionary4AI (Proprietary)' },
-  { id: 'dc4ai', name: 'DreamCanvas4AI (Proprietary)' },
-  { id: 'pp4ai', name: 'PixelPioneer4AI (Proprietary)' },
-  { id: 'flux-schnell', name: 'FLUX.1 [schnell]' },
-  { id: 'flux-dev', name: 'FLUX.1 [dev]' },
-  { id: 'flux-pro', name: 'FLUX.1 [pro]' },
-  { id: 'sd_v1.5', name: 'Stable Diffusion v1.5' },
-  { id: 'sd_v2.1', name: 'Stable Diffusion v2.1' },
-  { id: 'sd_v3', name: 'Stable Diffusion v3' },
-  { id: 'sd_xl', name: 'Stable Diffusion XL' },
-  { id: 'midjourney', name: 'Midjourney' },
-  { id: 'dall-e-2', name: 'DALLE-2' },
-  { id: 'dall-e-3', name: 'DALLE-3' },
-  { id: 'leonardo', name: 'Leonardo AI' },
-  { id: 'van-gogh-diffusion', name: 'Van Gogh Diffusion' },
-  { id: 'neverending-dream', name: 'NeverEnding Dream' },
-  { id: 'icbinp', name: 'ICBINP - I Cannot Believe It Is Not Photography' },
-  { id: 'something-v2-2', name: 'Something V2.2' },
-  { id: 'eimis-anime-diffusion-v1-0', name: 'Anime Diffusion' },
-  { id: 'anashel-rpg', name: 'RPG' },
-  { id: 'xsarchitectural-interior-design', name: 'InteriorDesign' },
-  { id: 'dream-shaper-v8', name: 'DreamShaper v8' },
-  { id: 'synthwave-punk-v2', name: 'SynthwavePunk v2' },
-
-
-
- 
-];
-
-models.forEach(model => {
-  const option = document.createElement('option');
-  option.value = model.id; // Set the value to the model ID
-  option.textContent = model.name; // Set the displayed name of the model
-  modelDropdown.appendChild(option); // Append option to the dropdown
-});
-
-    // Create third small title
-    const smallTitle3 = document.createElement('div');
-    smallTitle3.textContent = 'Resolution';
-    smallTitle3.style.color = '#ffffff';
-    smallTitle3.style.fontSize = '12px';
-    smallTitle3.style.marginBottom = '2px'; // Minimum space between title and input field
-    smallTitle3.style.textAlign = 'left';
-    smallTitle3.id = 'resolutionTitle';
-
-
-    const modelDropdownResolution = document.createElement('select');
-modelDropdownResolution.style.display = 'block';
-modelDropdownResolution.style.margin = '8px 0'; // Reduced margin
-modelDropdownResolution.style.backgroundColor = '#17182b';
-modelDropdownResolution.style.border = '1px solid #3996fb';
-modelDropdownResolution.style.color = '#ffffff';
-modelDropdownResolution.style.padding = '8px';
-modelDropdownResolution.id = 'resolutionDropdown';
-
-
-function getResolutions(modelId) {
-  let options = [];
-
-  switch (modelId) {
-    case 'sd_xl':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
-        { text: '768 x 1344: Vertical (9:16)', value: '768x1344' },
-        { text: '915 x 1144: Portrait (4:5)', value: '915x1144' },
-        { text: '1182 x 886: Photo (4:3)', value: '1182x886' },
-        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
-        { text: '1365 x 768: Widescreen (16:9)', value: '1365x768' },
-        { text: '1564 x 670: Cinematic (21:9)', value: '1564x670' }
-      ];
-      break;
-    case 'leonardo-old':
-      options = [
-        { text: '512 x 512: Square (1:1)', value: '512x512' },
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
-        { text: '768 x 1344: Vertical (9:16)', value: '768x1344' },
-        { text: '915 x 1144: Portrait (4:5)', value: '915x1144' },
-        { text: '1182 x 886: Photo (4:3)', value: '1182x886' },
-        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
-        { text: '1365 x 768: Widescreen (16:9)', value: '1365x768' },
-        { text: '1564 x 670: Cinematic (21:9)', value: '1564x670' }
-      ];
-      break;
-    case 'leonardo':
-      options = [
-        { text: '512 x 512: Square (1:1)', value: '512x512' },
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-      break;
-    case 'midjourney':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
-        { text: '1280 x 1024: Frame & Print (5:4)', value: '1280x1024' },
-        { text: '1254 x 836: Landscape (3:2)', value: '1254x836' },
-        { text: '1260 x 720: HD Screens (7:4)', value: '1260x720' }
-      ];
-      break;
-    case 'dall-e-2':
-      options = [
-        { text: '256 x 256: Square (1:1)', value: '256x256' },
-        { text: '512 x 512: Square (1:1)', value: '512x512' },
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-      break;
-    case 'dall-e-3':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
-        { text: '1792 x 1024: Landscape HD Screens (7:4)', value: '1792x1024' },
-        { text: '1024 x 1792: Portrait HD Screens (7:4)', value: '1024x1792' }
-      ];
-      break;
-    case 'i4ai':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-    case 'v4ai':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-    case 'dc4ai':
-      options = [
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-      break;
-    case 'pp4ai':
-      options = [
-        { text: '512 x 512: Square (1:1)', value: '512x512' },
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ];
-      break;
-      case 'flux-schnell':
-      case 'flux-dev':
-      case 'flux-pro':
-      case 'sd3':
-      case 'l4ai':
-
-
-
-        options = [
-          { text: '1024 x 1024: Square (1:1)', value: '1024x1024' },
-          { text: '768 x 1344: Portrait (9:16)', value: '768x1344' },
-          { text: '1344 x 768: Landscape (16:9)', value: '1344x768' },
-          { text: '1536 x 640: Ultra-Wide (21:9)', value: '1536x640' },
-          { text: '640 x 1536: Ultra-Tall (9:21)', value: '640x1536' },
-          { text: '1216 x 832: Landscape (3:2)', value: '1216x832' },
-          { text: '832 x 1216: Portrait (2:3)', value: '832x1216' },
-          { text: '1088 x 896: Square-ish (5:4)', value: '1088x896' },
-          { text: '896 x 1088: Portrait-ish (4:5)', value: '896x1088' }
-        ];
-        break;
-    // Add additional cases as necessary
-    default:
-      options = [
-        { text: '512 x 512: Square (1:1)', value: '512x512' },
-        { text: '1024 x 1024: Square (1:1)', value: '1024x1024' }
-      ]; // No options for unrecognized model
-  }
-
-  modelDropdownResolution.innerHTML = '';
-
-  options.forEach(option => {
-    const resolutionOption = document.createElement('option');
-    resolutionOption.value = option.value; // Set the value to the resolution value
-    resolutionOption.textContent = option.text; // Set the displayed name of the resolution
-    modelDropdownResolution.appendChild(resolutionOption); // Append option to the resolution dropdown
-  });
-}
-
-
-
-
-
-getResolutions(models[0].id);
-
-let generationCost = 35; // Default generation cost
-let remainingCredits = 7800; // Initialize from localStorage or default to 7800
-
-chrome.storage.local.get("credits", (result) => {
-  if (result.credits !== undefined) {
-    remainingCredits = result.credits; // Get the latest credits from storage
-    updateCreditsInfo();
-  }
-});
-
-
-const creditsInfoText = document.createElement('div');
-creditsInfoText.style.color = '#ffffff';
-creditsInfoText.style.fontSize = '12px';
-creditsInfoText.style.marginTop = '10px';
-
-updateCreditsInfo();
-
-
-const creditCosts = {
-  'dall-e-2': {
-    '256x256': 160,
-    '512x512': 180,
-    '1024x1024': 200,
-  },
-  'dall-e-3': {
-    '1024x1024': 400,
-    '1792x1024': 800,
-    '1024x1792': 800,
-  },
-  'sd_xl': {
-    '1024x1024': 20,
-    '768x1344': 20,
-    '915x1144':  20,
-	 '1182x886':  20,
-		 '1254x836':  20,
-		 '1365x768':  20, 
-		 '1564x670':  20,
-  },
-  'leonardo' : {
-     '512x512': 250,
-		 '1024x1024': 1000,
-		 '768x1344': 1000,
-		 '915x1144': 1000,
-		 '1182x886': 1000,
-		 '1254x836': 1000,
-		 '1365x768': 1000,
-		 '1564x670': 1000,
-  },
-  'midjourney' : {
-     '1024x1024': 450,
-		 '1280x1024': 450,
-		 '1254x836': 450,
-		 '1260x720': 450,
-  },
-  'i4ai': {
-     '1024x1024': 35,
-		 '768x1344': 35,
-		 '915x1144': 35,
-		 '1182x886': 35,
-		 '1254x836': 35,
-		 '1365x768': 35,
-		 '1564x670': 35,
-  },
-  'v4ai': {
-     '1024x1024': 35,
-		 '768x1344': 35,
-		 '915x1144': 35,
-		 '1182x886': 35,
-		 '1254x836': 35,
-		 '1365x768': 35,
-		 '1564x670': 35,
-  },
-  'dc4ai': {
-     '1024x1024': 480,
-		 '1280x1024': 480,
-		 '1254x836': 480,
-		 '1260x720': 480,
-  },
-  'pp4ai': {
-     '512x512': 25,
-		 '1024x1024': 45,
-  },
-  'flux-schnell': {
-     '1024x1024': 30,
-     '768x1344': 30,
-     '1344x768': 30,
-     '1536x640': 30,
-     '640x1536': 30,
-     '1216x832': 30,
-     '832x1216': 30,
-     '1088x896': 30,
-     '896x1088': 30,
-  },
-  'flux-dev': {
-     '1024x1024': 300,
-     '768x1344': 300,
-     '1344x768': 300,
-     '1536x640': 300,
-     '640x1536': 300,
-     '1216x832': 300,
-     '832x1216': 300,
-     '1088x896': 300,
-     '896x1088': 300,
-  },
-  'flux-pro': {
-     '1024x1024': 550,
-     '768x1344': 550,
-     '1344x768': 550,
-     '1536x640': 550,
-     '640x1536': 550,
-     '1216x832': 550,
-     '832x1216': 550,
-     '1088x896': 550,
-     '896x1088': 550,
-  },
-  'sd3': {
-     '1024x1024': 350,
-     '768x1344': 350,
-     '1344x768': 350,
-     '1536x640': 350,
-     '640x1536': 350,
-     '1216x832': 350,
-     '832x1216': 350,
-     '1088x896': 350,
-     '896x1088': 350,
-  },
-  'l4ai': {
-     '1024x1024': 35,
-     '768x1344': 35,
-     '1344x768': 35,
-     '1536x640': 35,
-     '640x1536': 35,
-     '1216x832': 35,
-     '832x1216': 35,
-     '1088x896': 35,
-     '896x1088': 35,
-  },
-  default: {
-     '512x512': 10,
-		 '1024x1024': 30,
-  }
-};
-
-function updateCreditsInfo() {
-  creditsInfoText.textContent = `This generation will cost ${generationCost} credits. You have ${remainingCredits} credits remaining. The image generation may take up to 5 minutes for this AI model, please stay patient.`;
-}
-
-modelDropdown.addEventListener('change', (event) => {
-  const selectedModelId = event.target.value;
-  getResolutions(selectedModelId);
-  updateCreditBalance(selectedModelId, modelDropdownResolution.value); 
-});
-
-modelDropdownResolution.addEventListener('change', (event) => {
-  const selectedModelId = modelDropdown.value;
-  updateCreditBalance(selectedModelId, event.target.value); // Update credits on resolution change
-});
-
-function updateCreditBalance(model, resolution) {
-  let credits = creditCosts[model]?.[resolution] || 35; // Default to 35 if no mapping exists
-  generationCost = credits; // Update generation cost dynamically
- // remainingCredits = 7800 - credits; // Deduct from remaining credits as an example (update this based on your logic)
-
-  // Update the credit balance display
-  updateCreditsInfo();
-}
-
-function updateRemainingCredits() {
-  remainingCredits -= generationCost; // Deduct generation cost
-  chrome.storage.local.set({ credits: remainingCredits }, () => {
-    updateCreditsInfo(); // Update the UI with the new balance
-  });
-}
-
-
-    // Create submit button
-    const submitButton = document.createElement('button');
-    submitButton.textContent = 'Generate Image';
-    submitButton.style.backgroundColor = '#3996fb'; // Changed button background color
-    submitButton.style.color = '#ffffff'; // Changed button text color
-    submitButton.style.border = 'none';
-    submitButton.style.padding = '10px';
-    submitButton.style.cursor = 'pointer';
-    submitButton.style.width = '30%'; // Limit button width to 30%
-    submitButton.style.borderRadius = '5px'; // Rounded edges for button
-    submitButton.style.marginTop = '10px'; // Space above the button
-    submitButton.id = 'generateButton';
-
-    submitButton.addEventListener('click', () => {
-      console.log("generate");
-    });
-
-    const imagePreviewContainer = document.createElement('div'); // Create a container for the image preview and related elements
-imagePreviewContainer.style.marginTop = '10px';
-imagePreviewContainer.style.textAlign = 'center'; // Center the content
-
-
-const imageTitle = document.createElement('h3'); // Create a title for the image
-imageTitle.textContent = 'Generated Image';
-imageTitle.style.fontFamily = 'Arial, sans-serif'; // Set font style
-imageTitle.style.fontSize = '18px';
-imageTitle.style.color = '#333'; // Set title color
-imagePreviewContainer.appendChild(imageTitle); // Append the title above the image preview
-
-    const imagePreview = document.createElement('div');
-    imagePreview.style.display = 'none'; // Initially hidden
-    imagePreview.style.marginTop = '10px'; // Space above the advanced fields
-    imagePreview.style.display = 'flex';
-    imagePreview.style.justifyContent = 'space-between'; // Align fields side by side
-    imagePreview.textContent = 'Generated Image';
-    imagePreviewContainer.appendChild(imagePreview);
-
-    const buttonContainer = document.createElement('div');
-buttonContainer.style.display = 'flex';
-buttonContainer.style.justifyContent = 'center';
-buttonContainer.style.gap = '10px'; // Add space between buttons
-buttonContainer.style.marginTop = '10px';
-imagePreviewContainer.appendChild(buttonContainer); // Append the button container below the image
-
-// Create Download button
-const downloadButton = document.createElement('button');
-downloadButton.textContent = 'Download';
-downloadButton.style.backgroundColor = '#4CAF50'; // Set background color for Download button
-downloadButton.style.color = '#fff';
-downloadButton.style.border = 'none';
-downloadButton.style.padding = '10px 20px';
-downloadButton.style.cursor = 'pointer';
-downloadButton.style.fontFamily = 'Arial, sans-serif';
-downloadButton.style.borderRadius = '5px';
-
-// Create Edit button
-const editButton = document.createElement('button');
-editButton.textContent = 'Edit';
-editButton.style.backgroundColor = '#007BFF'; // Set background color for Edit button
-editButton.style.color = '#fff';
-editButton.style.border = 'none';
-editButton.style.padding = '10px 20px';
-editButton.style.cursor = 'pointer';
-editButton.style.fontFamily = 'Arial, sans-serif';
-editButton.style.borderRadius = '5px';
-
-editButton.addEventListener('click', () => {
-  window.location.href = 'https://your-edit-url.com'; // Replace with your desired URL
-});
-
-// Append both buttons to the button container
-buttonContainer.appendChild(downloadButton);
-buttonContainer.appendChild(editButton);
-
-
-    submitButton.addEventListener('click', () => {
-      // Get user input values
-      const promptValue = document.getElementById('promptInput').value || ""; // Default to 'football' if empty
-      const modelValue = document.getElementById('modelDropdownSelect').value || "l4ai"; // Default to 'l4ai' if empty
-      const resolutionValue = document.getElementById('resolutionDropdown').value; // Get selected resolution value
-    
-      // Parse resolution values from dropdown
-      const [width, height] = resolutionValue.split('x').map(Number); // Extract width and height from resolution (e.g., '1024x1024')
-    
-      // Get optional values (negative prompt and seed)
-      const negativePromptValue = document.getElementById('negativePrompt').value || ""; // Default to empty string if not provided
-      const seedValue = document.getElementById('seed').value || null; // Default to null if empty
-    
-      // Construct the request payload
-      const payload = {
-        prompt: promptValue,
-        negative_prompt: negativePromptValue,
-        model: modelValue,
-        width: width || 1024, // Default to 1024 if resolution not properly parsed
-        height: height || 1024, // Default to 1024 if resolution not properly parsed
-        seed: seedValue,
-        steps: 25 // Set steps to 25 as per the given requirement
-      };
-    
-      console.log("Payload: ", payload); // Log the constructed payload for debugging
-
-
-      imageTitle.style.display = 'none'; 
-  imagePreview.style.display = 'none';
-  buttonContainer.style.display = 'none';
-
-  // Show loading gif and timer
-  const loadingGif = document.createElement('img');
-  loadingGif.src = 'loading-load.gif'; // Path to your loading gif
-  loadingGif.alt = 'Loading...';
-  loadingGif.style.width = '50px';
-  loadingGif.style.marginTop = '10px';
-  imagePreview.innerHTML = ''; // Clear any previous content in imagePreview
-  imagePreviewContainer.appendChild(loadingGif); // Append loading gif to the preview container
-
-  const timerElement = document.createElement('div');
-  timerElement.style.marginTop = '10px';
-  timerElement.style.color = '#fff';
-  timerElement.style.fontSize = '14px';
-  imagePreviewContainer.appendChild(timerElement); // Append timer below the gif
-
-  let timerValue = 0.0; // Initialize timer value
-  const timerInterval = setInterval(() => {
-    timerValue += 0.1;
-    timerElement.textContent = `Time elapsed: ${timerValue.toFixed(1)}s`;
-  }, 1000); // Update every 100ms (0.1 seconds)
-
-    
-      // Send POST request to the specified endpoint
-      fetch("https://app.ai4chat.co/generateAndUploadImage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+  const menuButton = document.getElementById("menuButton");
+  const chatbotModel = document.getElementById("chatbotmodel");
+  const chatbotMessages1 = document.getElementById("chatbotMessages");
+
+  // Variable to track toggle state
+  let isTextToImageMode = false;
+  let isAdvancedSettingsVisible = false; // Track advanced settings visibility
+
+  // Store the original content of the chatbotModel
+  const originalModelContent = chatbotModel.innerHTML;
+
+  // Event listener for the menu button to toggle the content
+  menuButton.addEventListener("click", () => {
+    if (!isTextToImageMode) {
+      // Replace the button inside chatbotModel with "Text to Image" text
+      chatbotModel.innerHTML = ""; // Clear existing content
+
+      // Create a container for the title and description
+      const titleContainer = document.createElement("div");
+      titleContainer.style.textAlign = "center"; // Center the title and description
+
+      // Create title for Text to Image
+      const title = document.createElement("div");
+      title.id = "textToImage";
+      title.textContent = "Text to Image";
+      title.style.color = "#3996fb";
+      title.style.fontSize = "24px"; // Bigger font for title
+      title.style.fontWeight = "bold";
+      title.style.marginBottom = "5px"; // Small space between title and description
+
+      // Create descriptive text under the title
+      const description = document.createElement("div");
+      description.textContent =
+        "Enter a description for your image, choose an AI model, and hit Generate below";
+      description.style.color = "#ffffff";
+      description.style.fontSize = "14px"; // Smaller font for description
+      description.style.marginBottom = "20px"; // Space between description and input fields
+
+      // Append title and description to the container
+      titleContainer.appendChild(title);
+      titleContainer.appendChild(description);
+
+      // Append the container to chatbotModel
+      chatbotModel.appendChild(titleContainer);
+
+      // Insert three input fields and a button into chatbotMessages
+      chatbotMessages1.innerHTML = ""; // Clear previous messages
+
+      // Create introductory title
+      const introTitle = document.createElement("div");
+      introTitle.textContent = "Enter the details below";
+      introTitle.style.color = "#3996fb";
+      introTitle.style.fontSize = "14px";
+      introTitle.style.fontWeight = "bold";
+      introTitle.style.marginBottom = "10px"; // Space above and below the title
+
+      // Append intro title
+      chatbotMessages1.appendChild(introTitle);
+
+      // Create first small title
+      const smallTitle1 = document.createElement("div");
+      smallTitle1.textContent = "What do you want to generate?";
+      smallTitle1.style.color = "#ffffff";
+      smallTitle1.style.fontSize = "12px";
+      smallTitle1.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle1.style.textAlign = "left";
+      smallTitle1.id = "promptTitle";
+
+      // Create first input field
+      const inputField1 = document.createElement("input");
+      inputField1.type = "text";
+      inputField1.placeholder = "Enter prompt";
+      inputField1.style.display = "block";
+      inputField1.style.margin = "8px 0"; // Reduced margin
+      inputField1.style.backgroundColor = "#17182b";
+      inputField1.style.border = "1px solid #3996fb";
+      inputField1.style.color = "#ffffff";
+      inputField1.style.padding = "8px";
+      inputField1.id = "promptInput";
+
+      // Create second small title
+      const smallTitle2 = document.createElement("div");
+      smallTitle2.textContent = "Model Selection";
+      smallTitle2.style.color = "#ffffff";
+      smallTitle2.style.fontSize = "12px";
+      smallTitle2.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle2.style.textAlign = "left";
+      smallTitle2.id = "modelSelectionTitle";
+
+      const modelDropdown = document.createElement("select");
+      modelDropdown.style.display = "block";
+      modelDropdown.style.margin = "8px 0"; // Reduced margin
+      modelDropdown.style.backgroundColor = "#17182b";
+      modelDropdown.style.border = "1px solid #3996fb";
+      modelDropdown.style.color = "#ffffff";
+      modelDropdown.style.padding = "8px";
+      modelDropdown.id = "modelDropdownSelect";
+
+      const models = [
+        { id: "l4ai", name: "Luminarium4AI (Proprietary)" },
+        { id: "v4ai", name: "Visionary4AI (Proprietary)" },
+        { id: "dc4ai", name: "DreamCanvas4AI (Proprietary)" },
+        { id: "pp4ai", name: "PixelPioneer4AI (Proprietary)" },
+        { id: "flux-schnell", name: "FLUX.1 [schnell]" },
+        { id: "flux-dev", name: "FLUX.1 [dev]" },
+        { id: "flux-pro", name: "FLUX.1 [pro]" },
+        { id: "sd_v1.5", name: "Stable Diffusion v1.5" },
+        { id: "sd_v2.1", name: "Stable Diffusion v2.1" },
+        { id: "sd_v3", name: "Stable Diffusion v3" },
+        { id: "sd_xl", name: "Stable Diffusion XL" },
+        { id: "midjourney", name: "Midjourney" },
+        { id: "dall-e-2", name: "DALLE-2" },
+        { id: "dall-e-3", name: "DALLE-3" },
+        { id: "leonardo", name: "Leonardo AI" },
+        { id: "van-gogh-diffusion", name: "Van Gogh Diffusion" },
+        { id: "neverending-dream", name: "NeverEnding Dream" },
+        {
+          id: "icbinp",
+          name: "ICBINP - I Cannot Believe It Is Not Photography",
         },
-        body: JSON.stringify(payload)
-      })
-        .then(response => response.json()) // Parse JSON response
-        .then(data => {
-          clearInterval(timerInterval); // Stop the timer
+        { id: "something-v2-2", name: "Something V2.2" },
+        { id: "eimis-anime-diffusion-v1-0", name: "Anime Diffusion" },
+        { id: "anashel-rpg", name: "RPG" },
+        { id: "xsarchitectural-interior-design", name: "InteriorDesign" },
+        { id: "dream-shaper-v8", name: "DreamShaper v8" },
+        { id: "synthwave-punk-v2", name: "SynthwavePunk v2" },
+      ];
 
-      // Remove the loading gif and timer
-      loadingGif.remove();
-      timerElement.remove();
+      models.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model.id; // Set the value to the model ID
+        option.textContent = model.name; // Set the displayed name of the model
+        modelDropdown.appendChild(option); // Append option to the dropdown
+      });
 
-      // Show the title, image preview, and button container
-      imageTitle.style.display = 'block';
-      imagePreview.style.display = 'block';
-      buttonContainer.style.display = 'flex'; // Display the button container with buttons
-          
+      // Create third small title
+      const smallTitle3 = document.createElement("div");
+      smallTitle3.textContent = "Resolution";
+      smallTitle3.style.color = "#ffffff";
+      smallTitle3.style.fontSize = "12px";
+      smallTitle3.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle3.style.textAlign = "left";
+      smallTitle3.id = "resolutionTitle";
 
-          console.log("Response: ", data); // Log the response for debugging
-          const imageUrl = data?.imageUrl; // Assuming the URL is in `data.image_url`
-          if (imageUrl) {
-            // Create an image element
-            const imageElement = document.createElement('img');
-            imageElement.src = imageUrl;
-            imageElement.alt = 'Generated Image';
-            imageElement.style.maxWidth = '300px'; // Set maximum width for the image
-            imageElement.style.border = '2px solid #000'; // Add border for better UI
-    
-            // Clear any previous image in the div and add the new image
-            imagePreview.innerHTML = 'Generated Image:'; // Clear and set header text
-            imagePreview.appendChild(imageElement); // Append the image element
-    
-            // Show the image preview div
-            imagePreview.style.display = 'block';
-            updateRemainingCredits();
-          } else {
-            alert("No image URL found in the response."); // Handle if image URL is missing
-          }
-        })
-        .catch(error => {
-          console.error("Error: ", error); // Log any errors for debugging
-          clearInterval(timerInterval); // Stop the timer in case of error
-      loadingGif.remove(); // Remove the loading gif in case of error
-      timerElement.remove(); // Remove the timer in case of error
-      alert("An error occurred while generating the image.");
+      const modelDropdownResolution = document.createElement("select");
+      modelDropdownResolution.style.display = "block";
+      modelDropdownResolution.style.margin = "8px 0"; // Reduced margin
+      modelDropdownResolution.style.backgroundColor = "#17182b";
+      modelDropdownResolution.style.border = "1px solid #3996fb";
+      modelDropdownResolution.style.color = "#ffffff";
+      modelDropdownResolution.style.padding = "8px";
+      modelDropdownResolution.id = "resolutionDropdown";
+
+      function getResolutions(modelId) {
+        let options = [];
+
+        switch (modelId) {
+          case "sd_xl":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+              { text: "768 x 1344: Vertical (9:16)", value: "768x1344" },
+              { text: "915 x 1144: Portrait (4:5)", value: "915x1144" },
+              { text: "1182 x 886: Photo (4:3)", value: "1182x886" },
+              { text: "1254 x 836: Landscape (3:2)", value: "1254x836" },
+              { text: "1365 x 768: Widescreen (16:9)", value: "1365x768" },
+              { text: "1564 x 670: Cinematic (21:9)", value: "1564x670" },
+            ];
+            break;
+          case "leonardo-old":
+            options = [
+              { text: "512 x 512: Square (1:1)", value: "512x512" },
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+              { text: "768 x 1344: Vertical (9:16)", value: "768x1344" },
+              { text: "915 x 1144: Portrait (4:5)", value: "915x1144" },
+              { text: "1182 x 886: Photo (4:3)", value: "1182x886" },
+              { text: "1254 x 836: Landscape (3:2)", value: "1254x836" },
+              { text: "1365 x 768: Widescreen (16:9)", value: "1365x768" },
+              { text: "1564 x 670: Cinematic (21:9)", value: "1564x670" },
+            ];
+            break;
+          case "leonardo":
+            options = [
+              { text: "512 x 512: Square (1:1)", value: "512x512" },
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+            break;
+          case "midjourney":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+              { text: "1280 x 1024: Frame & Print (5:4)", value: "1280x1024" },
+              { text: "1254 x 836: Landscape (3:2)", value: "1254x836" },
+              { text: "1260 x 720: HD Screens (7:4)", value: "1260x720" },
+            ];
+            break;
+          case "dall-e-2":
+            options = [
+              { text: "256 x 256: Square (1:1)", value: "256x256" },
+              { text: "512 x 512: Square (1:1)", value: "512x512" },
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+            break;
+          case "dall-e-3":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+              {
+                text: "1792 x 1024: Landscape HD Screens (7:4)",
+                value: "1792x1024",
+              },
+              {
+                text: "1024 x 1792: Portrait HD Screens (7:4)",
+                value: "1024x1792",
+              },
+            ];
+            break;
+          case "i4ai":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+          case "v4ai":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+          case "dc4ai":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+            break;
+          case "pp4ai":
+            options = [
+              { text: "512 x 512: Square (1:1)", value: "512x512" },
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ];
+            break;
+          case "flux-schnell":
+          case "flux-dev":
+          case "flux-pro":
+          case "sd3":
+          case "l4ai":
+            options = [
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+              { text: "768 x 1344: Portrait (9:16)", value: "768x1344" },
+              { text: "1344 x 768: Landscape (16:9)", value: "1344x768" },
+              { text: "1536 x 640: Ultra-Wide (21:9)", value: "1536x640" },
+              { text: "640 x 1536: Ultra-Tall (9:21)", value: "640x1536" },
+              { text: "1216 x 832: Landscape (3:2)", value: "1216x832" },
+              { text: "832 x 1216: Portrait (2:3)", value: "832x1216" },
+              { text: "1088 x 896: Square-ish (5:4)", value: "1088x896" },
+              { text: "896 x 1088: Portrait-ish (4:5)", value: "896x1088" },
+            ];
+            break;
+          // Add additional cases as necessary
+          default:
+            options = [
+              { text: "512 x 512: Square (1:1)", value: "512x512" },
+              { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
+            ]; // No options for unrecognized model
+        }
+
+        modelDropdownResolution.innerHTML = "";
+
+        options.forEach((option) => {
+          const resolutionOption = document.createElement("option");
+          resolutionOption.value = option.value; // Set the value to the resolution value
+          resolutionOption.textContent = option.text; // Set the displayed name of the resolution
+          modelDropdownResolution.appendChild(resolutionOption); // Append option to the resolution dropdown
         });
-    });
-
-    // Add text for advanced settings
-    const advancedSettingsText = document.createElement('div');
-    advancedSettingsText.textContent = 'Show Advanced Settings';
-    advancedSettingsText.style.color = '#3996fb'; // Set advanced settings text color
-    advancedSettingsText.style.fontSize = '14px';
-    advancedSettingsText.style.margin = '10px 0'; // Space above and below the text
-    advancedSettingsText.style.textAlign = 'left';
-    advancedSettingsText.style.cursor = 'pointer';
-
-    // Create container for advanced settings input fields
-    const advancedSettingsContainer = document.createElement('div');
-    advancedSettingsContainer.style.display = 'none'; // Initially hidden
-    advancedSettingsContainer.style.marginTop = '10px'; // Space above the advanced fields
-    advancedSettingsContainer.style.display = 'flex';
-    advancedSettingsContainer.style.justifyContent = 'space-between'; // Align fields side by side
-
-    // Create Negative Prompt input field
-    const negativePromptField = document.createElement('input');
-    negativePromptField.type = 'text';
-    negativePromptField.placeholder = 'Negative Prompt';
-    negativePromptField.style.width = '48%'; // Each input field takes 50% width
-    negativePromptField.style.backgroundColor = '#17182b';
-    negativePromptField.style.border = '1px solid #3996fb';
-    negativePromptField.style.color = '#ffffff';
-    negativePromptField.style.padding = '8px';
-    negativePromptField.id = 'negativePrompt';
-
-    // Create Seed input field
-    const seedField = document.createElement('input');
-    seedField.type = 'text';
-    seedField.placeholder = 'Seed';
-    seedField.style.width = '48%'; // Each input field takes 50% width
-    seedField.style.backgroundColor = '#17182b';
-    seedField.style.border = '1px solid #3996fb';
-    seedField.style.color = '#ffffff';
-    seedField.style.padding = '8px';
-    seedField.id = 'seed';
-
-
-   
-
-    // Append Negative Prompt and Seed fields to advanced settings container
-    advancedSettingsContainer.appendChild(negativePromptField);
-    advancedSettingsContainer.appendChild(seedField);
-
-    // Append titles, input fields, and button to chatbotMessages
-    chatbotMessages1.appendChild(smallTitle1);
-    chatbotMessages1.appendChild(inputField1);
-    chatbotMessages1.appendChild(smallTitle2);
-    chatbotMessages1.appendChild(modelDropdown);
-    chatbotMessages1.appendChild(smallTitle3);
-    chatbotMessages1.appendChild(modelDropdownResolution);
-    chatbotMessages1.appendChild(advancedSettingsText); // Add advanced settings text above the button
-    chatbotMessages1.appendChild(advancedSettingsContainer); // Append advanced settings container
-    chatbotMessages1.appendChild(submitButton); // Add the button after the advanced settings text
-
-
-    // Append credits info text below the submit button
-    chatbotMessages1.appendChild(creditsInfoText);
-    chatbotMessages1.appendChild(imagePreviewContainer); // Append the container to the body or relevant parent container
-
-    // Event listener to toggle the visibility of advanced settings
-    advancedSettingsText.addEventListener('click', () => {
-      isAdvancedSettingsVisible = !isAdvancedSettingsVisible; // Toggle visibility state
-
-      // Show or hide the advanced settings container and update text
-      if (isAdvancedSettingsVisible) {
-        advancedSettingsContainer.style.display = 'flex'; // Show fields
-        advancedSettingsText.textContent = 'Hide Advanced Settings'; // Change text
-      } else {
-        advancedSettingsContainer.style.display = 'none'; // Hide fields
-        advancedSettingsText.textContent = 'Show Advanced Settings'; // Revert text
       }
-    });
 
-    // Set the scrollable style to the chatbotMessages1 container
-    chatbotMessages1.style.maxHeight = '300px'; // Set a maximum height for the scrollable area
-    chatbotMessages1.style.overflowY = 'auto'; // Enable vertical scrolling
+      getResolutions(models[0].id);
 
-  } else {
-    // Restore the original content of chatbotModel and chatbotMessages
-    chatbotModel.innerHTML = originalModelContent;
-    chatbotMessages1.innerHTML = ''; // Clear previous inputs
-  }
+      let generationCost = 35; // Default generation cost
+      let remainingCredits = 7800; // Initialize from localStorage or default to 7800
 
-  // Toggle the mode
-  isTextToImageMode = !isTextToImageMode;
-});
+      chrome.storage.local.get("credits", (result) => {
+        if (result.credits !== undefined) {
+          remainingCredits = result.credits; // Get the latest credits from storage
+          updateCreditsInfo();
+        }
+      });
 
+      const creditsInfoText = document.createElement("div");
+      creditsInfoText.style.color = "#ffffff";
+      creditsInfoText.style.fontSize = "12px";
+      creditsInfoText.style.marginTop = "10px";
 
-chrome.storage.local.get("credits", function (result) {
+      updateCreditsInfo();
+
+      const creditCosts = {
+        "dall-e-2": {
+          "256x256": 160,
+          "512x512": 180,
+          "1024x1024": 200,
+        },
+        "dall-e-3": {
+          "1024x1024": 400,
+          "1792x1024": 800,
+          "1024x1792": 800,
+        },
+        sd_xl: {
+          "1024x1024": 20,
+          "768x1344": 20,
+          "915x1144": 20,
+          "1182x886": 20,
+          "1254x836": 20,
+          "1365x768": 20,
+          "1564x670": 20,
+        },
+        leonardo: {
+          "512x512": 250,
+          "1024x1024": 1000,
+          "768x1344": 1000,
+          "915x1144": 1000,
+          "1182x886": 1000,
+          "1254x836": 1000,
+          "1365x768": 1000,
+          "1564x670": 1000,
+        },
+        midjourney: {
+          "1024x1024": 450,
+          "1280x1024": 450,
+          "1254x836": 450,
+          "1260x720": 450,
+        },
+        i4ai: {
+          "1024x1024": 35,
+          "768x1344": 35,
+          "915x1144": 35,
+          "1182x886": 35,
+          "1254x836": 35,
+          "1365x768": 35,
+          "1564x670": 35,
+        },
+        v4ai: {
+          "1024x1024": 35,
+          "768x1344": 35,
+          "915x1144": 35,
+          "1182x886": 35,
+          "1254x836": 35,
+          "1365x768": 35,
+          "1564x670": 35,
+        },
+        dc4ai: {
+          "1024x1024": 480,
+          "1280x1024": 480,
+          "1254x836": 480,
+          "1260x720": 480,
+        },
+        pp4ai: {
+          "512x512": 25,
+          "1024x1024": 45,
+        },
+        "flux-schnell": {
+          "1024x1024": 30,
+          "768x1344": 30,
+          "1344x768": 30,
+          "1536x640": 30,
+          "640x1536": 30,
+          "1216x832": 30,
+          "832x1216": 30,
+          "1088x896": 30,
+          "896x1088": 30,
+        },
+        "flux-dev": {
+          "1024x1024": 300,
+          "768x1344": 300,
+          "1344x768": 300,
+          "1536x640": 300,
+          "640x1536": 300,
+          "1216x832": 300,
+          "832x1216": 300,
+          "1088x896": 300,
+          "896x1088": 300,
+        },
+        "flux-pro": {
+          "1024x1024": 550,
+          "768x1344": 550,
+          "1344x768": 550,
+          "1536x640": 550,
+          "640x1536": 550,
+          "1216x832": 550,
+          "832x1216": 550,
+          "1088x896": 550,
+          "896x1088": 550,
+        },
+        sd3: {
+          "1024x1024": 350,
+          "768x1344": 350,
+          "1344x768": 350,
+          "1536x640": 350,
+          "640x1536": 350,
+          "1216x832": 350,
+          "832x1216": 350,
+          "1088x896": 350,
+          "896x1088": 350,
+        },
+        l4ai: {
+          "1024x1024": 35,
+          "768x1344": 35,
+          "1344x768": 35,
+          "1536x640": 35,
+          "640x1536": 35,
+          "1216x832": 35,
+          "832x1216": 35,
+          "1088x896": 35,
+          "896x1088": 35,
+        },
+        default: {
+          "512x512": 10,
+          "1024x1024": 30,
+        },
+      };
+
+      function updateCreditsInfo() {
+        creditsInfoText.textContent = `This generation will cost ${generationCost} credits. You have ${remainingCredits} credits remaining. The image generation may take up to 5 minutes for this AI model, please stay patient.`;
+      }
+
+      modelDropdown.addEventListener("change", (event) => {
+        const selectedModelId = event.target.value;
+        getResolutions(selectedModelId);
+        updateCreditBalance(selectedModelId, modelDropdownResolution.value);
+      });
+
+      modelDropdownResolution.addEventListener("change", (event) => {
+        const selectedModelId = modelDropdown.value;
+        updateCreditBalance(selectedModelId, event.target.value); // Update credits on resolution change
+      });
+
+      function updateCreditBalance(model, resolution) {
+        let credits = creditCosts[model]?.[resolution] || 35; // Default to 35 if no mapping exists
+        generationCost = credits; // Update generation cost dynamically
+        // remainingCredits = 7800 - credits; // Deduct from remaining credits as an example (update this based on your logic)
+
+        // Update the credit balance display
+        updateCreditsInfo();
+      }
+
+      function updateRemainingCredits() {
+        remainingCredits -= generationCost; // Deduct generation cost
+        chrome.storage.local.set({ credits: remainingCredits }, () => {
+          updateCreditsInfo(); // Update the UI with the new balance
+        });
+      }
+
+      // Create submit button
+      const submitButton = document.createElement("button");
+      submitButton.textContent = "Generate Image";
+      submitButton.style.backgroundColor = "#3996fb"; // Changed button background color
+      submitButton.style.color = "#ffffff"; // Changed button text color
+      submitButton.style.border = "none";
+      submitButton.style.padding = "10px";
+      submitButton.style.cursor = "pointer";
+      submitButton.style.width = "30%"; // Limit button width to 30%
+      submitButton.style.borderRadius = "5px"; // Rounded edges for button
+      submitButton.style.marginTop = "10px"; // Space above the button
+      submitButton.id = "generateButton";
+
+      submitButton.addEventListener("click", () => {
+        console.log("generate");
+      });
+
+      const imagePreviewContainer = document.createElement("div"); // Create a container for the image preview and related elements
+      imagePreviewContainer.style.marginTop = "10px";
+      imagePreviewContainer.style.textAlign = "center"; // Center the content
+
+      const imageTitle = document.createElement("h3"); // Create a title for the image
+      imageTitle.textContent = "Generated Image";
+      imageTitle.style.fontFamily = "Arial, sans-serif"; // Set font style
+      imageTitle.style.fontSize = "18px";
+      imageTitle.style.color = "#333"; // Set title color
+      imagePreviewContainer.appendChild(imageTitle); // Append the title above the image preview
+
+      const imagePreview = document.createElement("div");
+      imagePreview.style.display = "none"; // Initially hidden
+      imagePreview.style.marginTop = "10px"; // Space above the advanced fields
+      imagePreview.style.display = "flex";
+      imagePreview.style.justifyContent = "space-between"; // Align fields side by side
+      imagePreview.textContent = "Generated Image";
+      imagePreviewContainer.appendChild(imagePreview);
+
+      const buttonContainer = document.createElement("div");
+      buttonContainer.style.display = "flex";
+      buttonContainer.style.justifyContent = "center";
+      buttonContainer.style.gap = "10px"; // Add space between buttons
+      buttonContainer.style.marginTop = "10px";
+      imagePreviewContainer.appendChild(buttonContainer); // Append the button container below the image
+
+      // Create Download button
+      const downloadButton = document.createElement("button");
+      downloadButton.textContent = "Download";
+      downloadButton.style.backgroundColor = "#4CAF50"; // Set background color for Download button
+      downloadButton.style.color = "#fff";
+      downloadButton.style.border = "none";
+      downloadButton.style.padding = "10px 20px";
+      downloadButton.style.cursor = "pointer";
+      downloadButton.style.fontFamily = "Arial, sans-serif";
+      downloadButton.style.borderRadius = "5px";
+
+      // Create Edit button
+      const editButton = document.createElement("button");
+      editButton.textContent = "Edit";
+      editButton.style.backgroundColor = "#007BFF"; // Set background color for Edit button
+      editButton.style.color = "#fff";
+      editButton.style.border = "none";
+      editButton.style.padding = "10px 20px";
+      editButton.style.cursor = "pointer";
+      editButton.style.fontFamily = "Arial, sans-serif";
+      editButton.style.borderRadius = "5px";
+
+      editButton.addEventListener("click", () => {
+        window.location.href = "https://your-edit-url.com"; // Replace with your desired URL
+      });
+
+      // Append both buttons to the button container
+      buttonContainer.appendChild(downloadButton);
+      buttonContainer.appendChild(editButton);
+
+      submitButton.addEventListener("click", () => {
+        // Get user input values
+        const promptValue = document.getElementById("promptInput").value || ""; // Default to 'football' if empty
+        const modelValue =
+          document.getElementById("modelDropdownSelect").value || "l4ai"; // Default to 'l4ai' if empty
+        const resolutionValue =
+          document.getElementById("resolutionDropdown").value; // Get selected resolution value
+
+        // Parse resolution values from dropdown
+        const [width, height] = resolutionValue.split("x").map(Number); // Extract width and height from resolution (e.g., '1024x1024')
+
+        // Get optional values (negative prompt and seed)
+        const negativePromptValue =
+          document.getElementById("negativePrompt").value || ""; // Default to empty string if not provided
+        const seedValue = document.getElementById("seed").value || null; // Default to null if empty
+
+        // Construct the request payload
+        const payload = {
+          prompt: promptValue,
+          negative_prompt: negativePromptValue,
+          model: modelValue,
+          width: width || 1024, // Default to 1024 if resolution not properly parsed
+          height: height || 1024, // Default to 1024 if resolution not properly parsed
+          seed: seedValue,
+          steps: 25, // Set steps to 25 as per the given requirement
+        };
+
+        console.log("Payload: ", payload); // Log the constructed payload for debugging
+
+        imageTitle.style.display = "none";
+        imagePreview.style.display = "none";
+        buttonContainer.style.display = "none";
+
+        // Show loading gif and timer
+        const loadingGif = document.createElement("img");
+        loadingGif.src = "loading-load.gif"; // Path to your loading gif
+        loadingGif.alt = "Loading...";
+        loadingGif.style.width = "50px";
+        loadingGif.style.marginTop = "10px";
+        imagePreview.innerHTML = ""; // Clear any previous content in imagePreview
+        imagePreviewContainer.appendChild(loadingGif); // Append loading gif to the preview container
+
+        const timerElement = document.createElement("div");
+        timerElement.style.marginTop = "10px";
+        timerElement.style.color = "#fff";
+        timerElement.style.fontSize = "14px";
+        imagePreviewContainer.appendChild(timerElement); // Append timer below the gif
+
+        let timerValue = 0.0; // Initialize timer value
+        const timerInterval = setInterval(() => {
+          timerValue += 0.1;
+          timerElement.textContent = `Time elapsed: ${timerValue.toFixed(1)}s`;
+        }, 1000); // Update every 100ms (0.1 seconds)
+
+        // Send POST request to the specified endpoint
+        fetch("https://app.ai4chat.co/generateAndUploadImage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((response) => response.json()) // Parse JSON response
+          .then((data) => {
+            clearInterval(timerInterval); // Stop the timer
+
+            // Remove the loading gif and timer
+            loadingGif.remove();
+            timerElement.remove();
+
+            // Show the title, image preview, and button container
+            imageTitle.style.display = "block";
+            imagePreview.style.display = "block";
+            buttonContainer.style.display = "flex"; // Display the button container with buttons
+
+            console.log("Response: ", data); // Log the response for debugging
+            const imageUrl = data?.imageUrl; // Assuming the URL is in `data.image_url`
+            if (imageUrl) {
+              // Create an image element
+              const imageElement = document.createElement("img");
+              imageElement.src = imageUrl;
+              imageElement.alt = "Generated Image";
+              imageElement.style.maxWidth = "300px"; // Set maximum width for the image
+              imageElement.style.border = "2px solid #000"; // Add border for better UI
+
+              // Clear any previous image in the div and add the new image
+              imagePreview.innerHTML = "Generated Image:"; // Clear and set header text
+              imagePreview.appendChild(imageElement); // Append the image element
+
+              // Show the image preview div
+              imagePreview.style.display = "block";
+              updateRemainingCredits();
+            } else {
+              alert("No image URL found in the response."); // Handle if image URL is missing
+            }
+          })
+          .catch((error) => {
+            console.error("Error: ", error); // Log any errors for debugging
+            clearInterval(timerInterval); // Stop the timer in case of error
+            loadingGif.remove(); // Remove the loading gif in case of error
+            timerElement.remove(); // Remove the timer in case of error
+            alert("An error occurred while generating the image.");
+          });
+      });
+
+      // Add text for advanced settings
+      const advancedSettingsText = document.createElement("div");
+      advancedSettingsText.textContent = "Show Advanced Settings";
+      advancedSettingsText.style.color = "#3996fb"; // Set advanced settings text color
+      advancedSettingsText.style.fontSize = "14px";
+      advancedSettingsText.style.margin = "10px 0"; // Space above and below the text
+      advancedSettingsText.style.textAlign = "left";
+      advancedSettingsText.style.cursor = "pointer";
+
+      // Create container for advanced settings input fields
+      const advancedSettingsContainer = document.createElement("div");
+      advancedSettingsContainer.style.display = "none"; // Initially hidden
+      advancedSettingsContainer.style.marginTop = "10px"; // Space above the advanced fields
+      advancedSettingsContainer.style.display = "flex";
+      advancedSettingsContainer.style.justifyContent = "space-between"; // Align fields side by side
+
+      // Create Negative Prompt input field
+      const negativePromptField = document.createElement("input");
+      negativePromptField.type = "text";
+      negativePromptField.placeholder = "Negative Prompt";
+      negativePromptField.style.width = "48%"; // Each input field takes 50% width
+      negativePromptField.style.backgroundColor = "#17182b";
+      negativePromptField.style.border = "1px solid #3996fb";
+      negativePromptField.style.color = "#ffffff";
+      negativePromptField.style.padding = "8px";
+      negativePromptField.id = "negativePrompt";
+
+      // Create Seed input field
+      const seedField = document.createElement("input");
+      seedField.type = "text";
+      seedField.placeholder = "Seed";
+      seedField.style.width = "48%"; // Each input field takes 50% width
+      seedField.style.backgroundColor = "#17182b";
+      seedField.style.border = "1px solid #3996fb";
+      seedField.style.color = "#ffffff";
+      seedField.style.padding = "8px";
+      seedField.id = "seed";
+
+      // Append Negative Prompt and Seed fields to advanced settings container
+      advancedSettingsContainer.appendChild(negativePromptField);
+      advancedSettingsContainer.appendChild(seedField);
+
+      // Append titles, input fields, and button to chatbotMessages
+      chatbotMessages1.appendChild(smallTitle1);
+      chatbotMessages1.appendChild(inputField1);
+      chatbotMessages1.appendChild(smallTitle2);
+      chatbotMessages1.appendChild(modelDropdown);
+      chatbotMessages1.appendChild(smallTitle3);
+      chatbotMessages1.appendChild(modelDropdownResolution);
+      chatbotMessages1.appendChild(advancedSettingsText); // Add advanced settings text above the button
+      chatbotMessages1.appendChild(advancedSettingsContainer); // Append advanced settings container
+      chatbotMessages1.appendChild(submitButton); // Add the button after the advanced settings text
+
+      // Append credits info text below the submit button
+      chatbotMessages1.appendChild(creditsInfoText);
+      chatbotMessages1.appendChild(imagePreviewContainer); // Append the container to the body or relevant parent container
+
+      // Event listener to toggle the visibility of advanced settings
+      advancedSettingsText.addEventListener("click", () => {
+        isAdvancedSettingsVisible = !isAdvancedSettingsVisible; // Toggle visibility state
+
+        // Show or hide the advanced settings container and update text
+        if (isAdvancedSettingsVisible) {
+          advancedSettingsContainer.style.display = "flex"; // Show fields
+          advancedSettingsText.textContent = "Hide Advanced Settings"; // Change text
+        } else {
+          advancedSettingsContainer.style.display = "none"; // Hide fields
+          advancedSettingsText.textContent = "Show Advanced Settings"; // Revert text
+        }
+      });
+
+      // Set the scrollable style to the chatbotMessages1 container
+      chatbotMessages1.style.maxHeight = "300px"; // Set a maximum height for the scrollable area
+      chatbotMessages1.style.overflowY = "auto"; // Enable vertical scrolling
+    } else {
+      // Restore the original content of chatbotModel and chatbotMessages
+      chatbotModel.innerHTML = originalModelContent;
+      chatbotMessages1.innerHTML = ""; // Clear previous inputs
+    }
+
+    // Toggle the mode
+    isTextToImageMode = !isTextToImageMode;
+  });
+
+  chrome.storage.local.get("credits", function (result) {
     const creditBalanceElement = document.getElementById("creditbalance");
     if (result.credits) {
       creditBalanceElement.textContent = result.credits;
@@ -978,233 +961,203 @@ chrome.storage.local.get("credits", function (result) {
     });
   }
 
-
-  
-
-
-
-
   let replyModalOpenOutlook = false;
 
-chrome.storage.local.get(["showReplyModalOutlook"], (data) => {
-  if (data.showReplyModalOutlook && !replyModalOpenOutlook) {
-    replyModalOpenOutlook = true;
-    createReplyModalOutlook(); // Pass recipient info to the modal
-    chrome.storage.local.remove(["showReplyModalOutlook"]);
-  }
-});
+  chrome.storage.local.get(["showReplyModalOutlook"], (data) => {
+    if (data.showReplyModalOutlook && !replyModalOpenOutlook) {
+      replyModalOpenOutlook = true;
+      createReplyModalOutlook(); // Pass recipient info to the modal
+      chrome.storage.local.remove(["showReplyModalOutlook"]);
+    }
+  });
 
+  // Function to create the reply modal
+  function createReplyModalOutlook() {
+    // Retrieve the sender info from storage
+    chrome.storage.local.get(["senderInfo", "emailBodyText"], (result) => {
+      const { name, email } = result.senderInfo || {};
+      const emailBodyText =
+        result.emailBodyText || "No email content available";
 
+      const modal = document.createElement("div");
+      modal.id = "replyModal";
+      modal.style.position = "fixed";
+      modal.style.top = "50%";
+      modal.style.left = "50%";
+      modal.style.transform = "translate(-50%, -50%)";
+      modal.style.width = "400px";
+      modal.style.padding = "20px";
+      modal.style.backgroundColor = "#17182b";
+      modal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
+      modal.style.zIndex = "1000";
+      modal.style.borderRadius = "10px";
+      modal.style.fontFamily = "Arial, sans-serif";
+      modal.style.color = "#fff";
 
-// Function to create the reply modal
-function createReplyModalOutlook() {
-  // Retrieve the sender info from storage
-  chrome.storage.local.get(["senderInfo", "emailBodyText"], (result) => {
-    const { name, email } = result.senderInfo || {};
-    const emailBodyText = result.emailBodyText || "No email content available";
-   
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.style.position = "absolute";
+      closeButton.style.top = "10px";
+      closeButton.style.right = "10px";
+      closeButton.style.backgroundColor = "#ff4d4d";
+      closeButton.style.color = "white";
+      closeButton.style.border = "none";
+      closeButton.style.padding = "5px 10px";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.cursor = "pointer";
 
-    const modal = document.createElement("div");
-    modal.id = "replyModal";
-    modal.style.position = "fixed";
-    modal.style.top = "50%";
-    modal.style.left = "50%";
-    modal.style.transform = "translate(-50%, -50%)";
-    modal.style.width = "400px";
-    modal.style.padding = "20px";
-    modal.style.backgroundColor = "#17182b";
-    modal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
-    modal.style.zIndex = "1000";
-    modal.style.borderRadius = "10px";
-    modal.style.fontFamily = "Arial, sans-serif";
-    modal.style.color = "#fff";
+      closeButton.addEventListener("click", () => {
+        modal.remove();
+        replyModalOpen = false; // Reset the flag when modal is closed
+      });
 
-    const closeButton = document.createElement("button");
-    closeButton.textContent = "Close";
-    closeButton.style.position = "absolute";
-    closeButton.style.top = "10px";
-    closeButton.style.right = "10px";
-    closeButton.style.backgroundColor = "#ff4d4d";
-    closeButton.style.color = "white";
-    closeButton.style.border = "none";
-    closeButton.style.padding = "5px 10px";
-    closeButton.style.borderRadius = "5px";
-    closeButton.style.cursor = "pointer";
+      // Display the recipient's information in the title
+      const titleBox = document.createElement("div");
+      titleBox.textContent =
+        name && email
+          ? `Replying to: ${name} <${email}>`
+          : "Replying to: Unknown";
+      titleBox.style.marginBottom = "15px";
+      titleBox.style.fontWeight = "bold";
+      titleBox.style.fontSize = "16px";
 
-    closeButton.addEventListener("click", () => {
-      modal.remove();
-      replyModalOpen = false; // Reset the flag when modal is closed
-    });
+      const emailBodyDiv = document.createElement("div");
+      emailBodyDiv.textContent = `Email Body: ${emailBodyText}`;
+      emailBodyDiv.style.marginTop = "20px";
+      emailBodyDiv.style.padding = "10px";
+      emailBodyDiv.style.border = "1px solid #3996fb";
+      emailBodyDiv.style.borderRadius = "5px";
+      emailBodyDiv.style.backgroundColor = "#282c34";
+      emailBodyDiv.style.fontSize = "14px";
+      emailBodyDiv.style.maxHeight = "150px";
+      emailBodyDiv.style.overflowY = "auto";
 
-    // Display the recipient's information in the title
-    const titleBox = document.createElement("div");
-    titleBox.textContent = name && email ? `Replying to: ${name} <${email}>` : "Replying to: Unknown";
-    titleBox.style.marginBottom = "15px";
-    titleBox.style.fontWeight = "bold";
-    titleBox.style.fontSize = "16px";
+      // Input box for user prompt
+      const inputBox = document.createElement("input");
+      inputBox.type = "text";
+      inputBox.style.marginTop = "20px";
+      inputBox.placeholder =
+        "We will draft a nice reply for you. Write something and press ENTER.";
+      inputBox.style.width = "95%";
+      inputBox.style.padding = "10px";
+      inputBox.style.marginBottom = "20px";
+      inputBox.style.border = "2px solid #3996fb";
+      inputBox.style.borderRadius = "5px";
+      inputBox.style.fontSize = "16px";
+      inputBox.style.backgroundColor = "#17182b";
+      inputBox.style.color = "#fff";
 
-    const emailBodyDiv = document.createElement("div");
-    emailBodyDiv.textContent = `Email Body: ${emailBodyText}`;
-    emailBodyDiv.style.marginTop = "20px";
-    emailBodyDiv.style.padding = "10px";
-    emailBodyDiv.style.border = "1px solid #3996fb";
-    emailBodyDiv.style.borderRadius = "5px";
-    emailBodyDiv.style.backgroundColor = "#282c34";
-    emailBodyDiv.style.fontSize = "14px";
-    emailBodyDiv.style.maxHeight = "150px";
-    emailBodyDiv.style.overflowY = "auto";
+      // Chatbot response area (initially hidden or empty)
+      const chatbotResponse = document.createElement("div");
+      chatbotResponse.id = "chatbotResponse";
+      chatbotResponse.style.display = "none"; // Initially hidden
+      chatbotResponse.style.marginBottom = "20px";
+      chatbotResponse.style.backgroundColor = "#17182b";
+      chatbotResponse.style.borderRadius = "5px";
+      chatbotResponse.style.padding = "10px";
+      chatbotResponse.style.fontSize = "14px";
+      chatbotResponse.style.maxHeight = "150px";
+      chatbotResponse.style.overflowY = "auto";
 
-    // Input box for user prompt
-    const inputBox = document.createElement("input");
-    inputBox.type = "text";
-    inputBox.style.marginTop = "20px";
-    inputBox.placeholder = "We will draft a nice reply for you. Write something and press ENTER.";
-    inputBox.style.width = "95%";
-    inputBox.style.padding = "10px";
-    inputBox.style.marginBottom = "20px";
-    inputBox.style.border = "2px solid #3996fb";
-    inputBox.style.borderRadius = "5px";
-    inputBox.style.fontSize = "16px";
-    inputBox.style.backgroundColor = "#17182b";
-    inputBox.style.color = "#fff";
+      // Predefined buttons and Send button container
+      const buttonContainer = document.createElement("div");
+      buttonContainer.style.display = "flex";
+      buttonContainer.style.justifyContent = "space-between";
 
-    // Chatbot response area (initially hidden or empty)
-    const chatbotResponse = document.createElement("div");
-    chatbotResponse.id = "chatbotResponse";
-    chatbotResponse.style.display = "none"; // Initially hidden
-    chatbotResponse.style.marginBottom = "20px";
-    chatbotResponse.style.backgroundColor = "#17182b";
-    chatbotResponse.style.borderRadius = "5px";
-    chatbotResponse.style.padding = "10px";
-    chatbotResponse.style.fontSize = "14px";
-    chatbotResponse.style.maxHeight = "150px";
-    chatbotResponse.style.overflowY = "auto";
+      const leftButtons = document.createElement("div");
+      leftButtons.style.display = "flex";
+      leftButtons.style.gap = "10px";
 
-    
-    
+      // Append the two buttons to leftButtons div
+      const coldEmailButton = document.createElement("button");
+      coldEmailButton.textContent = "Generate a reply";
+      coldEmailButton.style.padding = "10px 15px";
+      coldEmailButton.style.backgroundColor = "#3996fb";
+      coldEmailButton.style.color = "white";
+      coldEmailButton.style.border = "none";
+      coldEmailButton.style.borderRadius = "5px";
+      coldEmailButton.style.cursor = "pointer";
 
-   
-   
+      const introduceButton = document.createElement("button");
+      introduceButton.textContent = "Ask for more details";
+      introduceButton.style.padding = "10px 15px";
+      introduceButton.style.backgroundColor = "#3996fb";
+      introduceButton.style.color = "white";
+      introduceButton.style.border = "none";
+      introduceButton.style.borderRadius = "5px";
+      introduceButton.style.cursor = "pointer";
 
-    // Predefined buttons and Send button container
-    const buttonContainer = document.createElement("div");
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.justifyContent = "space-between";
+      leftButtons.appendChild(coldEmailButton);
+      leftButtons.appendChild(introduceButton);
 
-    const leftButtons = document.createElement("div");
-    leftButtons.style.display = "flex";
-    leftButtons.style.gap = "10px";
+      const sendButton = document.createElement("button");
+      sendButton.textContent = "Send";
+      sendButton.style.padding = "10px 15px";
+      sendButton.style.backgroundColor = "#3996fb";
+      sendButton.style.color = "white";
+      sendButton.style.border = "none";
+      sendButton.style.borderRadius = "5px";
+      sendButton.style.cursor = "pointer";
 
-    // Append the two buttons to leftButtons div
-    const coldEmailButton = document.createElement("button");
-    coldEmailButton.textContent = "Generate a reply";
-    coldEmailButton.style.padding = "10px 15px";
-    coldEmailButton.style.backgroundColor = "#3996fb";
-    coldEmailButton.style.color = "white";
-    coldEmailButton.style.border = "none";
-    coldEmailButton.style.borderRadius = "5px";
-    coldEmailButton.style.cursor = "pointer";
+      // Append all elements to the modal
+      buttonContainer.appendChild(leftButtons);
+      buttonContainer.appendChild(sendButton);
+      modal.appendChild(closeButton);
+      modal.appendChild(titleBox);
+      modal.appendChild(emailBodyDiv);
+      modal.appendChild(inputBox);
+      modal.appendChild(chatbotResponse);
+      modal.appendChild(buttonContainer);
 
-    const introduceButton = document.createElement("button");
-    introduceButton.textContent = "Ask for more details";
-    introduceButton.style.padding = "10px 15px";
-    introduceButton.style.backgroundColor = "#3996fb";
-    introduceButton.style.color = "white";
-    introduceButton.style.border = "none";
-    introduceButton.style.borderRadius = "5px";
-    introduceButton.style.cursor = "pointer";
+      document.body.appendChild(modal);
 
-    leftButtons.appendChild(coldEmailButton);
-    leftButtons.appendChild(introduceButton);
+      // Event listeners for left-side buttons
+      coldEmailButton.addEventListener("click", () => {
+        const userPrompt = inputBox.value || "";
+        const fullPrompt = `Generate a reply for the following email: ${emailBodyText}\n User input: ${userPrompt}`;
+        sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
+        modal.remove();
+      });
 
-    const sendButton = document.createElement("button");
-    sendButton.textContent = "Send";
-    sendButton.style.padding = "10px 15px";
-    sendButton.style.backgroundColor = "#3996fb";
-    sendButton.style.color = "white";
-    sendButton.style.border = "none";
-    sendButton.style.borderRadius = "5px";
-    sendButton.style.cursor = "pointer";
+      inputBox.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          const userPrompt = inputBox.value;
+          if (userPrompt) {
+            sendMessageToChatbot(userPrompt);
+            modal.remove();
+          }
+        }
+      });
 
-    // Append all elements to the modal
-    buttonContainer.appendChild(leftButtons);
-    buttonContainer.appendChild(sendButton);
-    modal.appendChild(closeButton);
-    modal.appendChild(titleBox);
-    modal.appendChild(emailBodyDiv);
-    modal.appendChild(inputBox);
-    modal.appendChild(chatbotResponse);
-    modal.appendChild(buttonContainer);
+      introduceButton.addEventListener("click", () => {
+        const userPrompt = inputBox.value || "";
+        const fullPrompt = `Ask for more details about the following email : ${emailBodyText} \n User input: ${userPrompt}`;
+        sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
+        modal.remove();
+      });
 
-    document.body.appendChild(modal);
+      function sendMessageWithContext(userPrompt) {
+        const fullPrompt = `${userPrompt}\nContext: ${emailBodyText}`;
+        sendMessageToChatbot(fullPrompt);
+      }
 
-   
-
-    // Event listeners for left-side buttons
-    coldEmailButton.addEventListener("click", () => {
-      const userPrompt = inputBox.value || "";
-      const fullPrompt = `Generate a reply for the following email: ${emailBodyText}\n User input: ${userPrompt}`;
-      sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
-      modal.remove();
-    });
-
-    inputBox.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+      sendButton.addEventListener("click", () => {
         const userPrompt = inputBox.value;
         if (userPrompt) {
-          sendMessageToChatbot(userPrompt);
+          //sendMessageToChatbot(userPrompt); // Implement chatbot interaction logic here
+          sendMessageWithContext(userPrompt);
           modal.remove();
         }
-      }
+      });
     });
-
-    introduceButton.addEventListener("click", () => {
-      const userPrompt = inputBox.value || "";
-      const fullPrompt = `Ask for more details about the following email : ${emailBodyText} \n User input: ${userPrompt}`;
-      sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
-      modal.remove();
-    });
-
-    function sendMessageWithContext(userPrompt) {
-      const fullPrompt = `${userPrompt}\nContext: ${emailBodyText}`;
-      sendMessageToChatbot(fullPrompt);
-    }
-
-    sendButton.addEventListener("click", () => {
-      const userPrompt = inputBox.value;
-      if (userPrompt) {
-        //sendMessageToChatbot(userPrompt); // Implement chatbot interaction logic here
-        sendMessageWithContext(userPrompt);
-        modal.remove();
-      }
-    });
-  });
-}
-
-// Listener to trigger the modal on receiving a message
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "reply_modal_outlook" && message.outlook) {
-    createReplyModalOutlook();
   }
-});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // Listener to trigger the modal on receiving a message
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "reply_modal_outlook" && message.outlook) {
+      createReplyModalOutlook();
+    }
+  });
 
   chrome.storage.local.get("showModal", (data) => {
     if (data.showModal) {
@@ -1342,7 +1295,6 @@ chrome.runtime.onMessage.addListener((message) => {
       }
     });
   }
-
 
   chrome.storage.local.get("showOutlookModal", (data) => {
     if (data.showOutlookModal) {
@@ -1614,7 +1566,7 @@ chrome.runtime.onMessage.addListener((message) => {
     // Send the prompt to the chatbot
     sendMessageToChatbot(prompt);
 
-    chrome.storage.local.remove('selectedText', () => {
+    chrome.storage.local.remove("selectedText", () => {
       console.log("Selected text removed from local storage");
     });
 
@@ -2445,8 +2397,6 @@ chrome.runtime.onMessage.addListener((message) => {
         return;
       }
 
-      
-
       lastResponse = formattedResponse;
       displayMessage("assistant", formattedResponse || "No content");
 
@@ -2496,7 +2446,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (request.type === "sendSearchValue") {
       const searchValue = request.searchValue;
       console.log("Received Search Value from Background:", searchValue);
-  
+
       // Call the sendMessageToChatbot function with the search value
       if (searchValue) {
         sendMessageToChatbot(searchValue);
