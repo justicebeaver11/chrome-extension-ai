@@ -10,92 +10,79 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Variable to track toggle state
   let isTextToImageMode = false;
-  let isAdvancedSettingsVisible = false; // Track advanced settings visibility
+  let isAdvancedSettingsVisible = false;
 
   // Store the original content of the chatbotModel
   const originalModelContent = chatbotModel.innerHTML;
 
-  // Event listener for the menu button to toggle the content
   menuButton.addEventListener("click", () => {
     if (!isTextToImageMode) {
-      // Replace the button inside chatbotModel with "Text to Image" text
-      chatbotModel.innerHTML = ""; // Clear existing content
+      chatbotModel.innerHTML = "";
 
-      // Create a container for the title and description
       const titleContainer = document.createElement("div");
-      titleContainer.style.textAlign = "center"; // Center the title and description
+      titleContainer.style.textAlign = "center";
 
-      // Create title for Text to Image
       const title = document.createElement("div");
       title.id = "textToImage";
       title.textContent = "Text to Image";
       title.style.color = "#3996fb";
-      title.style.fontSize = "24px"; // Bigger font for title
+      title.style.fontSize = "24px";
       title.style.fontWeight = "bold";
-      title.style.marginBottom = "5px"; // Small space between title and description
+      title.style.marginBottom = "5px";
 
-      // Create descriptive text under the title
       const description = document.createElement("div");
       description.textContent =
         "Enter a description for your image, choose an AI model, and hit Generate below";
       description.style.color = "#ffffff";
-      description.style.fontSize = "14px"; // Smaller font for description
-      description.style.marginBottom = "20px"; // Space between description and input fields
+      description.style.fontSize = "14px";
+      description.style.marginBottom = "20px";
 
-      // Append title and description to the container
       titleContainer.appendChild(title);
       titleContainer.appendChild(description);
 
-      // Append the container to chatbotModel
       chatbotModel.appendChild(titleContainer);
 
-      // Insert three input fields and a button into chatbotMessages
-      chatbotMessages1.innerHTML = ""; // Clear previous messages
+      chatbotMessages1.innerHTML = "";
 
-      // Create introductory title
       const introTitle = document.createElement("div");
       introTitle.textContent = "Enter the details below";
       introTitle.style.color = "#3996fb";
       introTitle.style.fontSize = "14px";
       introTitle.style.fontWeight = "bold";
-      introTitle.style.marginBottom = "10px"; // Space above and below the title
+      introTitle.style.marginBottom = "10px";
 
-      // Append intro title
       chatbotMessages1.appendChild(introTitle);
 
-      // Create first small title
       const smallTitle1 = document.createElement("div");
       smallTitle1.textContent = "What do you want to generate?";
       smallTitle1.style.color = "#ffffff";
       smallTitle1.style.fontSize = "12px";
-      smallTitle1.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle1.style.marginBottom = "2px";
       smallTitle1.style.textAlign = "left";
       smallTitle1.id = "promptTitle";
 
-      // Create first input field
       const inputField1 = document.createElement("input");
       inputField1.type = "text";
       inputField1.placeholder = "Enter prompt";
       inputField1.style.display = "block";
-      inputField1.style.margin = "8px 0"; // Reduced margin
+      inputField1.style.margin = "8px 0";
       inputField1.style.backgroundColor = "#17182b";
       inputField1.style.border = "1px solid #3996fb";
       inputField1.style.color = "#ffffff";
       inputField1.style.padding = "8px";
       inputField1.id = "promptInput";
 
-      // Create second small title
       const smallTitle2 = document.createElement("div");
       smallTitle2.textContent = "Model Selection";
       smallTitle2.style.color = "#ffffff";
       smallTitle2.style.fontSize = "12px";
-      smallTitle2.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle2.style.marginBottom = "2px";
       smallTitle2.style.textAlign = "left";
       smallTitle2.id = "modelSelectionTitle";
 
       const modelDropdown = document.createElement("select");
       modelDropdown.style.display = "block";
-      modelDropdown.style.margin = "8px 0"; // Reduced margin
+      modelDropdown.style.margin = "8px 0";
       modelDropdown.style.backgroundColor = "#17182b";
       modelDropdown.style.border = "1px solid #3996fb";
       modelDropdown.style.color = "#ffffff";
@@ -134,23 +121,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       models.forEach((model) => {
         const option = document.createElement("option");
-        option.value = model.id; // Set the value to the model ID
-        option.textContent = model.name; // Set the displayed name of the model
-        modelDropdown.appendChild(option); // Append option to the dropdown
+        option.value = model.id;
+        option.textContent = model.name;
+        modelDropdown.appendChild(option);
       });
 
-      // Create third small title
       const smallTitle3 = document.createElement("div");
       smallTitle3.textContent = "Resolution";
       smallTitle3.style.color = "#ffffff";
       smallTitle3.style.fontSize = "12px";
-      smallTitle3.style.marginBottom = "2px"; // Minimum space between title and input field
+      smallTitle3.style.marginBottom = "2px";
       smallTitle3.style.textAlign = "left";
       smallTitle3.id = "resolutionTitle";
 
       const modelDropdownResolution = document.createElement("select");
       modelDropdownResolution.style.display = "block";
-      modelDropdownResolution.style.margin = "8px 0"; // Reduced margin
+      modelDropdownResolution.style.margin = "8px 0";
       modelDropdownResolution.style.backgroundColor = "#17182b";
       modelDropdownResolution.style.border = "1px solid #3996fb";
       modelDropdownResolution.style.color = "#ffffff";
@@ -254,32 +240,32 @@ document.addEventListener("DOMContentLoaded", async () => {
               { text: "896 x 1088: Portrait-ish (4:5)", value: "896x1088" },
             ];
             break;
-          // Add additional cases as necessary
+
           default:
             options = [
               { text: "512 x 512: Square (1:1)", value: "512x512" },
               { text: "1024 x 1024: Square (1:1)", value: "1024x1024" },
-            ]; // No options for unrecognized model
+            ];
         }
 
         modelDropdownResolution.innerHTML = "";
 
         options.forEach((option) => {
           const resolutionOption = document.createElement("option");
-          resolutionOption.value = option.value; // Set the value to the resolution value
-          resolutionOption.textContent = option.text; // Set the displayed name of the resolution
-          modelDropdownResolution.appendChild(resolutionOption); // Append option to the resolution dropdown
+          resolutionOption.value = option.value;
+          resolutionOption.textContent = option.text;
+          modelDropdownResolution.appendChild(resolutionOption);
         });
       }
 
       getResolutions(models[0].id);
 
-      let generationCost = 35; // Default generation cost
-      let remainingCredits = 7800; // Initialize from localStorage or default to 7800
+      let generationCost = 35;
+      let remainingCredits = 7800;
 
       chrome.storage.local.get("credits", (result) => {
         if (result.credits !== undefined) {
-          remainingCredits = result.credits; // Get the latest credits from storage
+          remainingCredits = result.credits;
           updateCreditsInfo();
         }
       });
@@ -428,72 +414,68 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       modelDropdownResolution.addEventListener("change", (event) => {
         const selectedModelId = modelDropdown.value;
-        updateCreditBalance(selectedModelId, event.target.value); // Update credits on resolution change
+        updateCreditBalance(selectedModelId, event.target.value);
       });
 
       function updateCreditBalance(model, resolution) {
-        let credits = creditCosts[model]?.[resolution] || 35; // Default to 35 if no mapping exists
-        generationCost = credits; // Update generation cost dynamically
-        // remainingCredits = 7800 - credits; // Deduct from remaining credits as an example (update this based on your logic)
+        let credits = creditCosts[model]?.[resolution] || 35;
+        generationCost = credits;
 
-        // Update the credit balance display
         updateCreditsInfo();
       }
 
       function updateRemainingCredits() {
-        remainingCredits -= generationCost; // Deduct generation cost
+        remainingCredits -= generationCost;
         chrome.storage.local.set({ credits: remainingCredits }, () => {
-          updateCreditsInfo(); // Update the UI with the new balance
+          updateCreditsInfo();
         });
       }
 
-      // Create submit button
       const submitButton = document.createElement("button");
       submitButton.textContent = "Generate Image";
-      submitButton.style.backgroundColor = "#3996fb"; // Changed button background color
-      submitButton.style.color = "#ffffff"; // Changed button text color
+      submitButton.style.backgroundColor = "#3996fb";
+      submitButton.style.color = "#ffffff";
       submitButton.style.border = "none";
       submitButton.style.padding = "10px";
       submitButton.style.cursor = "pointer";
-      submitButton.style.width = "30%"; // Limit button width to 30%
-      submitButton.style.borderRadius = "5px"; // Rounded edges for button
-      submitButton.style.marginTop = "10px"; // Space above the button
+      submitButton.style.width = "30%";
+      submitButton.style.borderRadius = "5px";
+      submitButton.style.marginTop = "10px";
       submitButton.id = "generateButton";
 
       submitButton.addEventListener("click", () => {
         console.log("generate");
       });
 
-      const imagePreviewContainer = document.createElement("div"); // Create a container for the image preview and related elements
+      const imagePreviewContainer = document.createElement("div");
       imagePreviewContainer.style.marginTop = "10px";
-      imagePreviewContainer.style.textAlign = "center"; // Center the content
+      imagePreviewContainer.style.textAlign = "center";
 
-      const imageTitle = document.createElement("h3"); // Create a title for the image
+      const imageTitle = document.createElement("h3");
       imageTitle.textContent = "Generated Image";
-      imageTitle.style.fontFamily = "Arial, sans-serif"; // Set font style
+      imageTitle.style.fontFamily = "Arial, sans-serif";
       imageTitle.style.fontSize = "18px";
-      imageTitle.style.color = "#333"; // Set title color
-      imagePreviewContainer.appendChild(imageTitle); // Append the title above the image preview
+      imageTitle.style.color = "#333";
+      imagePreviewContainer.appendChild(imageTitle);
 
       const imagePreview = document.createElement("div");
-      imagePreview.style.display = "none"; // Initially hidden
-      imagePreview.style.marginTop = "10px"; // Space above the advanced fields
+      imagePreview.style.display = "none";
+      imagePreview.style.marginTop = "10px";
       imagePreview.style.display = "flex";
-      imagePreview.style.justifyContent = "space-between"; // Align fields side by side
+      imagePreview.style.justifyContent = "space-between";
       imagePreview.textContent = "Generated Image";
       imagePreviewContainer.appendChild(imagePreview);
 
       const buttonContainer = document.createElement("div");
       buttonContainer.style.display = "flex";
       buttonContainer.style.justifyContent = "center";
-      buttonContainer.style.gap = "10px"; // Add space between buttons
+      buttonContainer.style.gap = "10px";
       buttonContainer.style.marginTop = "10px";
-      imagePreviewContainer.appendChild(buttonContainer); // Append the button container below the image
+      imagePreviewContainer.appendChild(buttonContainer);
 
-      // Create Download button
       const downloadButton = document.createElement("button");
       downloadButton.textContent = "Download";
-      downloadButton.style.backgroundColor = "#4CAF50"; // Set background color for Download button
+      downloadButton.style.backgroundColor = "#4CAF50";
       downloadButton.style.color = "#fff";
       downloadButton.style.border = "none";
       downloadButton.style.padding = "10px 20px";
@@ -501,10 +483,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       downloadButton.style.fontFamily = "Arial, sans-serif";
       downloadButton.style.borderRadius = "5px";
 
-      // Create Edit button
       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
-      editButton.style.backgroundColor = "#007BFF"; // Set background color for Edit button
+      editButton.style.backgroundColor = "#007BFF";
       editButton.style.color = "#fff";
       editButton.style.border = "none";
       editButton.style.padding = "10px 20px";
@@ -513,30 +494,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       editButton.style.borderRadius = "5px";
 
       editButton.addEventListener("click", () => {
-        window.location.href = "https://your-edit-url.com"; // Replace with your desired URL
+        window.location.href = "https://app.ai4chat.co/image-editor";
       });
 
-      // Append both buttons to the button container
       buttonContainer.appendChild(downloadButton);
       buttonContainer.appendChild(editButton);
 
       submitButton.addEventListener("click", () => {
-        // Get user input values
-        const promptValue = document.getElementById("promptInput").value || ""; // Default to 'football' if empty
+        const promptValue = document.getElementById("promptInput").value || ""; // Default to '' if empty
         const modelValue =
           document.getElementById("modelDropdownSelect").value || "l4ai"; // Default to 'l4ai' if empty
         const resolutionValue =
           document.getElementById("resolutionDropdown").value; // Get selected resolution value
 
         // Parse resolution values from dropdown
-        const [width, height] = resolutionValue.split("x").map(Number); // Extract width and height from resolution (e.g., '1024x1024')
+        const [width, height] = resolutionValue.split("x").map(Number);
 
         // Get optional values (negative prompt and seed)
         const negativePromptValue =
           document.getElementById("negativePrompt").value || ""; // Default to empty string if not provided
         const seedValue = document.getElementById("seed").value || null; // Default to null if empty
 
-        // Construct the request payload
         const payload = {
           prompt: promptValue,
           negative_prompt: negativePromptValue,
@@ -547,34 +525,32 @@ document.addEventListener("DOMContentLoaded", async () => {
           steps: 25, // Set steps to 25 as per the given requirement
         };
 
-        console.log("Payload: ", payload); // Log the constructed payload for debugging
+        console.log("Payload: ", payload);
 
         imageTitle.style.display = "none";
         imagePreview.style.display = "none";
         buttonContainer.style.display = "none";
 
-        // Show loading gif and timer
         const loadingGif = document.createElement("img");
-        loadingGif.src = "loading-load.gif"; // Path to your loading gif
+        loadingGif.src = "loading-load.gif";
         loadingGif.alt = "Loading...";
         loadingGif.style.width = "50px";
         loadingGif.style.marginTop = "10px";
-        imagePreview.innerHTML = ""; // Clear any previous content in imagePreview
-        imagePreviewContainer.appendChild(loadingGif); // Append loading gif to the preview container
+        imagePreview.innerHTML = "";
+        imagePreviewContainer.appendChild(loadingGif);
 
         const timerElement = document.createElement("div");
         timerElement.style.marginTop = "10px";
         timerElement.style.color = "#fff";
         timerElement.style.fontSize = "14px";
-        imagePreviewContainer.appendChild(timerElement); // Append timer below the gif
+        imagePreviewContainer.appendChild(timerElement);
 
-        let timerValue = 0.0; // Initialize timer value
+        let timerValue = 0.0;
         const timerInterval = setInterval(() => {
           timerValue += 0.1;
           timerElement.textContent = `Time elapsed: ${timerValue.toFixed(1)}s`;
-        }, 1000); // Update every 100ms (0.1 seconds)
+        }, 1000);
 
-        // Send POST request to the specified endpoint
         fetch("https://app.ai4chat.co/generateAndUploadImage", {
           method: "POST",
           headers: {
@@ -593,21 +569,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Show the title, image preview, and button container
             imageTitle.style.display = "block";
             imagePreview.style.display = "block";
-            buttonContainer.style.display = "flex"; // Display the button container with buttons
+            buttonContainer.style.display = "flex";
 
             console.log("Response: ", data); // Log the response for debugging
-            const imageUrl = data?.imageUrl; // Assuming the URL is in `data.image_url`
+            const imageUrl = data?.imageUrl;
             if (imageUrl) {
               // Create an image element
               const imageElement = document.createElement("img");
               imageElement.src = imageUrl;
               imageElement.alt = "Generated Image";
-              imageElement.style.maxWidth = "300px"; // Set maximum width for the image
-              imageElement.style.border = "2px solid #000"; // Add border for better UI
+              imageElement.style.maxWidth = "300px";
+              imageElement.style.border = "2px solid #000";
 
               // Clear any previous image in the div and add the new image
-              imagePreview.innerHTML = "Generated Image:"; // Clear and set header text
-              imagePreview.appendChild(imageElement); // Append the image element
+              imagePreview.innerHTML = "Generated Image:";
+              imagePreview.appendChild(imageElement);
 
               // Show the image preview div
               imagePreview.style.display = "block";
@@ -617,70 +593,63 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
           })
           .catch((error) => {
-            console.error("Error: ", error); // Log any errors for debugging
-            clearInterval(timerInterval); // Stop the timer in case of error
-            loadingGif.remove(); // Remove the loading gif in case of error
-            timerElement.remove(); // Remove the timer in case of error
+            console.error("Error: ", error);
+            clearInterval(timerInterval);
+            loadingGif.remove();
+            timerElement.remove();
             alert("An error occurred while generating the image.");
           });
       });
 
-      // Add text for advanced settings
       const advancedSettingsText = document.createElement("div");
       advancedSettingsText.textContent = "Show Advanced Settings";
-      advancedSettingsText.style.color = "#3996fb"; // Set advanced settings text color
+      advancedSettingsText.style.color = "#3996fb";
       advancedSettingsText.style.fontSize = "14px";
-      advancedSettingsText.style.margin = "10px 0"; // Space above and below the text
+      advancedSettingsText.style.margin = "10px 0";
       advancedSettingsText.style.textAlign = "left";
       advancedSettingsText.style.cursor = "pointer";
 
-      // Create container for advanced settings input fields
       const advancedSettingsContainer = document.createElement("div");
-      advancedSettingsContainer.style.display = "none"; // Initially hidden
-      advancedSettingsContainer.style.marginTop = "10px"; // Space above the advanced fields
+      advancedSettingsContainer.style.display = "none";
+      advancedSettingsContainer.style.marginTop = "10px";
       advancedSettingsContainer.style.display = "flex";
-      advancedSettingsContainer.style.justifyContent = "space-between"; // Align fields side by side
+      advancedSettingsContainer.style.justifyContent = "space-between";
 
-      // Create Negative Prompt input field
       const negativePromptField = document.createElement("input");
       negativePromptField.type = "text";
       negativePromptField.placeholder = "Negative Prompt";
-      negativePromptField.style.width = "48%"; // Each input field takes 50% width
+      negativePromptField.style.width = "48%";
       negativePromptField.style.backgroundColor = "#17182b";
       negativePromptField.style.border = "1px solid #3996fb";
       negativePromptField.style.color = "#ffffff";
       negativePromptField.style.padding = "8px";
       negativePromptField.id = "negativePrompt";
 
-      // Create Seed input field
       const seedField = document.createElement("input");
       seedField.type = "text";
       seedField.placeholder = "Seed";
-      seedField.style.width = "48%"; // Each input field takes 50% width
+      seedField.style.width = "48%";
       seedField.style.backgroundColor = "#17182b";
       seedField.style.border = "1px solid #3996fb";
       seedField.style.color = "#ffffff";
       seedField.style.padding = "8px";
       seedField.id = "seed";
 
-      // Append Negative Prompt and Seed fields to advanced settings container
       advancedSettingsContainer.appendChild(negativePromptField);
       advancedSettingsContainer.appendChild(seedField);
 
-      // Append titles, input fields, and button to chatbotMessages
       chatbotMessages1.appendChild(smallTitle1);
       chatbotMessages1.appendChild(inputField1);
       chatbotMessages1.appendChild(smallTitle2);
       chatbotMessages1.appendChild(modelDropdown);
       chatbotMessages1.appendChild(smallTitle3);
       chatbotMessages1.appendChild(modelDropdownResolution);
-      chatbotMessages1.appendChild(advancedSettingsText); // Add advanced settings text above the button
-      chatbotMessages1.appendChild(advancedSettingsContainer); // Append advanced settings container
-      chatbotMessages1.appendChild(submitButton); // Add the button after the advanced settings text
+      chatbotMessages1.appendChild(advancedSettingsText);
+      chatbotMessages1.appendChild(advancedSettingsContainer);
+      chatbotMessages1.appendChild(submitButton);
 
-      // Append credits info text below the submit button
       chatbotMessages1.appendChild(creditsInfoText);
-      chatbotMessages1.appendChild(imagePreviewContainer); // Append the container to the body or relevant parent container
+      chatbotMessages1.appendChild(imagePreviewContainer);
 
       // Event listener to toggle the visibility of advanced settings
       advancedSettingsText.addEventListener("click", () => {
@@ -697,15 +666,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       // Set the scrollable style to the chatbotMessages1 container
-      chatbotMessages1.style.maxHeight = "300px"; // Set a maximum height for the scrollable area
-      chatbotMessages1.style.overflowY = "auto"; // Enable vertical scrolling
+      chatbotMessages1.style.maxHeight = "300px";
+      chatbotMessages1.style.overflowY = "auto";
     } else {
-      // Restore the original content of chatbotModel and chatbotMessages
       chatbotModel.innerHTML = originalModelContent;
-      chatbotMessages1.innerHTML = ""; // Clear previous inputs
+      chatbotMessages1.innerHTML = "";
     }
 
-    // Toggle the mode
     isTextToImageMode = !isTextToImageMode;
   });
 
@@ -853,7 +820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Chatbot response area (initially hidden or empty)
     const chatbotResponse = document.createElement("div");
     chatbotResponse.id = "chatbotResponse";
-    chatbotResponse.style.display = "none"; // Initially hidden
+    chatbotResponse.style.display = "none";
     chatbotResponse.style.marginBottom = "20px";
     chatbotResponse.style.backgroundColor = "#17182b";
     chatbotResponse.style.borderRadius = "5px";
@@ -916,12 +883,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     emailBodyBox.classList.add("custom-scrollbar");
 
-    // Append elements to modal
     modal.appendChild(closeButton);
     modal.appendChild(titleBox); // Append recipient title first
     modal.appendChild(emailBodyBox);
     modal.appendChild(inputBox);
-    modal.appendChild(chatbotResponse); // Add chatbot response element here
+    modal.appendChild(chatbotResponse);
     modal.appendChild(buttonContainer);
 
     document.body.appendChild(modal);
@@ -1008,7 +974,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       closeButton.addEventListener("click", () => {
         modal.remove();
-        replyModalOpen = false; // Reset the flag when modal is closed
+        replyModalOpen = false;
       });
 
       // Display the recipient's information in the title
@@ -1050,7 +1016,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Chatbot response area (initially hidden or empty)
       const chatbotResponse = document.createElement("div");
       chatbotResponse.id = "chatbotResponse";
-      chatbotResponse.style.display = "none"; // Initially hidden
+      chatbotResponse.style.display = "none";
       chatbotResponse.style.marginBottom = "20px";
       chatbotResponse.style.backgroundColor = "#17182b";
       chatbotResponse.style.borderRadius = "5px";
@@ -1068,7 +1034,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       leftButtons.style.display = "flex";
       leftButtons.style.gap = "10px";
 
-      // Append the two buttons to leftButtons div
       const coldEmailButton = document.createElement("button");
       coldEmailButton.textContent = "Generate a reply";
       coldEmailButton.style.padding = "10px 15px";
@@ -1099,7 +1064,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       sendButton.style.borderRadius = "5px";
       sendButton.style.cursor = "pointer";
 
-      // Append all elements to the modal
       buttonContainer.appendChild(leftButtons);
       buttonContainer.appendChild(sendButton);
       modal.appendChild(closeButton);
@@ -1115,7 +1079,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       coldEmailButton.addEventListener("click", () => {
         const userPrompt = inputBox.value || "";
         const fullPrompt = `Generate a reply for the following email: ${emailBodyText}\n User input: ${userPrompt}`;
-        sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
+        sendMessageToChatbot(fullPrompt);
         modal.remove();
       });
 
@@ -1132,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       introduceButton.addEventListener("click", () => {
         const userPrompt = inputBox.value || "";
         const fullPrompt = `Ask for more details about the following email : ${emailBodyText} \n User input: ${userPrompt}`;
-        sendMessageToChatbot(fullPrompt); // Implement chatbot interaction logic here
+        sendMessageToChatbot(fullPrompt);
         modal.remove();
       });
 
@@ -1144,7 +1108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       sendButton.addEventListener("click", () => {
         const userPrompt = inputBox.value;
         if (userPrompt) {
-          //sendMessageToChatbot(userPrompt); // Implement chatbot interaction logic here
           sendMessageWithContext(userPrompt);
           modal.remove();
         }
@@ -1152,7 +1115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Listener to trigger the modal on receiving a message
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "reply_modal_outlook" && message.outlook) {
       createReplyModalOutlook();
@@ -1162,7 +1124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   chrome.storage.local.get("showModal", (data) => {
     if (data.showModal) {
       createDynamicModal();
-      chrome.storage.local.remove("showModal"); // Reset state
+      chrome.storage.local.remove("showModal");
     }
   });
 
@@ -1194,13 +1156,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputBox.style.border = "2px solid #3996fb";
     inputBox.style.borderRadius = "5px";
     inputBox.style.fontSize = "16px";
-    inputBox.style.backgroundColor = "#17182b"; // Set input background color
-    inputBox.style.color = "#fff"; // Set input text color
+    inputBox.style.backgroundColor = "#17182b";
+    inputBox.style.color = "#fff";
 
     // Chatbot response area (initially hidden or empty)
     const chatbotResponse = document.createElement("div");
     chatbotResponse.id = "chatbotResponse";
-    chatbotResponse.style.display = "none"; // Initially hidden
+    chatbotResponse.style.display = "none";
     chatbotResponse.style.marginBottom = "20px";
     chatbotResponse.style.backgroundColor = "#17182b";
     chatbotResponse.style.borderRadius = "5px";
@@ -1251,7 +1213,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     buttonContainer.appendChild(leftButtons);
     buttonContainer.appendChild(sendButton);
 
-    // Close button
     const closeButton = document.createElement("button");
     closeButton.textContent = "Close";
     closeButton.style.position = "absolute";
@@ -1271,7 +1232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Append elements to modal
     modal.appendChild(closeButton);
     modal.appendChild(inputBox);
-    modal.appendChild(chatbotResponse); // Add chatbot response element here
+    modal.appendChild(chatbotResponse);
     modal.appendChild(buttonContainer);
 
     document.body.appendChild(modal);
@@ -1299,7 +1260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   chrome.storage.local.get("showOutlookModal", (data) => {
     if (data.showOutlookModal) {
       createDynamicModalOutlook();
-      chrome.storage.local.remove("showOutlookModal"); // Reset state
+      chrome.storage.local.remove("showOutlookModal");
     }
   });
 
@@ -1331,13 +1292,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputBox.style.border = "2px solid #3996fb";
     inputBox.style.borderRadius = "5px";
     inputBox.style.fontSize = "16px";
-    inputBox.style.backgroundColor = "#17182b"; // Set input background color
-    inputBox.style.color = "#fff"; // Set input text color
+    inputBox.style.backgroundColor = "#17182b";
+    inputBox.style.color = "#fff";
 
     // Chatbot response area (initially hidden or empty)
     const chatbotResponse = document.createElement("div");
     chatbotResponse.id = "chatbotResponse";
-    chatbotResponse.style.display = "none"; // Initially hidden
+    chatbotResponse.style.display = "none";
     chatbotResponse.style.marginBottom = "20px";
     chatbotResponse.style.backgroundColor = "#17182b";
     chatbotResponse.style.borderRadius = "5px";
@@ -1388,7 +1349,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     buttonContainer.appendChild(leftButtons);
     buttonContainer.appendChild(sendButton);
 
-    // Close button
     const closeButton = document.createElement("button");
     closeButton.textContent = "Close";
     closeButton.style.position = "absolute";
@@ -1405,10 +1365,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       modal.remove();
     });
 
-    // Append elements to modal
     modal.appendChild(closeButton);
     modal.appendChild(inputBox);
-    modal.appendChild(chatbotResponse); // Add chatbot response element here
+    modal.appendChild(chatbotResponse);
     modal.appendChild(buttonContainer);
 
     document.body.appendChild(modal);
@@ -1592,7 +1551,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         chatInput.value = data.selectedText;
       }
 
-      // If needed, you can use the lastTabUrl as well (for example, display it in the UI)
       if (data.lastTabUrl) {
         console.log("Last Active Tab URL:", data.lastTabUrl);
       }
@@ -1689,7 +1647,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "LLaVA v1.6 34B": 10,
     "Qwen 1.5 72B": 10,
     "DBRX 132B Instruct": 10,
-    "Command": 10,
+    Command: 10,
     "Capybara 34B": 10,
     "Gemini 1.5 Flash": 10,
     "Dolphin 2.9.2 Mixtral 8x22B": 10,
@@ -1832,7 +1790,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedValue = wordCountValues[value];
 
     wordCountText.textContent = `Word Count: ${selectedValue}`;
-    // chrome.storage.local.set({ selectedWordCount: selectedValue });
     chrome.storage.local.set({ selectedWordCount: selectedValue }, () => {
       console.log("Word count updated:", selectedValue);
     });
@@ -1876,8 +1833,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const chatbotMessages = document.getElementById("chatbotMessages");
-
-  // Event listener for "openNewTabButton" to start a new chat
 
   // Options toggle logic
   const ellipsisButton = document.getElementById("ellipsisButton");
@@ -1976,11 +1931,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Display the message in the chat box
       displayMessage("user", messageText);
 
-      // Clear the text input
       chatbotInput.value = "";
 
       // Reset the text area height to its default value
-      chatbotInput.style.height = "30px"; // This should match the initial height of your text area
+      chatbotInput.style.height = "30px";
       document.querySelector("#sendButton i.fa-paper-plane").style.display =
         "none";
       document.querySelector("#sendButton i.fa-spinner").style.display =
@@ -1988,17 +1942,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const timerElement = document.getElementById("timer");
       timerElement.style.display = "block";
-      startTimer(timerElement); // Start a timer that counts up until the response is received
+      startTimer(timerElement);
       sendButton.style.marginTop = "20px";
 
       // Send the message to the chatbot
       sendMessageToChatbot(messageText).then(() => {
-        // Hide spinner and show the send button, stop the timer once the response is received
         document.querySelector("#sendButton i.fa-spinner").style.display =
           "none";
         document.querySelector("#sendButton i.fa-paper-plane").style.display =
           "inline-block";
-        stopTimer(timerElement); // Stop the timer
+        stopTimer(timerElement);
       });
     }
   });
@@ -2006,21 +1959,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   let timerInterval;
 
   function startTimer(timerElement) {
-    let startTime = Date.now(); // Record the start time
+    let startTime = Date.now();
 
     timerInterval = setInterval(() => {
-      let elapsedTime = Date.now() - startTime; // Calculate the elapsed time
-      let seconds = Math.floor(elapsedTime / 1000); // Get seconds
-      let milliseconds = Math.floor((elapsedTime % 1000) / 100); // Get milliseconds as 1/10th of a second
+      let elapsedTime = Date.now() - startTime;
+      let seconds = Math.floor(elapsedTime / 1000);
+      let milliseconds = Math.floor((elapsedTime % 1000) / 100);
 
-      timerElement.textContent = `${seconds}.${milliseconds}s`; // Format as 1.2s
-    }, 100); // Update every 100 milliseconds
+      timerElement.textContent = `${seconds}.${milliseconds}s`;
+    }, 100);
   }
 
   // Function to stop the timer once the response is received
   function stopTimer(timerElement) {
-    clearInterval(timerInterval); // Stop the interval
-    timerElement.style.display = "none"; // Hide the timer element once the response is received
+    clearInterval(timerInterval);
+    timerElement.style.display = "none";
   }
 
   async function getSessionTokenFromStorage() {
@@ -2031,7 +1984,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  //opensource
   const chatbotContainer = document.getElementById("chatbotContainer");
   const selectionContainer = document.getElementById("selectionContainer");
   const chatWithChatbotButton1 = document.getElementById("chatWithChatbot");
@@ -2044,7 +1996,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Function to send a message to the chatbot
   function sendMessageToChatbot(message, url, markdown) {
-    // Implement your chatbot message handling logic here
     console.log("Sending message to chatbot:", message);
     console.log("URL:", url);
     console.log("Markdown content:", markdown);
@@ -2080,12 +2031,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   document
     .getElementById("closePopupButton")
     .addEventListener("click", function () {
-      webpageOptionsPopup.style.display = "none"; // Close the popup using display none
+      webpageOptionsPopup.style.display = "none";
     });
 
   // Show the popup with the searchBox click event
   searchBox.addEventListener("click", () => {
-    webpageOptionsPopup.style.display = "flex"; // Open the popup using display flex
+    webpageOptionsPopup.style.display = "flex";
   });
 
   // Event listener for the 'Chat with Chatbot' button
@@ -2097,7 +2048,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Event listener for the 'Chat with Webpage' button
   chatWithWebpageButton1.addEventListener("click", () => {
     chatbotContainer.style.display = "block";
-    searchBox.style.display = "block"; // Show search box
+    searchBox.style.display = "block";
   });
 
   // Event listener for the 'Fetch Content' button
@@ -2109,7 +2060,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Fetch markdown from the URL
       fetchMarkdownFromUrl(url);
 
-      // Hide URL input and fetch button, and show the chatbot interface
       webpageOptionsPopup.style.display = "none";
       chatbotContainer.style.display = "flex";
     }
@@ -2198,7 +2148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       contentDiv.style.display = "flex";
       chatbotContainer.style.display = "none";
       document.getElementById("selectionContainer").style.display = "none";
-      handleSignIn(); // Implement your sign-in logic here
+      handleSignIn();
     }
   }
 
@@ -2258,7 +2208,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  let lastResponse = ""; // Track the last response
+  let lastResponse = "";
 
   function formatResponse(response) {
     let tempDiv = document.createElement("div");
@@ -2294,7 +2244,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const aiengine = currentModel;
 
-      //const conversation = [{ role: "user", content: messageText }];
       let conversation;
 
       // Fetch selected option (chatbot or webpage)
@@ -2317,7 +2266,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           const markdownContent = await markdownResponse.text();
 
           if (markdownContent) {
-            // If markdown content is successfully fetched, use it in the conversation
             conversation = [
               {
                 role: "system",
@@ -2400,7 +2348,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       lastResponse = formattedResponse;
       displayMessage("assistant", formattedResponse || "No content");
 
-      // Remove Loading... message
       updateCreditBalance();
       removeLoadingMessage();
     } catch (error) {
@@ -2486,20 +2433,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const chatbotMessages = document.getElementById("chatbotMessages");
 
-    // Use setTimeout to add a 1-second delay
     setTimeout(() => {
-      // Append the loading message after the delay
       chatbotMessages.appendChild(loadingDiv);
 
-      // Use requestAnimationFrame to ensure the browser processes the UI update before further logic
       requestAnimationFrame(() => {
-        // Scroll to the bottom of the chat messages after the element is rendered
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
       });
-    }, 2000); // 1000 milliseconds = 1 second
+    }, 2000);
   }
 
-  // Remove "Loading..." message
   function removeLoadingMessage() {
     const loadingDiv = document.getElementById("loadingMessage");
     if (loadingDiv) {

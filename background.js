@@ -48,8 +48,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
   }
-
-  // Handle the message to get the current tab URL
 });
 
 setInterval(() => {
@@ -70,15 +68,12 @@ function openMovablePopup() {
       height: 650,
       top: 100,
       left: 100,
-      
     },
     (window) => {
       chrome.windows.onBoundsChanged.addListener(() => {
         chrome.windows.get(window.id, (updatedWindow) => {
-         // localStorage.setItem("windowTop", updatedWindow.top);
-         // localStorage.setItem("windowLeft", updatedWindow.left);
-         chrome.storage.local.set({ windowTop: updatedWindow.top });
-         chrome.storage.local.set({ windowLeft: updatedWindow.left });
+          chrome.storage.local.set({ windowTop: updatedWindow.top });
+          chrome.storage.local.set({ windowLeft: updatedWindow.left });
         });
       });
     }
@@ -134,10 +129,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (
-    (message.action === "trigger_modal" && message.gmail) 
-    
-  ) {
+  if (message.action === "trigger_modal" && message.gmail) {
     // Set Gmail state
     chrome.storage.local.set({ showModal: true });
 
@@ -163,7 +155,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         showReplyModal: true,
         emailBody: message.emailBody,
 
-        recipientInfo: message.recipient, // Store recipient info
+        recipientInfo: message.recipient,
       });
 
       chrome.windows.create({
@@ -182,12 +174,8 @@ chrome.windows.onRemoved.addListener((windowId) => {
   popupOpen = false;
 });
 
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (
-    (message.action === "trigger_modal_outlook" && message.outlook) 
-    
-  ) {
+  if (message.action === "trigger_modal_outlook" && message.outlook) {
     // Set Gmail state
     chrome.storage.local.set({ showOutlookModal: true });
 
@@ -202,8 +190,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   }
 });
-
-
 
 let popupOpenOutlook = false;
 
@@ -231,7 +217,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.windows.onRemoved.addListener((windowId) => {
   popupOpenOutlook = false;
 });
-
-
-
-

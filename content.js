@@ -25,8 +25,6 @@ if (targetNode) {
   updateCredits();
 }
 
-
-
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key === "m") {
     let selectedText = window.getSelection().toString().trim();
@@ -39,8 +37,6 @@ document.addEventListener("keydown", (event) => {
     }
   }
 });
-
-
 
 // Gmail DOM is dynamic, so we need to carefully select the sender and recipient info
 function extractEmailInfo() {
@@ -111,17 +107,14 @@ function extractGmailEmailContent() {
   // Collect text content inside `span`, `p`, and other relevant tags inside the opened email.
   let textContent = Array.from(emailBody.querySelectorAll("span, p, div"))
     .map((element) => element.innerText.trim())
-    .filter((text) => text.length > 0) // Filter out empty text.
-    .join("\n"); // Join extracted texts with new lines.
-
-  // Log the extracted text content to the console for verification.
+    .filter((text) => text.length > 0)
+    .join("\n");
 
   return textContent;
 }
 
 // Modify the injectReplyAIButton function
 function injectReplyAIButton(toolbar) {
-  // Ensure no duplicate buttons
   if (!toolbar.querySelector(".ai-reply-button")) {
     const aiButton = document.createElement("button");
     aiButton.className = "T-I J-J5-Ji aoO v7 T-I-atl L3 ai-reply-button";
@@ -153,9 +146,7 @@ function injectReplyAIButton(toolbar) {
 
     toolbar.appendChild(aiButton);
 
-    // On button click
     aiButton.addEventListener("click", () => {
-      // Disable the button to prevent multiple clicks
       aiButton.disabled = true;
 
       // Extract and log the sender and recipient information
@@ -184,10 +175,9 @@ function injectReplyAIButton(toolbar) {
         });
       }
 
-      // Re-enable the button after a delay
       setTimeout(() => {
         aiButton.disabled = false;
-      }, 1000); // Adjust delay as necessary
+      }, 1000);
     });
   }
 }
@@ -230,17 +220,17 @@ function injectComposeAIButton() {
         aiButton.appendChild(document.createTextNode("AI"));
 
         // Custom styling for the compose button
-        aiButton.style.marginLeft = "10px"; // Left margin
-        aiButton.style.backgroundColor = "#3996fb"; // Blue background
-        aiButton.style.color = "white"; // White text color
-        aiButton.style.border = "none"; // No border
-        aiButton.style.padding = "12px 20px"; // Padding
-        aiButton.style.borderRadius = "8px"; // Rounded edges
-        aiButton.style.cursor = "pointer"; // Pointer cursor
-        aiButton.style.display = "flex"; // Flex display
-        aiButton.style.alignItems = "center"; // Center items vertically
-        aiButton.style.fontSize = "16px"; // Font size
-        aiButton.style.fontWeight = "bold"; // Bold text
+        aiButton.style.marginLeft = "10px";
+        aiButton.style.backgroundColor = "#3996fb";
+        aiButton.style.color = "white";
+        aiButton.style.border = "none";
+        aiButton.style.padding = "12px 20px";
+        aiButton.style.borderRadius = "8px";
+        aiButton.style.cursor = "pointer";
+        aiButton.style.display = "flex";
+        aiButton.style.alignItems = "center";
+        aiButton.style.fontSize = "16px";
+        aiButton.style.fontWeight = "bold";
 
         composeButton.parentElement.appendChild(aiButton);
 
@@ -252,21 +242,22 @@ function injectComposeAIButton() {
         });
       }
     } else {
-      setTimeout(injectComposeAIButton, 1000); // Retry if the compose button is not found
+      setTimeout(injectComposeAIButton, 1000);
     }
   }
 }
 
 // Event listeners
 window.addEventListener("load", () => {
-  injectComposeAIButton(); // Call the compose button function
-  waitForReplyBox(); // Call the reply box function
+  injectComposeAIButton();
+  waitForReplyBox();
 });
-
 
 function injectComposeAIButtonOutlook() {
   if (window.location.hostname.includes("outlook")) {
-    const newMailButton = document.querySelector('button[aria-label="New mail"]');
+    const newMailButton = document.querySelector(
+      'button[aria-label="New mail"]'
+    );
 
     if (newMailButton) {
       if (!document.querySelector("#ai-compose-button-outlook")) {
@@ -283,7 +274,6 @@ function injectComposeAIButtonOutlook() {
         aiButton.appendChild(icon);
         aiButton.appendChild(document.createTextNode("AI"));
 
-        // Custom styling for the compose button
         aiButton.style.marginLeft = "8px";
         aiButton.style.marginTop = "4px";
         aiButton.style.backgroundColor = "#3996fb";
@@ -303,9 +293,11 @@ function injectComposeAIButtonOutlook() {
           newMailButton.click();
 
           // Send message to background script to open popup
-          chrome.runtime.sendMessage({ action: "trigger_modal_outlook", outlook: true });
+          chrome.runtime.sendMessage({
+            action: "trigger_modal_outlook",
+            outlook: true,
+          });
         });
-
       }
     } else {
       setTimeout(injectComposeAIButtonOutlook, 1000);
@@ -313,62 +305,53 @@ function injectComposeAIButtonOutlook() {
   }
 }
 
-// Event listeners
 window.addEventListener("load", () => {
-  //injectComposeAIButtonGmail(); // Gmail button
   injectComposeAIButton();
-  injectComposeAIButtonOutlook(); // Outlook button
-  waitForReplyBox(); // Call the reply box function
+  injectComposeAIButtonOutlook();
+  waitForReplyBox();
 });
 
-
-
-
-
-
-
-
-//title working
-window.addEventListener('load', function () {
+window.addEventListener("load", function () {
   // Function to inject the AI-Reply button
   function injectAIReplyButton() {
     // Find the toolbar containing Reply and Forward buttons
-    const toolbar = document.querySelector('div[role="toolbar"][aria-label="Quick actions"]');
+    const toolbar = document.querySelector(
+      'div[role="toolbar"][aria-label="Quick actions"]'
+    );
 
     if (toolbar) {
-      // Create the AI-Reply button
-      const aiReplyButton = document.createElement('button');
-      aiReplyButton.type = 'button';
-      aiReplyButton.innerText = 'AI-Reply'; // Set the text to AI-Reply
-      aiReplyButton.role = 'menuitem';
-      aiReplyButton.className = 'fui-Button ai-reply-btn';
+      const aiReplyButton = document.createElement("button");
+      aiReplyButton.type = "button";
+      aiReplyButton.innerText = "AI-Reply";
+      aiReplyButton.role = "menuitem";
+      aiReplyButton.className = "fui-Button ai-reply-btn";
 
-      // Add styles to the AI-Reply button
-      aiReplyButton.style.backgroundColor = '#ffffff'; // White background
-      aiReplyButton.style.color = '#3996fb'; // Text color blue
-      aiReplyButton.style.border = '1px solid #3996fb'; // Blue border
-      aiReplyButton.style.padding = '6px 12px'; // Padding adjusted for button
-      aiReplyButton.style.marginRight = '4px'; // Space between buttons
-      aiReplyButton.style.cursor = 'pointer'; // Pointer cursor on hover
-      aiReplyButton.style.fontSize = '14px'; // Font size to match other buttons
-      aiReplyButton.style.fontFamily = 'Arial, sans-serif'; // Simple font family
-      aiReplyButton.style.lineHeight = '1.5'; // Line height to ensure text fits properly
-      aiReplyButton.style.height = '29px'; // Set height to ensure uniformity
-      aiReplyButton.style.display = 'inline-flex'; // Inline-flex to match toolbar buttons
-      aiReplyButton.style.alignItems = 'center'; // Vertically align text inside button
-      aiReplyButton.style.justifyContent = 'center'; // Center text inside the button
-      aiReplyButton.style.width = 'auto'; // Let the width adjust based on content
-      aiReplyButton.style.marginLeft = '6px';
-      aiReplyButton.style.marginTop = '6px';
+      aiReplyButton.style.backgroundColor = "#ffffff";
+      aiReplyButton.style.color = "#3996fb";
+      aiReplyButton.style.border = "1px solid #3996fb";
+      aiReplyButton.style.padding = "6px 12px";
+      aiReplyButton.style.marginRight = "4px";
+      aiReplyButton.style.cursor = "pointer";
+      aiReplyButton.style.fontSize = "14px";
+      aiReplyButton.style.fontFamily = "Arial, sans-serif";
+      aiReplyButton.style.lineHeight = "1.5";
+      aiReplyButton.style.height = "29px";
+      aiReplyButton.style.display = "inline-flex";
+      aiReplyButton.style.alignItems = "center";
+      aiReplyButton.style.justifyContent = "center";
+      aiReplyButton.style.width = "auto";
+      aiReplyButton.style.marginLeft = "6px";
+      aiReplyButton.style.marginTop = "6px";
 
       // Insert the AI-Reply button between Reply and Forward buttons
-      const forwardButton = toolbar.querySelector('button[aria-label="Forward"]');
+      const forwardButton = toolbar.querySelector(
+        'button[aria-label="Forward"]'
+      );
       if (forwardButton) {
         toolbar.insertBefore(aiReplyButton, forwardButton);
       }
 
-      // Add click event listener for AI-Reply button functionality
-      aiReplyButton.addEventListener('click', () => {
+      aiReplyButton.addEventListener("click", () => {
         // Call the function to extract sender information
         const senderInfo = extractSenderInfo();
 
@@ -386,14 +369,15 @@ window.addEventListener('load', function () {
         }
       });
     } else {
-      // Retry injecting the button after some time if the toolbar is not yet available
       setTimeout(injectAIReplyButton, 1000);
     }
   }
 
   // Function to extract sender information
   function extractSenderInfo() {
-    const senderElements = document.querySelectorAll('div.PW01N.l8Tnu span.OZZZK');
+    const senderElements = document.querySelectorAll(
+      "div.PW01N.l8Tnu span.OZZZK"
+    );
 
     if (senderElements.length === 0) {
       console.log("No sender information found.");
@@ -416,12 +400,11 @@ window.addEventListener('load', function () {
   }
 
   function extractEmailBodyText() {
-    // Select all p, span, and heading tags in the email body
-    const elements = document.querySelectorAll('p, span, h1');
+    const elements = document.querySelectorAll("p, span, h1");
     let emailBodyText = "";
 
     // Extract and log the text content of each element
-    elements.forEach(el => {
+    elements.forEach((el) => {
       const textContent = el.textContent.trim();
       if (textContent) {
         emailBodyText += textContent + " ";
@@ -431,28 +414,5 @@ window.addEventListener('load', function () {
     chrome.storage.local.set({ emailBodyText });
   }
 
-  // Run the function to inject the button after page load
   injectAIReplyButton();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

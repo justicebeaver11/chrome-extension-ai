@@ -451,8 +451,6 @@ input:checked + .slider:before {
   visibility: visible;
 }
 
-
-
 #chatbotMessages {
   flex-grow: 1;
   display: flex;
@@ -466,10 +464,6 @@ input:checked + .slider:before {
   height: calc(100% - 100px);
   flex: 1;
 }
-
-
-
-
 
 #chatInputArea {
   display: flex;
@@ -489,7 +483,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   width: 100%;
-  padding-bottom: 5px; 
+  padding-bottom: 5px;
 }
 
 #bookmarkButton {
@@ -521,7 +515,8 @@ input:checked + .slider:before {
   margin-left: 10px;
 }
 
-#ellipsisButton, #sendButton {
+#ellipsisButton,
+#sendButton {
   background-color: transparent;
   border: none;
   color: #ffffff;
@@ -541,11 +536,11 @@ input:checked + .slider:before {
   width: 100%;
 }
 
-#bookmarkButton:hover, #sendButton:hover, #ellipsisButton:hover {
+#bookmarkButton:hover,
+#sendButton:hover,
+#ellipsisButton:hover {
   color: #3996fb;
 }
-
-
 
 .chat-message {
   max-width: 60%;
@@ -619,7 +614,7 @@ input:checked + .slider:before {
 }
 
 #chatbotMessages {
- scrollbar-width:  thin;
+  scrollbar-width: thin;
   scrollbar-color: #3996fb transparent;
 }
 
@@ -629,7 +624,6 @@ input:checked + .slider:before {
 
 #chatbotMessages::-webkit-scrollbar-track {
   background: transparent;
-  
 }
 
 #chatbotMessages::-webkit-scrollbar-thumb {
@@ -664,16 +658,16 @@ input:checked + .slider:before {
 }
 
 #tonePopup::-webkit-scrollbar {
-  width: 4px; 
+  width: 4px;
 }
 
 #tonePopup::-webkit-scrollbar-thumb {
-  background-color: #3996fb; 
-  border-radius: 4px; 
+  background-color: #3996fb;
+  border-radius: 4px;
 }
 
 #tonePopup::-webkit-scrollbar-track {
-  background: #17182b; 
+  background: #17182b;
 }
 
 #tonePopup h2 {
@@ -772,28 +766,28 @@ input:checked + .slider:before {
 }
 
 .volume-up-button {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 200px;
-    padding: 10px;
-    border-radius: 5px;
-    text-decoration: none;
-  }
-  
-  .volume-up-text {
-    flex-grow: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  #volumeUp {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.volume-up-text {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#volumeUp {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 .word-count-button {
   display: flex;
@@ -820,28 +814,28 @@ input:checked + .slider:before {
 }
 
 .lang-change-button {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 200px;
-    padding: 10px;
-    border-radius: 5px;
-    text-decoration: none;
-  }
-  
-  .lang-change-text {
-    flex-grow: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  #langChange {
-    position: absolute;
-    right: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.lang-change-text {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#langChange {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 #wordCountPopup {
   background-color: #17182b;
@@ -934,17 +928,16 @@ input:checked + .slider:before {
   justify-content: center;
   margin: auto;
   position: fixed;
-  border: 2px solid #3996fb; /* Add the border */
+  border: 2px solid #3996fb;
   width: fit-content;
   transform: translate(-20%, -20%);
-  padding: 20px; /* Add some padding for better visibility */
-  box-sizing: border-box; /* Ensure padding doesn't affect width calculation */
+  padding: 20px;
+  box-sizing: border-box;
   position: absolute;
   z-index: 999;
-  top: 35%; /* Center vertically based on 600px height */
-  left: 28%; /* Center horizontally based on 500px width */
+  top: 35%;
+  left: 28%;
 }
-
 
 .button-box {
   margin: 10px 0;
@@ -963,26 +956,22 @@ input:checked + .slider:before {
   background-color: #0056b3;
 }
 
-
-
 #searchBox {
   display: inline-block;
   margin-left: 15px;
-  border: 1px solid #3996fb; /* Border color */
-  background-color: #000319; /* Background color */
-  border-radius: 5px; /* Border radius for rounded corners */
-  padding: 8px 12px; /* Padding inside the box */
-  margin-right: 0px; /* Space between search box and the settings button */
-  cursor: pointer; /* Show pointer cursor */
+  border: 1px solid #3996fb;
+  background-color: #000319;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-right: 0px;
+  cursor: pointer;
 }
 
 #searchBox i {
-  color: white; /* Color of the search icon */
-  font-size: 14px; /* Icon size */
-  vertical-align: middle; /* Align the icon vertically */
+  color: white;
+  font-size: 14px;
+  vertical-align: middle;
 }
-
-
 
 .popup {
   position: fixed;
@@ -999,7 +988,7 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1000; 
+  z-index: 1000;
   max-height: 90vh;
 }
 
@@ -1010,8 +999,8 @@ input:checked + .slider:before {
 .popup #closePopupButton {
   background: transparent;
   position: absolute;
-  top: 10px; 
-  right: 10px; 
+  top: 10px;
+  right: 10px;
   border: none;
   font-size: 20px;
   color: #3996fb;
@@ -1032,9 +1021,8 @@ input:checked + .slider:before {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
 .popup #fetchContentButton {
-  width: 50%; 
+  width: 50%;
   padding: 2px 8px;
   background-color: #3996fb;
   color: white;
@@ -1045,43 +1033,38 @@ input:checked + .slider:before {
   margin-top: 10px;
   line-height: normal;
   height: 40px;
-   
 }
-
 
 .popup #fetchContentButton:hover {
   background-color: #0056b3;
 }
 
-
-
 #retrieveUrlContainer {
-  margin-top: 10px; 
-  text-align: center; 
+  margin-top: 10px;
+  text-align: center;
 }
 
 #retrieveUrlButton {
-  background-color: #3996fb; /* Background color of the button */
-  color: white; /* Text color of the button */
-  border: none; /* Remove default border */
-  padding: 10px 20px; /* Padding inside the button */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 16px; /* Font size of the button text */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s; /* Smooth transition for background color */
+  background-color: #3996fb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 #retrieveUrlButton:hover {
-  background-color: #297bca; 
+  background-color: #297bca;
 }
 
-/* Modal Styles */
 #optionsModal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #17182b; /* Dark background */
+  background-color: #17182b;
   padding: 20px;
   width: 300px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -1094,12 +1077,12 @@ input:checked + .slider:before {
 #optionsModal h3 {
   margin-top: 0;
   font-size: 18px;
-  color: #fff; /* Light text for dark background */
+  color: #fff;
 }
 
 #optionsModal p {
   font-size: 14px;
-  color: #bbb; /* Slightly muted text color */
+  color: #bbb;
   margin-bottom: 15px;
 }
 
@@ -1109,9 +1092,9 @@ input:checked + .slider:before {
   margin: 10px auto;
   padding: 10px;
   width: 100%;
-  background-color: #17182b; /* Transparent button background */
+  background-color: #17182b;
   color: white;
-  border: 2px solid #3996fb; /* Border color */
+  border: 2px solid #3996fb;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
@@ -1133,50 +1116,24 @@ input:checked + .slider:before {
   z-index: 999;
 }
 
-/* Scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px; /* Adjust scrollbar width */
+  width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #17182b; /* Track color */
+  background: #17182b;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #3996fb; /* Scrollbar color */
-  border-radius: 5px; /* Rounded corners */
+  background-color: #3996fb;
+  border-radius: 5px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #3080d1; /* Darker shade on hover */
+  background-color: #3080d1;
 }
 
-/* Scrollbar width for Firefox */
 .custom-scrollbar {
-  scrollbar-width: thin; /* Make scrollbar thin */
-  scrollbar-color: #3996fb #17182b; /* Thumb color, Track color */
+  scrollbar-width: thin;
+  scrollbar-color: #3996fb #17182b;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

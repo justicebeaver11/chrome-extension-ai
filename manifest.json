@@ -7,20 +7,17 @@
     "storage",
     "tabs",
     "webNavigation",
-     "scripting",
-     "activeTab", 
-     "alarms",
-     "commands",
-     "contextMenus"
-     
-
+    "scripting",
+    "activeTab",
+    "alarms",
+    "commands",
+    "contextMenus"
   ],
   "host_permissions": [
     "https://app.ai4chat.co/*",
     "http://localhost:3000/*",
     "http://*/*",
     "https://*/*"
-    
   ],
   "content_scripts": [
     {
@@ -32,14 +29,13 @@
   "background": {
     "service_worker": "background.js"
   },
-   "commands": {
+  "commands": {
     "open_movale_popup": {
       "suggested_key": {
         "default": "Ctrl+Space"
       },
       "description": "Open the extension popup"
     }
-    
   },
   "action": {
     "default_icon": {
@@ -57,8 +53,3 @@
     "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }
-
-  
-  
-  
-  
