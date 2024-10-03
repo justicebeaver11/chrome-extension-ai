@@ -30,7 +30,7 @@
     "service_worker": "background.js"
   },
   "commands": {
-    "open_movale_popup": {
+    "open_movable_popup": {
       "suggested_key": {
         "default": "Ctrl+Space"
       },

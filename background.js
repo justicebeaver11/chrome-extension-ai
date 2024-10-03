@@ -217,3 +217,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.windows.onRemoved.addListener((windowId) => {
   popupOpenOutlook = false;
 });
+
+

@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
+ 
+
+
+
   const menuButton = document.getElementById("menuButton");
   const chatbotModel = document.getElementById("chatbotmodel");
   const chatbotMessages1 = document.getElementById("chatbotMessages");
@@ -1455,12 +1459,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     chatbotResponse.innerText = ""; // Clear the content
   }
 
+
   // Function to show the options modal
   function showOptionsModal(selectedText) {
     // Create the modal HTML dynamically
     const modal = document.createElement("div");
     modal.innerHTML = `
       <div id="optionsModal">
+      <button id="closeModalButton">Close the popup</button>
           <h3>What would you like to do with this text?</h3>
           <p>"${selectedText}"</p>
           <button id="shortenText">Make Shorter</button>
@@ -1499,6 +1505,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       .addEventListener("click", () =>
         handleOptionSelection("simplify", selectedText)
       );
+      document.getElementById("closeModalButton").addEventListener("click", () => {
+        chrome.storage.local.remove("selectedText", () => {
+          console.log("Selected text removed from local storage");
+        });
+    
+        // Close the modal and remove the backdrop
+        document.getElementById("optionsModal").remove();
+        document.getElementById("modalBackdrop").remove();
+      });
+      
   }
 
   // Function to handle option selection
@@ -1524,11 +1540,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Send the prompt to the chatbot
     sendMessageToChatbot(prompt);
+    
+
+
+
+   
 
     chrome.storage.local.remove("selectedText", () => {
       console.log("Selected text removed from local storage");
-    });
+  });
+  
+ 
 
+
+  
     // Close the modal
     document.getElementById("optionsModal").remove();
     document.getElementById("modalBackdrop").remove();
@@ -1537,9 +1562,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Listen for messages from the background script to show the options modal
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "show_options_modal" && request.text) {
+      
       showOptionsModal(request.text);
     }
   });
+
+ 
 
   // Call the function and update the popup UI
   getLastTabUrlAndSelectedTextFromStorage()

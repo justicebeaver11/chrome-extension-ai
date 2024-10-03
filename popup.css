@@ -1098,6 +1098,7 @@ input:checked + .slider:before {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+
 }
 
 #optionsModal button:hover {
@@ -1114,6 +1115,26 @@ input:checked + .slider:before {
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+}
+
+#closeModalButton {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 100px;
+  background-color: #17182b;
+  color: white;
+  border: 2px solid #3996fb;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 10px;
+
+}
+
+
+#closeModalButton:hover {
+  background-color: #3996fb;
+  color: white;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
