@@ -4,10 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
- 
-
-
-
   const menuButton = document.getElementById("menuButton");
   const chatbotModel = document.getElementById("chatbotmodel");
   const chatbotMessages1 = document.getElementById("chatbotMessages");
@@ -1396,69 +1392,68 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  async function sendMessageToChatbot(messageText) {
-    displayLoadingMessage();
-    try {
-      const sessionToken = await getSessionTokenFromStorage();
-      if (!sessionToken) {
-        console.log("No session token available.");
-        return;
-      }
+  // async function sendMessageToChatbot(messageText) {
+  //   displayLoadingMessage();
+  //   try {
+  //     const sessionToken = await getSessionTokenFromStorage();
+  //     if (!sessionToken) {
+  //       console.log("No session token available.");
+  //       return;
+  //     }
 
-      const chatid = await getLatestChatId();
-      if (!chatid) {
-        console.log("Failed to retrieve chat ID.");
-        return;
-      }
+  //     const chatid = await getLatestChatId();
+  //     if (!chatid) {
+  //       console.log("Failed to retrieve chat ID.");
+  //       return;
+  //     }
 
-      const response = await fetch("https://app.ai4chat.co/chatgpt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionToken}`,
-        },
-        body: JSON.stringify({
-          chatid,
-          conversation: [{ role: "user", content: messageText }],
-          timezoneOffset: new Date().getTimezoneOffset(),
-        }),
-      });
+  //     const response = await fetch("https://app.ai4chat.co/chatgpt", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${sessionToken}`,
+  //       },
+  //       body: JSON.stringify({
+  //         chatid,
+  //         conversation: [{ role: "user", content: messageText }],
+  //         timezoneOffset: new Date().getTimezoneOffset(),
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error from server:", errorData.error);
-        return;
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       console.error("Error from server:", errorData.error);
+  //       return;
+  //     }
 
-      const data = await response.text();
-      displayChatbotResponse(data);
-      removeLoadingMessage();
-    } catch (error) {
-      console.error("Error sending message to chatbot:", error);
-      removeLoadingMessage();
-    }
-  }
+  //     const data = await response.text();
+  //     displayChatbotResponse(data);
+  //     removeLoadingMessage();
+  //   } catch (error) {
+  //     console.error("Error sending message to chatbot:", error);
+  //     removeLoadingMessage();
+  //   }
+  // }
 
-  // Function to display the chatbot response in the modal
-  function displayChatbotResponse(responseText) {
-    const chatbotResponse = document.getElementById("chatbotResponse");
-    chatbotResponse.style.display = "block"; // Show the response div
-    chatbotResponse.innerText = responseText; // Insert the response
-  }
+  // // Function to display the chatbot response in the modal
+  // function displayChatbotResponse(responseText) {
+  //   const chatbotResponse = document.getElementById("chatbotResponse");
+  //   chatbotResponse.style.display = "block"; // Show the response div
+  //   chatbotResponse.innerText = responseText; // Insert the response
+  // }
 
-  // Function to show a "loading" message (optional)
-  function displayLoadingMessage() {
-    const chatbotResponse = document.getElementById("chatbotResponse");
-    chatbotResponse.style.display = "block"; // Make sure it's visible
-    chatbotResponse.innerText = "Loading...";
-  }
+  // // Function to show a "loading" message (optional)
+  // function displayLoadingMessage() {
+  //   const chatbotResponse = document.getElementById("chatbotResponse");
+  //   chatbotResponse.style.display = "block"; // Make sure it's visible
+  //   chatbotResponse.innerText = "Loading...";
+  // }
 
-  // Function to remove the "loading" message
-  function removeLoadingMessage() {
-    const chatbotResponse = document.getElementById("chatbotResponse");
-    chatbotResponse.innerText = ""; // Clear the content
-  }
-
+  // // Function to remove the "loading" message
+  // function removeLoadingMessage() {
+  //   const chatbotResponse = document.getElementById("chatbotResponse");
+  //   chatbotResponse.innerText = ""; // Clear the content
+  // }
 
   // Function to show the options modal
   function showOptionsModal(selectedText) {
@@ -1505,16 +1500,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       .addEventListener("click", () =>
         handleOptionSelection("simplify", selectedText)
       );
-      document.getElementById("closeModalButton").addEventListener("click", () => {
+    document
+      .getElementById("closeModalButton")
+      .addEventListener("click", () => {
         chrome.storage.local.remove("selectedText", () => {
           console.log("Selected text removed from local storage");
         });
-    
+
         // Close the modal and remove the backdrop
         document.getElementById("optionsModal").remove();
         document.getElementById("modalBackdrop").remove();
       });
-      
   }
 
   // Function to handle option selection
@@ -1540,20 +1536,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Send the prompt to the chatbot
     sendMessageToChatbot(prompt);
-    
-
-
-
-   
 
     chrome.storage.local.remove("selectedText", () => {
       console.log("Selected text removed from local storage");
-  });
-  
- 
+    });
 
-
-  
     // Close the modal
     document.getElementById("optionsModal").remove();
     document.getElementById("modalBackdrop").remove();
@@ -1562,12 +1549,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Listen for messages from the background script to show the options modal
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "show_options_modal" && request.text) {
-      
       showOptionsModal(request.text);
     }
   });
-
- 
 
   // Call the function and update the popup UI
   getLastTabUrlAndSelectedTextFromStorage()
@@ -1597,6 +1581,122 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   });
+
+  
+  
+  
+    // Get the reference to the button that will trigger the modal
+    const youtubeChatBtn = document.getElementById('youtubeChat');
+
+    // Event listener for youtubeChat button click
+    youtubeChatBtn.addEventListener('click', () => {
+        // Create the modal container
+        const modal = document.createElement('div');
+        modal.id = 'dynamicModal';
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.width = '300px';
+        modal.style.backgroundColor = '#fff';
+        modal.style.border = '2px solid #000319';
+        modal.style.padding = '20px';
+        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        modal.style.zIndex = '1000';
+
+        // Create the input field for the video ID
+        const inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.placeholder = 'Enter YouTube Video ID';
+        inputField.id = 'videoIdInput';
+        inputField.style.width = '100%';
+        inputField.style.marginBottom = '10px';
+        inputField.style.padding = '8px';
+
+        // Create the continue button
+        const continueBtn = document.createElement('button');
+        continueBtn.innerText = 'Continue';
+        continueBtn.style.backgroundColor = '#000319';
+        continueBtn.style.color = '#fff';
+        continueBtn.style.padding = '10px';
+        continueBtn.style.border = 'none';
+        continueBtn.style.cursor = 'pointer';
+        continueBtn.style.width = '100%';
+
+        // Create a close button to hide the modal
+        const closeButton = document.createElement('span');
+        closeButton.innerHTML = '&times;';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.color = '#000';
+
+        // Append the input, button, and close button to the modal
+        modal.appendChild(closeButton);
+        modal.appendChild(inputField);
+        modal.appendChild(continueBtn);
+
+        // Append the modal to the body
+        document.body.appendChild(modal);
+
+        // Close button functionality
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        // Continue button functionality
+        continueBtn.addEventListener('click', () => {
+            const videoId = document.getElementById('videoIdInput').value.trim();
+
+            if (videoId === '') {
+                alert('Please enter a valid YouTube Video ID.');
+                return;
+            }
+
+            // Fetch the transcript using the provided video ID
+            fetch(`http://localhost:3000/transcript/${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Check if transcript data is returned
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Extract only the `text` property from each object in the transcript array
+                        const transcriptText = data.map(entry => entry.text).join(' ');
+
+                        // Log the concatenated transcript text (optional for debugging)
+                        console.log('Transcript Text:', transcriptText);
+
+                        // Define the prompt using the transcript text
+                        const promptMessage = `Elaborate more on the ${transcriptText} and keep this as the context for further conversation so that user can aks questions related to this`;
+
+                        // Send the constructed prompt message to the chatbot
+                        sendMessageToChatbot(promptMessage);
+
+                        // Alert to inform that the transcript has been sent to the chatbot
+                        //alert('Transcript sent to the chatbot successfully!');
+                    } else {
+                        alert('No transcript found for this video. Please check the video ID.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching transcript:', error);
+                    alert('Failed to fetch the transcript. Please check the video ID and try again.');
+                });
+
+            // Close the modal after fetching
+            document.body.removeChild(modal);
+        });
+    });
+
+
+
+
+
+
+
+
+
 
   const modelCredits = {
     "OpenChat 3.5 8B": 1,
@@ -1675,7 +1775,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "LLaVA v1.6 34B": 10,
     "Qwen 1.5 72B": 10,
     "DBRX 132B Instruct": 10,
-    Command: 10,
+    "Command": 10,
     "Capybara 34B": 10,
     "Gemini 1.5 Flash": 10,
     "Dolphin 2.9.2 Mixtral 8x22B": 10,

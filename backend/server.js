@@ -1,3 +1,5 @@
+
+const { YoutubeTranscript } = require('youtube-transcript');
 const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
@@ -66,6 +68,21 @@ app.post('/chatgpt', async (req, res) => {
     }
 });
 
+
+app.get('/transcript/:videoId', async (req, res) => {
+    const videoId = req.params.videoId;
+  
+    try {
+      // Fetch the transcript using YoutubeTranscript
+      const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+  
+      // Send the transcript as a response
+      res.json(transcript);
+    } catch (error) {
+      console.error('Error fetching transcript:', error.message);
+      res.status(500).json({ error: 'Failed to fetch transcript' });
+    }
+  });
 
 
 const PORT = process.env.PORT || 3000;

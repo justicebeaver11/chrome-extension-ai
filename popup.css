@@ -1098,7 +1098,6 @@ input:checked + .slider:before {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-
 }
 
 #optionsModal button:hover {
@@ -1128,9 +1127,7 @@ input:checked + .slider:before {
   border-radius: 5px;
   cursor: pointer;
   font-size: 10px;
-
 }
-
 
 #closeModalButton:hover {
   background-color: #3996fb;
