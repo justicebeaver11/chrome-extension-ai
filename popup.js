@@ -706,19 +706,47 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-  function getLastTabUrlFromStorage() {
-    return new Promise((resolve, reject) => {
-      chrome.storage.local.get("lastTabUrl", (result) => {
-        if (result.lastTabUrl) {
-          console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
-          resolve(result.lastTabUrl);
-        } else {
-          console.log("No URL found in storage.");
-          reject("No URL found");
-        }
-      });
+ 
+  // Your existing function to get the last active tab URL from storage
+function getLastTabUrlFromStorage() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get("lastTabUrl", (result) => {
+      if (result.lastTabUrl) {
+        console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+        resolve(result.lastTabUrl);
+      } else {
+        console.log("No URL found in storage.");
+        reject("No URL found");
+      }
     });
+  });
+}
+
+// Function to update the last active tab URL in storage
+function updateLastTabUrlInStorage(newUrl) {
+  chrome.storage.local.set({ lastTabUrl: newUrl }, () => {
+    console.log("Last Active Tab URL updated in Storage:", newUrl);
+  });
+}
+
+// Listen for URL changes in any tab and update the storage
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.url && !tab.url.includes("chrome-extension://")) {
+    updateLastTabUrlInStorage(changeInfo.url);
   }
+});
+
+// Listen for when the active tab changes and update the storage
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  chrome.tabs.get(activeInfo.tabId, (tab) => {
+    if (tab.url && !tab.url.includes("chrome-extension://")) {
+      updateLastTabUrlInStorage(tab.url);
+    }
+  });
+});
+
+
+
 
   function getLastTabUrlAndSelectedTextFromStorage() {
     return new Promise((resolve, reject) => {
@@ -1582,112 +1610,263 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  const youtubeChatBtn = document.getElementById('youtubeChat');
+
+// Event listener for youtubeChat button click
+youtubeChatBtn.addEventListener('click', () => {
+    
+    const modal = document.createElement('div');
+    modal.id = 'dynamicModal';
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.width = '300px';
+    modal.style.backgroundColor = '#fff';
+    modal.style.border = '2px solid #000319';
+    modal.style.padding = '20px';
+    modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    modal.style.zIndex = '1000';
+
+    // Create the input field for the video ID
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.placeholder = 'Enter YouTube Video ID';
+    inputField.id = 'videoIdInput';
+    inputField.style.width = '100%';
+    inputField.style.marginBottom = '10px';
+    inputField.style.padding = '8px';
+
+    // Create the continue button
+    const continueBtn = document.createElement('button');
+    continueBtn.innerText = 'Continue';
+    continueBtn.style.backgroundColor = '#000319';
+    continueBtn.style.color = '#fff';
+    continueBtn.style.padding = '10px';
+    continueBtn.style.border = 'none';
+    continueBtn.style.cursor = 'pointer';
+    continueBtn.style.width = '100%';
+
+    const retrieveUrlBtn = document.createElement('button');
+    retrieveUrlBtn.innerText = 'Retrieve Tab URL';
+    retrieveUrlBtn.style.backgroundColor = '#007BFF';
+    retrieveUrlBtn.style.color = '#fff';
+    retrieveUrlBtn.style.padding = '10px';
+    retrieveUrlBtn.style.border = 'none';
+    retrieveUrlBtn.style.cursor = 'pointer';
+    retrieveUrlBtn.style.width = '100%';
+    retrieveUrlBtn.style.marginBottom = '10px';
+
+    // Create a close button to hide the modal
+    const closeButton = document.createElement('span');
+    closeButton.innerHTML = '&times;';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '10px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.color = '#000';
+
+    // Append the input, button, and close button to the modal
+    modal.appendChild(closeButton);
+    modal.appendChild(inputField);
+    modal.appendChild(retrieveUrlBtn);
+    modal.appendChild(continueBtn);
+
+    // Append the modal to the body
+    document.body.appendChild(modal);
+
+    // Close button functionality
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+
+    retrieveUrlBtn.addEventListener('click', () => {
+      getLastTabUrlFromStorage()
+          .then((url) => {
+              // Set the retrieved URL into the input field
+              document.getElementById('videoIdInput').value = url;
+          })
+          .catch((error) => {
+              alert(error);
+          });
+  });
+
+    // Continue button functionality
+    continueBtn.addEventListener('click', () => {
+        // const videoId = document.getElementById('videoIdInput').value.trim();
+
+        // if (videoId === '') {
+        //     alert('Please enter a valid YouTube Video ID.');
+        //     return;
+        // }
+        const inputValue = document.getElementById('videoIdInput').value.trim();
+
+        // Extract video ID from the input (URL or direct ID)
+        const videoId = extractVideoId(inputValue);
+
+        if (!videoId) {
+            alert('Please enter a valid YouTube Video URL or ID.');
+            return;
+        }
+
+
+        // Fetch the transcript using the provided video ID
+        fetch(`http://localhost:3000/transcript/${videoId}`)
+            .then(response => response.json())
+            .then(data => {
+                
+                if (Array.isArray(data) && data.length > 0) {
+                    
+                    const transcriptDetails = data.map(entry => {
+                        const text = entry.text || 'N/A';
+                        const duration = entry.duration || '00:00';
+                        return `At ${duration}, the text was: "${text}"`;
+                    }).join('\n');
+
+                    
+                    console.log('Transcript Details:', transcriptDetails);
+
+                    // Define the prompt using the transcript details
+                  
+                    const transcriptContext = `Here is the transcript of the video along with timestamps: \n${transcriptDetails}. Please use this context for further conversation so that the user can ask questions related to specific timestamps or the entire transcript and adhere strictly to this context.`;
+                    chrome.storage.local.set({ transcriptContext }, () => {
+                      console.log('Transcript context stored:', transcriptContext);
+                  });
+                  
+                   // localStorage.setItem('transcriptContent', transcriptContext);
+                    // Send the constructed prompt message to the chatbot
+                    sendMessageToChatbot(transcriptContext);
+
+                    // Alert to inform that the transcript has been sent to the chatbot
+                   // alert('Transcript sent to the chatbot successfully!');
+                } else {
+                    alert('No transcript found for this video. Please check the video ID.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching transcript:', error);
+                alert('Failed to fetch the transcript. Please check the video ID and try again.');
+            });
+
+        // Close the modal after fetching
+        document.body.removeChild(modal);
+    });
+});
+
+function extractVideoId(urlOrId) {
+  const urlPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = urlOrId.match(urlPattern);
+  return match ? match[1] : (urlOrId.length === 11 ? urlOrId : null);
+}
   
   
   
     // Get the reference to the button that will trigger the modal
-    const youtubeChatBtn = document.getElementById('youtubeChat');
+    // const youtubeChatBtn = document.getElementById('youtubeChat');
 
-    // Event listener for youtubeChat button click
-    youtubeChatBtn.addEventListener('click', () => {
-        // Create the modal container
-        const modal = document.createElement('div');
-        modal.id = 'dynamicModal';
-        modal.style.position = 'fixed';
-        modal.style.top = '50%';
-        modal.style.left = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.width = '300px';
-        modal.style.backgroundColor = '#fff';
-        modal.style.border = '2px solid #000319';
-        modal.style.padding = '20px';
-        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-        modal.style.zIndex = '1000';
+    // // Event listener for youtubeChat button click
+    // youtubeChatBtn.addEventListener('click', () => {
+    //     // Create the modal container
+    //     const modal = document.createElement('div');
+    //     modal.id = 'dynamicModal';
+    //     modal.style.position = 'fixed';
+    //     modal.style.top = '50%';
+    //     modal.style.left = '50%';
+    //     modal.style.transform = 'translate(-50%, -50%)';
+    //     modal.style.width = '300px';
+    //     modal.style.backgroundColor = '#fff';
+    //     modal.style.border = '2px solid #000319';
+    //     modal.style.padding = '20px';
+    //     modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    //     modal.style.zIndex = '1000';
 
-        // Create the input field for the video ID
-        const inputField = document.createElement('input');
-        inputField.type = 'text';
-        inputField.placeholder = 'Enter YouTube Video ID';
-        inputField.id = 'videoIdInput';
-        inputField.style.width = '100%';
-        inputField.style.marginBottom = '10px';
-        inputField.style.padding = '8px';
+    //     // Create the input field for the video ID
+    //     const inputField = document.createElement('input');
+    //     inputField.type = 'text';
+    //     inputField.placeholder = 'Enter YouTube Video ID';
+    //     inputField.id = 'videoIdInput';
+    //     inputField.style.width = '100%';
+    //     inputField.style.marginBottom = '10px';
+    //     inputField.style.padding = '8px';
 
-        // Create the continue button
-        const continueBtn = document.createElement('button');
-        continueBtn.innerText = 'Continue';
-        continueBtn.style.backgroundColor = '#000319';
-        continueBtn.style.color = '#fff';
-        continueBtn.style.padding = '10px';
-        continueBtn.style.border = 'none';
-        continueBtn.style.cursor = 'pointer';
-        continueBtn.style.width = '100%';
+    //     // Create the continue button
+    //     const continueBtn = document.createElement('button');
+    //     continueBtn.innerText = 'Continue';
+    //     continueBtn.style.backgroundColor = '#000319';
+    //     continueBtn.style.color = '#fff';
+    //     continueBtn.style.padding = '10px';
+    //     continueBtn.style.border = 'none';
+    //     continueBtn.style.cursor = 'pointer';
+    //     continueBtn.style.width = '100%';
 
-        // Create a close button to hide the modal
-        const closeButton = document.createElement('span');
-        closeButton.innerHTML = '&times;';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.style.fontSize = '20px';
-        closeButton.style.color = '#000';
+    //     // Create a close button to hide the modal
+    //     const closeButton = document.createElement('span');
+    //     closeButton.innerHTML = '&times;';
+    //     closeButton.style.position = 'absolute';
+    //     closeButton.style.top = '10px';
+    //     closeButton.style.right = '10px';
+    //     closeButton.style.cursor = 'pointer';
+    //     closeButton.style.fontSize = '20px';
+    //     closeButton.style.color = '#000';
 
-        // Append the input, button, and close button to the modal
-        modal.appendChild(closeButton);
-        modal.appendChild(inputField);
-        modal.appendChild(continueBtn);
+    //     // Append the input, button, and close button to the modal
+    //     modal.appendChild(closeButton);
+    //     modal.appendChild(inputField);
+    //     modal.appendChild(continueBtn);
 
-        // Append the modal to the body
-        document.body.appendChild(modal);
+    //     // Append the modal to the body
+    //     document.body.appendChild(modal);
 
-        // Close button functionality
-        closeButton.addEventListener('click', () => {
-            document.body.removeChild(modal);
-        });
+    //     // Close button functionality
+    //     closeButton.addEventListener('click', () => {
+    //         document.body.removeChild(modal);
+    //     });
 
-        // Continue button functionality
-        continueBtn.addEventListener('click', () => {
-            const videoId = document.getElementById('videoIdInput').value.trim();
+    //     // Continue button functionality
+    //     continueBtn.addEventListener('click', () => {
+    //         const videoId = document.getElementById('videoIdInput').value.trim();
 
-            if (videoId === '') {
-                alert('Please enter a valid YouTube Video ID.');
-                return;
-            }
+    //         if (videoId === '') {
+    //             alert('Please enter a valid YouTube Video ID.');
+    //             return;
+    //         }
 
-            // Fetch the transcript using the provided video ID
-            fetch(`http://localhost:3000/transcript/${videoId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Check if transcript data is returned
-                    if (Array.isArray(data) && data.length > 0) {
-                        // Extract only the `text` property from each object in the transcript array
-                        const transcriptText = data.map(entry => entry.text).join(' ');
+    //         // Fetch the transcript using the provided video ID
+    //         fetch(`http://localhost:3000/transcript/${videoId}`)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 // Check if transcript data is returned
+    //                 if (Array.isArray(data) && data.length > 0) {
+    //                     // Extract only the `text` property from each object in the transcript array
+    //                     const transcriptText = data.map(entry => entry.text).join(' ');
+                        
 
-                        // Log the concatenated transcript text (optional for debugging)
-                        console.log('Transcript Text:', transcriptText);
+    //                     // Log the concatenated transcript text (optional for debugging)
+    //                     console.log('Transcript Text:', transcriptText);
+                      
 
-                        // Define the prompt using the transcript text
-                        const promptMessage = `Elaborate more on the ${transcriptText} and keep this as the context for further conversation so that user can aks questions related to this`;
+    //                     // Define the prompt using the transcript text
+    //                     const promptMessage = `Elaborate more on the ${transcriptText} and keep this as the context for further conversation so that user can aks questions related to this`;
 
-                        // Send the constructed prompt message to the chatbot
-                        sendMessageToChatbot(promptMessage);
+    //                     // Send the constructed prompt message to the chatbot
+    //                     sendMessageToChatbot(promptMessage);
 
-                        // Alert to inform that the transcript has been sent to the chatbot
-                        //alert('Transcript sent to the chatbot successfully!');
-                    } else {
-                        alert('No transcript found for this video. Please check the video ID.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching transcript:', error);
-                    alert('Failed to fetch the transcript. Please check the video ID and try again.');
-                });
+    //                     // Alert to inform that the transcript has been sent to the chatbot
+    //                     //alert('Transcript sent to the chatbot successfully!');
+    //                 } else {
+    //                     alert('No transcript found for this video. Please check the video ID.');
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching transcript:', error);
+    //                 alert('Failed to fetch the transcript. Please check the video ID and try again.');
+    //             });
 
-            // Close the modal after fetching
-            document.body.removeChild(modal);
-        });
-    });
+    //         // Close the modal after fetching
+    //         document.body.removeChild(modal);
+    //     });
+    // });
 
 
 
@@ -2355,6 +2534,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     return textContent + (preContent ? `\n\n${preContent}` : "");
   }
 
+  let conversationHistory = [];
+
   async function sendMessageToChatbot(messageText) {
     displayLoadingMessage();
     try {
@@ -2369,10 +2550,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Failed to retrieve chat ID.");
         return;
       }
-
+      const transcriptContext = await getTranscriptContext();
       const aiengine = currentModel;
 
-      let conversation;
+      let conversation = [];
+
+
+      
+  
+    
 
       // Fetch selected option (chatbot or webpage)
       const selectedOption = await new Promise((resolve) => {
@@ -2405,6 +2591,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                   "What are the examples mentioned on the page or give the page summary?",
               },
             ];
+            conversationHistory.push(
+              { role: "system", content: `You are assisting with the following webpage content: ${markdownContent}` },
+              { role: "user", content: "What are the examples mentioned on the page or give the page summary?" }
+            );
           } else {
             console.log("Failed to fetch markdown content.");
             conversation = [{ role: "user", content: messageText }];
@@ -2414,9 +2604,21 @@ document.addEventListener("DOMContentLoaded", async () => {
           conversation = [{ role: "user", content: messageText }];
         }
       } else {
+        if (transcriptContext) {
+          conversation = [{ role: "system", content: transcriptContext }].concat(
+            conversationHistory,
+            { role: "user", content: messageText }
+          );
+  
+          // Push system message to history only if context exists
+          conversationHistory.push({ role: "system", content: transcriptContext });
+      } else {
         // Default chatbot conversation
-        conversation = [{ role: "user", content: messageText }];
+        conversation = conversationHistory.concat({ role: "user", content: messageText });
       }
+    }
+
+      conversationHistory.push({ role: "user", content: messageText });
 
       const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -2474,6 +2676,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       lastResponse = formattedResponse;
+      conversationHistory.push({ role: "assistant", content: formattedResponse });
       displayMessage("assistant", formattedResponse || "No content");
 
       updateCreditBalance();
@@ -2491,6 +2694,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       console.error("Model not found");
     }
+  }
+
+  
+
+  async function getTranscriptContext() {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get("transcriptContext", (result) => {
+        if (result.transcriptContext) {
+          console.log("Transcript Context Retrieved:", result.transcriptContext);
+          resolve(result.transcriptContext); // Return the stored transcript context
+        } else {
+          console.log("No Transcript Context Found.");
+          resolve(""); // Return empty if not found
+        }
+      });
+    });
   }
 
   function updateCreditBalance() {
