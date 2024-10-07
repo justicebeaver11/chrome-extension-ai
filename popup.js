@@ -4,6 +4,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
+ 
+  
+
+
+
+
+
+  const googleDocUrl = 'https://docs.google.com/document/d/1vLCIozQgCox1Qwso-JBrW3wMXqHGAFS03HnpUU2HNuQ/export?format=txt';
+  // Function to fetch text content from Google Docs
+  function fetchGoogleDocText() {
+      fetch(googleDocUrl)
+          .then((response) => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok ' + response.statusText);
+              }
+              return response.text();
+          })
+          .then((textContent) => {
+              console.log(textContent);  // Logs the entire text content of the Google Doc
+          })
+          .catch((error) => {
+              console.error('Error fetching Google Doc content:', error);
+          });
+  }
+
+  // Add event listener to the button
+  document.getElementById('googleDocs').addEventListener('click', fetchGoogleDocText);
+
   const menuButton = document.getElementById("menuButton");
   const chatbotModel = document.getElementById("chatbotmodel");
   const chatbotMessages1 = document.getElementById("chatbotMessages");
@@ -1762,112 +1790,7 @@ function extractVideoId(urlOrId) {
   
   
   
-    // Get the reference to the button that will trigger the modal
-    // const youtubeChatBtn = document.getElementById('youtubeChat');
-
-    // // Event listener for youtubeChat button click
-    // youtubeChatBtn.addEventListener('click', () => {
-    //     // Create the modal container
-    //     const modal = document.createElement('div');
-    //     modal.id = 'dynamicModal';
-    //     modal.style.position = 'fixed';
-    //     modal.style.top = '50%';
-    //     modal.style.left = '50%';
-    //     modal.style.transform = 'translate(-50%, -50%)';
-    //     modal.style.width = '300px';
-    //     modal.style.backgroundColor = '#fff';
-    //     modal.style.border = '2px solid #000319';
-    //     modal.style.padding = '20px';
-    //     modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-    //     modal.style.zIndex = '1000';
-
-    //     // Create the input field for the video ID
-    //     const inputField = document.createElement('input');
-    //     inputField.type = 'text';
-    //     inputField.placeholder = 'Enter YouTube Video ID';
-    //     inputField.id = 'videoIdInput';
-    //     inputField.style.width = '100%';
-    //     inputField.style.marginBottom = '10px';
-    //     inputField.style.padding = '8px';
-
-    //     // Create the continue button
-    //     const continueBtn = document.createElement('button');
-    //     continueBtn.innerText = 'Continue';
-    //     continueBtn.style.backgroundColor = '#000319';
-    //     continueBtn.style.color = '#fff';
-    //     continueBtn.style.padding = '10px';
-    //     continueBtn.style.border = 'none';
-    //     continueBtn.style.cursor = 'pointer';
-    //     continueBtn.style.width = '100%';
-
-    //     // Create a close button to hide the modal
-    //     const closeButton = document.createElement('span');
-    //     closeButton.innerHTML = '&times;';
-    //     closeButton.style.position = 'absolute';
-    //     closeButton.style.top = '10px';
-    //     closeButton.style.right = '10px';
-    //     closeButton.style.cursor = 'pointer';
-    //     closeButton.style.fontSize = '20px';
-    //     closeButton.style.color = '#000';
-
-    //     // Append the input, button, and close button to the modal
-    //     modal.appendChild(closeButton);
-    //     modal.appendChild(inputField);
-    //     modal.appendChild(continueBtn);
-
-    //     // Append the modal to the body
-    //     document.body.appendChild(modal);
-
-    //     // Close button functionality
-    //     closeButton.addEventListener('click', () => {
-    //         document.body.removeChild(modal);
-    //     });
-
-    //     // Continue button functionality
-    //     continueBtn.addEventListener('click', () => {
-    //         const videoId = document.getElementById('videoIdInput').value.trim();
-
-    //         if (videoId === '') {
-    //             alert('Please enter a valid YouTube Video ID.');
-    //             return;
-    //         }
-
-    //         // Fetch the transcript using the provided video ID
-    //         fetch(`http://localhost:3000/transcript/${videoId}`)
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 // Check if transcript data is returned
-    //                 if (Array.isArray(data) && data.length > 0) {
-    //                     // Extract only the `text` property from each object in the transcript array
-    //                     const transcriptText = data.map(entry => entry.text).join(' ');
-                        
-
-    //                     // Log the concatenated transcript text (optional for debugging)
-    //                     console.log('Transcript Text:', transcriptText);
-                      
-
-    //                     // Define the prompt using the transcript text
-    //                     const promptMessage = `Elaborate more on the ${transcriptText} and keep this as the context for further conversation so that user can aks questions related to this`;
-
-    //                     // Send the constructed prompt message to the chatbot
-    //                     sendMessageToChatbot(promptMessage);
-
-    //                     // Alert to inform that the transcript has been sent to the chatbot
-    //                     //alert('Transcript sent to the chatbot successfully!');
-    //                 } else {
-    //                     alert('No transcript found for this video. Please check the video ID.');
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching transcript:', error);
-    //                 alert('Failed to fetch the transcript. Please check the video ID and try again.');
-    //             });
-
-    //         // Close the modal after fetching
-    //         document.body.removeChild(modal);
-    //     });
-    // });
-
+   
 
 
 
@@ -2136,6 +2059,20 @@ function extractVideoId(urlOrId) {
   window.addEventListener("click", function (event) {
     if (!event.target.matches("#caretIcon")) {
       document.getElementById("caretDropdown").style.display = "none";
+    }
+  });
+
+
+  document.getElementById("barIcon").addEventListener("click", function () {
+    const caretDropdownMenu = document.getElementById("caretDropdownMenu");
+    caretDropdownMenu.style.display =
+      caretDropdownMenu.style.display === "block" ? "none" : "block";
+  });
+
+  // Close dropdown if clicked outside
+  window.addEventListener("click", function (event) {
+    if (!event.target.matches("#barIcon")) {
+      document.getElementById("caretDropdownMenu").style.display = "none";
     }
   });
 

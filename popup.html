@@ -98,21 +98,37 @@
             <i class="fa fa-plus"></i>
             <div class="tooltip">Open a new chat</div>
           </button>
-          <button id="menuButton" class="icon-button">
-            <i class="fa-solid fa-image"></i>
-            <div class="tooltip">Text to Image</div>
+
+          <button id="settingsMenuButton" class="icon-button">
+            <i class="fa-solid fa-bars" id="barIcon"></i>
+            <div class="tooltip">Menu</div>
+            
           </button>
-          <button id="youtubeChat" class="icon-button">
-            <i class="fa-brands fa-youtube"></i>
-            <div class="tooltip">Youtube Chat</div>
-          </button>
-          <button id="googleDocs" class="icon-button">
-            <i class="fa-solid fa-file"></i>
-            <div class="tooltip">Google Docs</div>
-          </button>
+          <div id="caretDropdownMenu" class="dropdown-content-new">
+            <a href="#" id="menuButton" class="menu-Button"
+              ><span class="text-image"> Text to Image </span>
+              <i class="fa-solid fa-image" id="textImage"></i
+            ></a>
+            <a href="#" id="youtubeChat" class="youtube-Button"
+              ><span class="youtube-chat">Youtube Chat</span>
+              <i class="fa-brands fa-youtube" id="youtubechat"></i
+            ></a>
+            <a href="#" id="googleDocs" class="google-button"
+              ><span class="google-doc"> Google Doc</span>
+              <i class="fa-solid fa-file" id="googledoc"></i
+            ></a>
+          </div>
+
+     
+          
+          
+
+          
+
           <button id="closeChatButton" class="icon-button">
             <i class="fa-solid fa-chevron-right"></i>
           </button>
+          
         </div>
       </div>
       <div id="chatbotmodel">
