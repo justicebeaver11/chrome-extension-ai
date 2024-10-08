@@ -4,33 +4,156 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
- 
-  
+  const googleDocBtn = document.getElementById('googleDocs');
+
+// Event listener for googleDoc button click
+googleDocBtn.addEventListener('click', () => {
+    const modal = document.createElement('div');
+    modal.id = 'dynamicModalDoc';
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.width = '300px';
+    modal.style.backgroundColor = '#17182b';
+    modal.style.border = '1px solid #3996fb';
+    modal.style.padding = '20px';
+    modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    modal.style.zIndex = '1000';
+    modal.style.borderRadius = '10px';
+
+    // Create the input field for the Google Doc URL
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.placeholder = 'Enter the Google Doc URL';
+    inputField.id = 'googleDocInput';
+    inputField.style.width = '93%';
+    inputField.style.marginBottom = '10px';
+    inputField.style.padding = '8px';
+    inputField.style.borderRadius = '5px'; // Rounded edges for the input field
+inputField.style.backgroundColor = '#f0f0f0'; // Light background for the input field
+inputField.style.color = '#17182b'; // Text color inside the input field
 
 
+    // Create the Retrieve URL button
+    const retrieveUrlBtn = document.createElement('button');
+    retrieveUrlBtn.innerText = 'Retrieve Tab URL';
+    retrieveUrlBtn.style.backgroundColor = '#007BFF';
+    retrieveUrlBtn.style.color = '#fff';
+    retrieveUrlBtn.style.padding = '10px';
+    retrieveUrlBtn.style.border = 'none';
+    retrieveUrlBtn.style.cursor = 'pointer';
+    retrieveUrlBtn.style.width = '100%';
+    retrieveUrlBtn.style.marginBottom = '10px';
+    retrieveUrlBtn.style.borderRadius = '5px';
 
+    retrieveUrlBtn.addEventListener('mouseover', () => {
+      retrieveUrlBtn.style.backgroundColor = '#0056b3'; // Darker blue on hover
+    });
+    retrieveUrlBtn.addEventListener('mouseout', () => {
+      retrieveUrlBtn.style.backgroundColor = '#007BFF'; // Revert to original color
+    });
 
+    // Create the Continue button
+    const continueBtn = document.createElement('button');
+    continueBtn.innerText = 'Continue';
+    continueBtn.style.backgroundColor = '#000319';
+    continueBtn.style.color = '#fff';
+    continueBtn.style.padding = '10px';
+    continueBtn.style.border = 'none';
+    continueBtn.style.cursor = 'pointer';
+    continueBtn.style.width = '100%';
+    continueBtn.style.borderRadius = '5px'; // Rounded edges for the button
 
-  const googleDocUrl = 'https://docs.google.com/document/d/1vLCIozQgCox1Qwso-JBrW3wMXqHGAFS03HnpUU2HNuQ/export?format=txt';
-  // Function to fetch text content from Google Docs
-  function fetchGoogleDocText() {
-      fetch(googleDocUrl)
-          .then((response) => {
-              if (!response.ok) {
-                  throw new Error('Network response was not ok ' + response.statusText);
-              }
-              return response.text();
-          })
-          .then((textContent) => {
-              console.log(textContent);  // Logs the entire text content of the Google Doc
-          })
-          .catch((error) => {
-              console.error('Error fetching Google Doc content:', error);
-          });
-  }
+// Hover effect for Continue button
+continueBtn.addEventListener('mouseover', () => {
+  continueBtn.style.backgroundColor = '#17182b'; // Slightly darker on hover
+});
+continueBtn.addEventListener('mouseout', () => {
+  continueBtn.style.backgroundColor = '#000319'; // Revert to original color
+});
 
-  // Add event listener to the button
-  document.getElementById('googleDocs').addEventListener('click', fetchGoogleDocText);
+    // Create a close button to hide the modal
+    const closeButton = document.createElement('span');
+    closeButton.innerHTML = '&times;';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '10px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.color = '#000';
+
+    // Append elements to the modal
+    modal.appendChild(closeButton);
+    modal.style.paddingTop = '30px';
+    modal.appendChild(inputField);
+    modal.appendChild(retrieveUrlBtn);
+    modal.appendChild(continueBtn);
+
+    // Append modal to the body
+    document.body.appendChild(modal);
+
+    // Close modal functionality
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+
+    // Function to retrieve and set the last tab URL
+    retrieveUrlBtn.addEventListener('click', () => {
+        getLastTabUrlFromStorage()
+            .then((url) => {
+                document.getElementById('googleDocInput').value = url;
+            })
+            .catch((error) => {
+                alert('Error retrieving URL: ' + error);
+            });
+    });
+
+    // Continue button functionality
+    continueBtn.addEventListener('click', () => {
+        const googleDocUrl = document.getElementById('googleDocInput').value.trim();
+
+        // Check if the URL is a valid Google Docs URL
+        if (!googleDocUrl.startsWith('https://docs.google.com/document/d/')) {
+            alert('Please enter a valid Google Docs URL');
+            return;
+        }
+
+        // Ensure the URL ends with /export?format=txt
+        let formattedUrl = googleDocUrl;
+        if (!formattedUrl.endsWith('/export?format=txt')) {
+            const docIdEnd = googleDocUrl.indexOf('/edit');
+            if (docIdEnd !== -1) {
+                formattedUrl = googleDocUrl.slice(0, docIdEnd) + '/export?format=txt';
+            } else {
+                formattedUrl += '/export?format=txt';
+            }
+        }
+
+        // Fetch and log the Google Doc text content
+        fetchGoogleDocText(formattedUrl);
+        document.body.removeChild(modal);
+    });
+});
+
+// Function to fetch text content from Google Docs
+function fetchGoogleDocText(url) {
+    fetch(url)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then((textContent) => {
+            console.log(textContent); // Logs the entire text content of the Google Doc
+            sendMessageToChatbot(textContent);
+        })
+        .catch((error) => {
+            console.error('Error fetching Google Doc content:', error);
+        });
+}
+
 
   const menuButton = document.getElementById("menuButton");
   const chatbotModel = document.getElementById("chatbotmodel");
@@ -1650,20 +1773,26 @@ youtubeChatBtn.addEventListener('click', () => {
     modal.style.left = '50%';
     modal.style.transform = 'translate(-50%, -50%)';
     modal.style.width = '300px';
-    modal.style.backgroundColor = '#fff';
-    modal.style.border = '2px solid #000319';
+    modal.style.backgroundColor = '#17182b';
+    modal.style.border = '1px solid #3996fb';
     modal.style.padding = '20px';
     modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
     modal.style.zIndex = '1000';
+    modal.style.borderRadius = '10px';
+
 
     // Create the input field for the video ID
     const inputField = document.createElement('input');
     inputField.type = 'text';
     inputField.placeholder = 'Enter YouTube Video ID';
     inputField.id = 'videoIdInput';
-    inputField.style.width = '100%';
+    inputField.style.width = '93%';
     inputField.style.marginBottom = '10px';
     inputField.style.padding = '8px';
+    inputField.style.borderRadius = '5px'; // Rounded edges for the input field
+    inputField.style.backgroundColor = '#f0f0f0'; // Light background for the input field
+    inputField.style.color = '#17182b'; // Text color inside the input field
+    
 
     // Create the continue button
     const continueBtn = document.createElement('button');
@@ -1674,6 +1803,16 @@ youtubeChatBtn.addEventListener('click', () => {
     continueBtn.style.border = 'none';
     continueBtn.style.cursor = 'pointer';
     continueBtn.style.width = '100%';
+    continueBtn.style.borderRadius = '5px'; // Rounded edges for the button
+
+    // Hover effect for Continue button
+    continueBtn.addEventListener('mouseover', () => {
+      continueBtn.style.backgroundColor = '#17182b'; // Slightly darker on hover
+    });
+    continueBtn.addEventListener('mouseout', () => {
+      continueBtn.style.backgroundColor = '#000319'; // Revert to original color
+    });
+    
 
     const retrieveUrlBtn = document.createElement('button');
     retrieveUrlBtn.innerText = 'Retrieve Tab URL';
@@ -1684,6 +1823,15 @@ youtubeChatBtn.addEventListener('click', () => {
     retrieveUrlBtn.style.cursor = 'pointer';
     retrieveUrlBtn.style.width = '100%';
     retrieveUrlBtn.style.marginBottom = '10px';
+    retrieveUrlBtn.style.borderRadius = '5px';
+
+    retrieveUrlBtn.addEventListener('mouseover', () => {
+      retrieveUrlBtn.style.backgroundColor = '#0056b3'; // Darker blue on hover
+    });
+    retrieveUrlBtn.addEventListener('mouseout', () => {
+      retrieveUrlBtn.style.backgroundColor = '#007BFF'; // Revert to original color
+    });
+
 
     // Create a close button to hide the modal
     const closeButton = document.createElement('span');
@@ -1697,6 +1845,7 @@ youtubeChatBtn.addEventListener('click', () => {
 
     // Append the input, button, and close button to the modal
     modal.appendChild(closeButton);
+    modal.style.paddingTop = '30px';
     modal.appendChild(inputField);
     modal.appendChild(retrieveUrlBtn);
     modal.appendChild(continueBtn);
@@ -1722,12 +1871,7 @@ youtubeChatBtn.addEventListener('click', () => {
 
     // Continue button functionality
     continueBtn.addEventListener('click', () => {
-        // const videoId = document.getElementById('videoIdInput').value.trim();
-
-        // if (videoId === '') {
-        //     alert('Please enter a valid YouTube Video ID.');
-        //     return;
-        // }
+        
         const inputValue = document.getElementById('videoIdInput').value.trim();
 
         // Extract video ID from the input (URL or direct ID)
