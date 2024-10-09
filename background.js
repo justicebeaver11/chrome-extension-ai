@@ -60,9 +60,6 @@ setInterval(() => {
 
 // Function to create a movable popup window
 function openMovablePopup() {
-
-  
-
   chrome.windows.create(
     {
       url: "popup.html",
@@ -220,8 +217,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.windows.onRemoved.addListener((windowId) => {
   popupOpenOutlook = false;
 });
-
-
-
-
-

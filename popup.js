@@ -4,156 +4,148 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 
-  const googleDocBtn = document.getElementById('googleDocs');
+  const googleDocBtn = document.getElementById("googleDocs");
 
-// Event listener for googleDoc button click
-googleDocBtn.addEventListener('click', () => {
-    const modal = document.createElement('div');
-    modal.id = 'dynamicModalDoc';
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.width = '300px';
-    modal.style.backgroundColor = '#17182b';
-    modal.style.border = '1px solid #3996fb';
-    modal.style.padding = '20px';
-    modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-    modal.style.zIndex = '1000';
-    modal.style.borderRadius = '10px';
+  // Event listener for googleDoc button click
+  googleDocBtn.addEventListener("click", () => {
+    const modal = document.createElement("div");
+    modal.id = "dynamicModalDoc";
+    modal.style.position = "fixed";
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    modal.style.width = "300px";
+    modal.style.backgroundColor = "#17182b";
+    modal.style.border = "1px solid #3996fb";
+    modal.style.padding = "20px";
+    modal.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    modal.style.zIndex = "1000";
+    modal.style.borderRadius = "10px";
 
-    // Create the input field for the Google Doc URL
-    const inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.placeholder = 'Enter the Google Doc URL';
-    inputField.id = 'googleDocInput';
-    inputField.style.width = '93%';
-    inputField.style.marginBottom = '10px';
-    inputField.style.padding = '8px';
-    inputField.style.borderRadius = '5px'; // Rounded edges for the input field
-inputField.style.backgroundColor = '#f0f0f0'; // Light background for the input field
-inputField.style.color = '#17182b'; // Text color inside the input field
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.placeholder = "Enter the Google Doc URL";
+    inputField.id = "googleDocInput";
+    inputField.style.width = "93%";
+    inputField.style.marginBottom = "10px";
+    inputField.style.padding = "8px";
+    inputField.style.borderRadius = "5px";
+    inputField.style.backgroundColor = "#f0f0f0";
+    inputField.style.color = "#17182b";
 
+    const retrieveUrlBtn = document.createElement("button");
+    retrieveUrlBtn.innerText = "Retrieve Tab URL";
+    retrieveUrlBtn.style.backgroundColor = "#007BFF";
+    retrieveUrlBtn.style.color = "#fff";
+    retrieveUrlBtn.style.padding = "10px";
+    retrieveUrlBtn.style.border = "none";
+    retrieveUrlBtn.style.cursor = "pointer";
+    retrieveUrlBtn.style.width = "100%";
+    retrieveUrlBtn.style.marginBottom = "10px";
+    retrieveUrlBtn.style.borderRadius = "5px";
 
-    // Create the Retrieve URL button
-    const retrieveUrlBtn = document.createElement('button');
-    retrieveUrlBtn.innerText = 'Retrieve Tab URL';
-    retrieveUrlBtn.style.backgroundColor = '#007BFF';
-    retrieveUrlBtn.style.color = '#fff';
-    retrieveUrlBtn.style.padding = '10px';
-    retrieveUrlBtn.style.border = 'none';
-    retrieveUrlBtn.style.cursor = 'pointer';
-    retrieveUrlBtn.style.width = '100%';
-    retrieveUrlBtn.style.marginBottom = '10px';
-    retrieveUrlBtn.style.borderRadius = '5px';
-
-    retrieveUrlBtn.addEventListener('mouseover', () => {
-      retrieveUrlBtn.style.backgroundColor = '#0056b3'; // Darker blue on hover
+    retrieveUrlBtn.addEventListener("mouseover", () => {
+      retrieveUrlBtn.style.backgroundColor = "#0056b3";
     });
-    retrieveUrlBtn.addEventListener('mouseout', () => {
-      retrieveUrlBtn.style.backgroundColor = '#007BFF'; // Revert to original color
+    retrieveUrlBtn.addEventListener("mouseout", () => {
+      retrieveUrlBtn.style.backgroundColor = "#007BFF";
     });
 
-    // Create the Continue button
-    const continueBtn = document.createElement('button');
-    continueBtn.innerText = 'Continue';
-    continueBtn.style.backgroundColor = '#000319';
-    continueBtn.style.color = '#fff';
-    continueBtn.style.padding = '10px';
-    continueBtn.style.border = 'none';
-    continueBtn.style.cursor = 'pointer';
-    continueBtn.style.width = '100%';
-    continueBtn.style.borderRadius = '5px'; // Rounded edges for the button
+    const continueBtn = document.createElement("button");
+    continueBtn.innerText = "Continue";
+    continueBtn.style.backgroundColor = "#000319";
+    continueBtn.style.color = "#fff";
+    continueBtn.style.padding = "10px";
+    continueBtn.style.border = "none";
+    continueBtn.style.cursor = "pointer";
+    continueBtn.style.width = "100%";
+    continueBtn.style.borderRadius = "5px";
 
-// Hover effect for Continue button
-continueBtn.addEventListener('mouseover', () => {
-  continueBtn.style.backgroundColor = '#17182b'; // Slightly darker on hover
-});
-continueBtn.addEventListener('mouseout', () => {
-  continueBtn.style.backgroundColor = '#000319'; // Revert to original color
-});
+    continueBtn.addEventListener("mouseover", () => {
+      continueBtn.style.backgroundColor = "#ccc";
+    });
+    continueBtn.addEventListener("mouseout", () => {
+      continueBtn.style.backgroundColor = "#000319";
+    });
 
-    // Create a close button to hide the modal
-    const closeButton = document.createElement('span');
-    closeButton.innerHTML = '&times;';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.fontSize = '20px';
-    closeButton.style.color = '#000';
+    const closeButton = document.createElement("span");
+    closeButton.innerHTML = "&times;";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "10px";
+    closeButton.style.right = "10px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.fontSize = "20px";
+    closeButton.style.color = "#fff";
 
-    // Append elements to the modal
     modal.appendChild(closeButton);
-    modal.style.paddingTop = '30px';
+    modal.style.paddingTop = "30px";
     modal.appendChild(inputField);
     modal.appendChild(retrieveUrlBtn);
     modal.appendChild(continueBtn);
 
-    // Append modal to the body
     document.body.appendChild(modal);
 
-    // Close modal functionality
-    closeButton.addEventListener('click', () => {
-        document.body.removeChild(modal);
+    closeButton.addEventListener("click", () => {
+      document.body.removeChild(modal);
     });
 
-    // Function to retrieve and set the last tab URL
-    retrieveUrlBtn.addEventListener('click', () => {
-        getLastTabUrlFromStorage()
-            .then((url) => {
-                document.getElementById('googleDocInput').value = url;
-            })
-            .catch((error) => {
-                alert('Error retrieving URL: ' + error);
-            });
+    retrieveUrlBtn.addEventListener("click", () => {
+      getLastTabUrlFromStorage()
+        .then((url) => {
+          document.getElementById("googleDocInput").value = url;
+        })
+        .catch((error) => {
+          alert("Error retrieving URL: " + error);
+        });
     });
 
     // Continue button functionality
-    continueBtn.addEventListener('click', () => {
-        const googleDocUrl = document.getElementById('googleDocInput').value.trim();
+    continueBtn.addEventListener("click", () => {
+      const googleDocUrl = document
+        .getElementById("googleDocInput")
+        .value.trim();
 
-        // Check if the URL is a valid Google Docs URL
-        if (!googleDocUrl.startsWith('https://docs.google.com/document/d/')) {
-            alert('Please enter a valid Google Docs URL');
-            return;
+      // Check if the URL is a valid Google Docs URL
+      if (!googleDocUrl.startsWith("https://docs.google.com/document/d/")) {
+        alert("Please enter a valid Google Docs URL");
+        return;
+      }
+
+      let formattedUrl = googleDocUrl;
+      if (!formattedUrl.endsWith("/export?format=txt")) {
+        const docIdEnd = googleDocUrl.indexOf("/edit");
+        if (docIdEnd !== -1) {
+          formattedUrl = googleDocUrl.slice(0, docIdEnd) + "/export?format=txt";
+        } else {
+          formattedUrl += "/export?format=txt";
         }
+      }
 
-        // Ensure the URL ends with /export?format=txt
-        let formattedUrl = googleDocUrl;
-        if (!formattedUrl.endsWith('/export?format=txt')) {
-            const docIdEnd = googleDocUrl.indexOf('/edit');
-            if (docIdEnd !== -1) {
-                formattedUrl = googleDocUrl.slice(0, docIdEnd) + '/export?format=txt';
-            } else {
-                formattedUrl += '/export?format=txt';
-            }
-        }
-
-        // Fetch and log the Google Doc text content
-        fetchGoogleDocText(formattedUrl);
-        document.body.removeChild(modal);
+      fetchGoogleDocText(formattedUrl);
+      document.body.removeChild(modal);
     });
-});
+  });
 
-// Function to fetch text content from Google Docs
-function fetchGoogleDocText(url) {
+  // Function to fetch text content from Google Docs
+  function fetchGoogleDocText(url) {
     fetch(url)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.text();
-        })
-        .then((textContent) => {
-            console.log(textContent); // Logs the entire text content of the Google Doc
-            sendMessageToChatbot(textContent);
-        })
-        .catch((error) => {
-            console.error('Error fetching Google Doc content:', error);
-        });
-}
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        return response.text();
+      })
+      .then((textContent) => {
+        console.log(textContent);
+        localStorage.setItem("googleDocContent", textContent);
+        localStorage.setItem("googleDocMode", "true");
 
+        sendMessageToChatbot(textContent);
+      })
+      .catch((error) => {
+        console.error("Error fetching Google Doc content:", error);
+      });
+  }
 
   const menuButton = document.getElementById("menuButton");
   const chatbotModel = document.getElementById("chatbotmodel");
@@ -857,47 +849,43 @@ function fetchGoogleDocText(url) {
       }
     });
 
- 
-  // Your existing function to get the last active tab URL from storage
-function getLastTabUrlFromStorage() {
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.get("lastTabUrl", (result) => {
-      if (result.lastTabUrl) {
-        console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
-        resolve(result.lastTabUrl);
-      } else {
-        console.log("No URL found in storage.");
-        reject("No URL found");
+  // function to get the last active tab URL from storage
+  function getLastTabUrlFromStorage() {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get("lastTabUrl", (result) => {
+        if (result.lastTabUrl) {
+          console.log("Last Active Tab URL from Storage:", result.lastTabUrl);
+          resolve(result.lastTabUrl);
+        } else {
+          console.log("No URL found in storage.");
+          reject("No URL found");
+        }
+      });
+    });
+  }
+
+  // Function to update the last active tab URL in storage
+  function updateLastTabUrlInStorage(newUrl) {
+    chrome.storage.local.set({ lastTabUrl: newUrl }, () => {
+      console.log("Last Active Tab URL updated in Storage:", newUrl);
+    });
+  }
+
+  // Listen for URL changes in any tab and update the storage
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url && !tab.url.includes("chrome-extension://")) {
+      updateLastTabUrlInStorage(changeInfo.url);
+    }
+  });
+
+  // Listen for when the active tab changes and update the storage
+  chrome.tabs.onActivated.addListener((activeInfo) => {
+    chrome.tabs.get(activeInfo.tabId, (tab) => {
+      if (tab.url && !tab.url.includes("chrome-extension://")) {
+        updateLastTabUrlInStorage(tab.url);
       }
     });
   });
-}
-
-// Function to update the last active tab URL in storage
-function updateLastTabUrlInStorage(newUrl) {
-  chrome.storage.local.set({ lastTabUrl: newUrl }, () => {
-    console.log("Last Active Tab URL updated in Storage:", newUrl);
-  });
-}
-
-// Listen for URL changes in any tab and update the storage
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url && !tab.url.includes("chrome-extension://")) {
-    updateLastTabUrlInStorage(changeInfo.url);
-  }
-});
-
-// Listen for when the active tab changes and update the storage
-chrome.tabs.onActivated.addListener((activeInfo) => {
-  chrome.tabs.get(activeInfo.tabId, (tab) => {
-    if (tab.url && !tab.url.includes("chrome-extension://")) {
-      updateLastTabUrlInStorage(tab.url);
-    }
-  });
-});
-
-
-
 
   function getLastTabUrlAndSelectedTextFromStorage() {
     return new Promise((resolve, reject) => {
@@ -1571,69 +1559,6 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     });
   }
 
-  // async function sendMessageToChatbot(messageText) {
-  //   displayLoadingMessage();
-  //   try {
-  //     const sessionToken = await getSessionTokenFromStorage();
-  //     if (!sessionToken) {
-  //       console.log("No session token available.");
-  //       return;
-  //     }
-
-  //     const chatid = await getLatestChatId();
-  //     if (!chatid) {
-  //       console.log("Failed to retrieve chat ID.");
-  //       return;
-  //     }
-
-  //     const response = await fetch("https://app.ai4chat.co/chatgpt", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${sessionToken}`,
-  //       },
-  //       body: JSON.stringify({
-  //         chatid,
-  //         conversation: [{ role: "user", content: messageText }],
-  //         timezoneOffset: new Date().getTimezoneOffset(),
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       console.error("Error from server:", errorData.error);
-  //       return;
-  //     }
-
-  //     const data = await response.text();
-  //     displayChatbotResponse(data);
-  //     removeLoadingMessage();
-  //   } catch (error) {
-  //     console.error("Error sending message to chatbot:", error);
-  //     removeLoadingMessage();
-  //   }
-  // }
-
-  // // Function to display the chatbot response in the modal
-  // function displayChatbotResponse(responseText) {
-  //   const chatbotResponse = document.getElementById("chatbotResponse");
-  //   chatbotResponse.style.display = "block"; // Show the response div
-  //   chatbotResponse.innerText = responseText; // Insert the response
-  // }
-
-  // // Function to show a "loading" message (optional)
-  // function displayLoadingMessage() {
-  //   const chatbotResponse = document.getElementById("chatbotResponse");
-  //   chatbotResponse.style.display = "block"; // Make sure it's visible
-  //   chatbotResponse.innerText = "Loading...";
-  // }
-
-  // // Function to remove the "loading" message
-  // function removeLoadingMessage() {
-  //   const chatbotResponse = document.getElementById("chatbotResponse");
-  //   chatbotResponse.innerText = ""; // Clear the content
-  // }
-
   // Function to show the options modal
   function showOptionsModal(selectedText) {
     // Create the modal HTML dynamically
@@ -1761,188 +1686,162 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     }
   });
 
-  const youtubeChatBtn = document.getElementById('youtubeChat');
+  const youtubeChatBtn = document.getElementById("youtubeChat");
 
-// Event listener for youtubeChat button click
-youtubeChatBtn.addEventListener('click', () => {
-    
-    const modal = document.createElement('div');
-    modal.id = 'dynamicModal';
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.width = '300px';
-    modal.style.backgroundColor = '#17182b';
-    modal.style.border = '1px solid #3996fb';
-    modal.style.padding = '20px';
-    modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-    modal.style.zIndex = '1000';
-    modal.style.borderRadius = '10px';
+  // Event listener for youtubeChat button click
+  youtubeChatBtn.addEventListener("click", () => {
+    const modal = document.createElement("div");
+    modal.id = "dynamicModal";
+    modal.style.position = "fixed";
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    modal.style.width = "300px";
+    modal.style.backgroundColor = "#17182b";
+    modal.style.border = "1px solid #3996fb";
+    modal.style.padding = "20px";
+    modal.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    modal.style.zIndex = "1000";
+    modal.style.borderRadius = "10px";
 
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.placeholder = "Enter YouTube Video ID";
+    inputField.id = "videoIdInput";
+    inputField.style.width = "93%";
+    inputField.style.marginBottom = "10px";
+    inputField.style.padding = "8px";
+    inputField.style.borderRadius = "5px";
+    inputField.style.backgroundColor = "#f0f0f0";
+    inputField.style.color = "#17182b";
 
-    // Create the input field for the video ID
-    const inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.placeholder = 'Enter YouTube Video ID';
-    inputField.id = 'videoIdInput';
-    inputField.style.width = '93%';
-    inputField.style.marginBottom = '10px';
-    inputField.style.padding = '8px';
-    inputField.style.borderRadius = '5px'; // Rounded edges for the input field
-    inputField.style.backgroundColor = '#f0f0f0'; // Light background for the input field
-    inputField.style.color = '#17182b'; // Text color inside the input field
-    
+    const continueBtn = document.createElement("button");
+    continueBtn.innerText = "Continue";
+    continueBtn.style.backgroundColor = "#000319";
+    continueBtn.style.color = "#fff";
+    continueBtn.style.padding = "10px";
+    continueBtn.style.border = "none";
+    continueBtn.style.cursor = "pointer";
+    continueBtn.style.width = "100%";
+    continueBtn.style.borderRadius = "5px";
 
-    // Create the continue button
-    const continueBtn = document.createElement('button');
-    continueBtn.innerText = 'Continue';
-    continueBtn.style.backgroundColor = '#000319';
-    continueBtn.style.color = '#fff';
-    continueBtn.style.padding = '10px';
-    continueBtn.style.border = 'none';
-    continueBtn.style.cursor = 'pointer';
-    continueBtn.style.width = '100%';
-    continueBtn.style.borderRadius = '5px'; // Rounded edges for the button
-
-    // Hover effect for Continue button
-    continueBtn.addEventListener('mouseover', () => {
-      continueBtn.style.backgroundColor = '#17182b'; // Slightly darker on hover
+    continueBtn.addEventListener("mouseover", () => {
+      continueBtn.style.backgroundColor = "#ccc";
     });
-    continueBtn.addEventListener('mouseout', () => {
-      continueBtn.style.backgroundColor = '#000319'; // Revert to original color
-    });
-    
-
-    const retrieveUrlBtn = document.createElement('button');
-    retrieveUrlBtn.innerText = 'Retrieve Tab URL';
-    retrieveUrlBtn.style.backgroundColor = '#007BFF';
-    retrieveUrlBtn.style.color = '#fff';
-    retrieveUrlBtn.style.padding = '10px';
-    retrieveUrlBtn.style.border = 'none';
-    retrieveUrlBtn.style.cursor = 'pointer';
-    retrieveUrlBtn.style.width = '100%';
-    retrieveUrlBtn.style.marginBottom = '10px';
-    retrieveUrlBtn.style.borderRadius = '5px';
-
-    retrieveUrlBtn.addEventListener('mouseover', () => {
-      retrieveUrlBtn.style.backgroundColor = '#0056b3'; // Darker blue on hover
-    });
-    retrieveUrlBtn.addEventListener('mouseout', () => {
-      retrieveUrlBtn.style.backgroundColor = '#007BFF'; // Revert to original color
+    continueBtn.addEventListener("mouseout", () => {
+      continueBtn.style.backgroundColor = "#000319";
     });
 
+    const retrieveUrlBtn = document.createElement("button");
+    retrieveUrlBtn.innerText = "Retrieve Tab URL";
+    retrieveUrlBtn.style.backgroundColor = "#007BFF";
+    retrieveUrlBtn.style.color = "#fff";
+    retrieveUrlBtn.style.padding = "10px";
+    retrieveUrlBtn.style.border = "none";
+    retrieveUrlBtn.style.cursor = "pointer";
+    retrieveUrlBtn.style.width = "100%";
+    retrieveUrlBtn.style.marginBottom = "10px";
+    retrieveUrlBtn.style.borderRadius = "5px";
 
-    // Create a close button to hide the modal
-    const closeButton = document.createElement('span');
-    closeButton.innerHTML = '&times;';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.fontSize = '20px';
-    closeButton.style.color = '#000';
+    retrieveUrlBtn.addEventListener("mouseover", () => {
+      retrieveUrlBtn.style.backgroundColor = "#0056b3";
+    });
+    retrieveUrlBtn.addEventListener("mouseout", () => {
+      retrieveUrlBtn.style.backgroundColor = "#007BFF";
+    });
 
-    // Append the input, button, and close button to the modal
+    const closeButton = document.createElement("span");
+    closeButton.innerHTML = "&times;";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "10px";
+    closeButton.style.right = "10px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.fontSize = "20px";
+    closeButton.style.color = "#fff";
+
     modal.appendChild(closeButton);
-    modal.style.paddingTop = '30px';
+    modal.style.paddingTop = "30px";
     modal.appendChild(inputField);
     modal.appendChild(retrieveUrlBtn);
     modal.appendChild(continueBtn);
 
-    // Append the modal to the body
     document.body.appendChild(modal);
 
     // Close button functionality
-    closeButton.addEventListener('click', () => {
-        document.body.removeChild(modal);
+    closeButton.addEventListener("click", () => {
+      document.body.removeChild(modal);
     });
 
-    retrieveUrlBtn.addEventListener('click', () => {
+    retrieveUrlBtn.addEventListener("click", () => {
       getLastTabUrlFromStorage()
-          .then((url) => {
-              // Set the retrieved URL into the input field
-              document.getElementById('videoIdInput').value = url;
-          })
-          .catch((error) => {
-              alert(error);
-          });
-  });
+        .then((url) => {
+          // Set the retrieved URL into the input field
+          document.getElementById("videoIdInput").value = url;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    });
 
     // Continue button functionality
-    continueBtn.addEventListener('click', () => {
-        
-        const inputValue = document.getElementById('videoIdInput').value.trim();
+    continueBtn.addEventListener("click", () => {
+      const inputValue = document.getElementById("videoIdInput").value.trim();
 
-        // Extract video ID from the input (URL or direct ID)
-        const videoId = extractVideoId(inputValue);
+      // Extract video ID from the input (URL or direct ID)
+      const videoId = extractVideoId(inputValue);
 
-        if (!videoId) {
-            alert('Please enter a valid YouTube Video URL or ID.');
-            return;
-        }
+      if (!videoId) {
+        alert("Please enter a valid YouTube Video URL or ID.");
+        return;
+      }
 
+      // Fetch the transcript using the provided video ID
+      fetch(`http://localhost:3000/transcript/${videoId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            const transcriptDetails = data
+              .map((entry) => {
+                const text = entry.text || "N/A";
+                const duration = entry.duration || "00:00";
+                return `At ${duration}, the text was: "${text}"`;
+              })
+              .join("\n");
 
-        // Fetch the transcript using the provided video ID
-        fetch(`http://localhost:3000/transcript/${videoId}`)
-            .then(response => response.json())
-            .then(data => {
-                
-                if (Array.isArray(data) && data.length > 0) {
-                    
-                    const transcriptDetails = data.map(entry => {
-                        const text = entry.text || 'N/A';
-                        const duration = entry.duration || '00:00';
-                        return `At ${duration}, the text was: "${text}"`;
-                    }).join('\n');
+            console.log("Transcript Details:", transcriptDetails);
 
-                    
-                    console.log('Transcript Details:', transcriptDetails);
+            // Define the prompt using the transcript details
 
-                    // Define the prompt using the transcript details
-                  
-                    const transcriptContext = `Here is the transcript of the video along with timestamps: \n${transcriptDetails}. Please use this context for further conversation so that the user can ask questions related to specific timestamps or the entire transcript and adhere strictly to this context.`;
-                    chrome.storage.local.set({ transcriptContext }, () => {
-                      console.log('Transcript context stored:', transcriptContext);
-                  });
-                  
-                   // localStorage.setItem('transcriptContent', transcriptContext);
-                    // Send the constructed prompt message to the chatbot
-                    sendMessageToChatbot(transcriptContext);
+            const transcriptContext = `Here is the transcript of the video along with timestamps: \n${transcriptDetails}. Please use this context for further conversation so that the user can ask questions related to specific timestamps or the entire transcript and adhere strictly to this context.`;
 
-                    // Alert to inform that the transcript has been sent to the chatbot
-                   // alert('Transcript sent to the chatbot successfully!');
-                } else {
-                    alert('No transcript found for this video. Please check the video ID.');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching transcript:', error);
-                alert('Failed to fetch the transcript. Please check the video ID and try again.');
-            });
+            localStorage.setItem("youtubeChatContent", transcriptContext);
+            localStorage.setItem("youtubeChatMode", "true");
 
-        // Close the modal after fetching
-        document.body.removeChild(modal);
+            sendMessageToChatbot(transcriptContext);
+          } else {
+            alert(
+              "No transcript found for this video. Please check the video ID."
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching transcript:", error);
+          alert(
+            "Failed to fetch the transcript. Please check the video ID and try again."
+          );
+        });
+
+      // Close the modal after fetching
+      document.body.removeChild(modal);
     });
-});
+  });
 
-function extractVideoId(urlOrId) {
-  const urlPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-  const match = urlOrId.match(urlPattern);
-  return match ? match[1] : (urlOrId.length === 11 ? urlOrId : null);
-}
-  
-  
-  
-   
-
-
-
-
-
-
-
-
+  function extractVideoId(urlOrId) {
+    const urlPattern =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = urlOrId.match(urlPattern);
+    return match ? match[1] : urlOrId.length === 11 ? urlOrId : null;
+  }
 
   const modelCredits = {
     "OpenChat 3.5 8B": 1,
@@ -2021,7 +1920,7 @@ function extractVideoId(urlOrId) {
     "LLaVA v1.6 34B": 10,
     "Qwen 1.5 72B": 10,
     "DBRX 132B Instruct": 10,
-    "Command": 10,
+    Command: 10,
     "Capybara 34B": 10,
     "Gemini 1.5 Flash": 10,
     "Dolphin 2.9.2 Mixtral 8x22B": 10,
@@ -2205,7 +2104,6 @@ function extractVideoId(urlOrId) {
       document.getElementById("caretDropdown").style.display = "none";
     }
   });
-
 
   document.getElementById("barIcon").addEventListener("click", function () {
     const caretDropdownMenu = document.getElementById("caretDropdownMenu");
@@ -2631,15 +2529,41 @@ function extractVideoId(urlOrId) {
         console.log("Failed to retrieve chat ID.");
         return;
       }
-      const transcriptContext = await getTranscriptContext();
+
       const aiengine = currentModel;
 
       let conversation = [];
 
+      let systemMessage = "";
 
-      
-  
-    
+      // Check if Google Doc mode is active
+      const googleDocMode = localStorage.getItem("googleDocMode") === "true";
+      const googleDocContent = localStorage.getItem("googleDocContent") || "";
+
+      if (googleDocMode) {
+        systemMessage = `You are assisting based on the following Google Doc content: ${googleDocContent}`;
+
+        // Append the context to each user message to ensure it always has context
+        messageText = `Note: Use the following Google Doc content for context: ${googleDocContent}. \nUser: ${messageText}`;
+      }
+
+      conversation.push({ role: "system", content: systemMessage });
+      conversation.push({ role: "user", content: messageText });
+
+      const youtubeChatMode =
+        localStorage.getItem("youtubeChatMode") === "true";
+      const youtubeChatContent =
+        localStorage.getItem("youtubeChatContent") || "";
+
+      if (youtubeChatMode) {
+        systemMessage = `You are assisting based on the following Google Doc content: ${youtubeChatContent}`;
+
+        // Append the context to each user message to ensure it always has context
+        messageText = `Note: Use the following Google Doc content for context: ${youtubeChatContent}. \nUser: ${messageText}`;
+      }
+
+      conversation.push({ role: "system", content: systemMessage });
+      conversation.push({ role: "user", content: messageText });
 
       // Fetch selected option (chatbot or webpage)
       const selectedOption = await new Promise((resolve) => {
@@ -2673,8 +2597,15 @@ function extractVideoId(urlOrId) {
               },
             ];
             conversationHistory.push(
-              { role: "system", content: `You are assisting with the following webpage content: ${markdownContent}` },
-              { role: "user", content: "What are the examples mentioned on the page or give the page summary?" }
+              {
+                role: "system",
+                content: `You are assisting with the following webpage content: ${markdownContent}`,
+              },
+              {
+                role: "user",
+                content:
+                  "What are the examples mentioned on the page or give the page summary?",
+              }
             );
           } else {
             console.log("Failed to fetch markdown content.");
@@ -2685,19 +2616,12 @@ function extractVideoId(urlOrId) {
           conversation = [{ role: "user", content: messageText }];
         }
       } else {
-        if (transcriptContext) {
-          conversation = [{ role: "system", content: transcriptContext }].concat(
-            conversationHistory,
-            { role: "user", content: messageText }
-          );
-  
-          // Push system message to history only if context exists
-          conversationHistory.push({ role: "system", content: transcriptContext });
-      } else {
         // Default chatbot conversation
-        conversation = conversationHistory.concat({ role: "user", content: messageText });
+        conversation = conversationHistory.concat({
+          role: "user",
+          content: messageText,
+        });
       }
-    }
 
       conversationHistory.push({ role: "user", content: messageText });
 
@@ -2757,7 +2681,10 @@ function extractVideoId(urlOrId) {
       }
 
       lastResponse = formattedResponse;
-      conversationHistory.push({ role: "assistant", content: formattedResponse });
+      conversationHistory.push({
+        role: "assistant",
+        content: formattedResponse,
+      });
       displayMessage("assistant", formattedResponse || "No content");
 
       updateCreditBalance();
@@ -2775,22 +2702,6 @@ function extractVideoId(urlOrId) {
     } else {
       console.error("Model not found");
     }
-  }
-
-  
-
-  async function getTranscriptContext() {
-    return new Promise((resolve, reject) => {
-      chrome.storage.local.get("transcriptContext", (result) => {
-        if (result.transcriptContext) {
-          console.log("Transcript Context Retrieved:", result.transcriptContext);
-          resolve(result.transcriptContext); // Return the stored transcript context
-        } else {
-          console.log("No Transcript Context Found.");
-          resolve(""); // Return empty if not found
-        }
-      });
-    });
   }
 
   function updateCreditBalance() {

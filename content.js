@@ -416,5 +416,3 @@ window.addEventListener("load", function () {
 
   injectAIReplyButton();
 });
-
-
